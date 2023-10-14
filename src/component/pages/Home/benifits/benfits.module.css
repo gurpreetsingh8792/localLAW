@@ -1,0 +1,15 @@
+.sectionHead{
+    display: flex;
+    gap:1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.sectionHead span{
+    color: var(--color-primary);
+    border-radius: 1rem;
+    border: 0.1px solid var(--color-primary);
+    padding: 0.6rem;
+    /* background-color: var(--color-secondary); */
+}
+

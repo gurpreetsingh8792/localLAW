@@ -1,0 +1,163 @@
+
+  /* Middle container and form started */
+  .midContainer, .formContainer {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: "Montserrat", sans-serif;
+    overflow: hidden;
+  }
+
+  
+  .midContainer {
+    display: flex;
+    justify-content: center;
+    padding-right: 12rem;
+    align-items: center;
+    box-sizing: border-box;
+    height: 80%; /* Center vertically on the viewport */
+    border: 1px solid #ccc;
+  }
+  
+  /* Style the mid-left-container (for the logo) */
+  .midLeftContainer {
+    padding-right: 180px;
+    width: 60rem;
+    height: 42.1rem;
+  }
+  
+  .midLeftContainer img {
+    height: 100%; /* Allow image to resize proportionally */
+    width: 100%;
+  }
+  
+  /* Style the midRightContainer */
+  .midRightContainer {
+    border-radius: 0.6rem;
+    box-shadow: 0px 0px 2px 1px rgb(225, 225, 225);
+    text-align: center;
+    padding: 0px 0px 30px 0px;
+    width: 32%;
+  }
+  
+  .container-head {
+    margin-right: 4rem;
+    font-size: 1.1rem;
+  }
+  
+  /* Remove h2::after content to avoid overflow */
+  h2::after {
+    content: "";
+  }
+  
+  p {
+    margin-right: 5.9rem;
+  }
+  
+  /* Style the form container */
+  .formContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  /* Style the form inputs */
+  input[type="email"],
+  input[type="password"] {
+    width: 70%;
+    padding: 10px;
+    margin: 12px 0;
+    border: 0px solid;
+    border-radius: 0.5rem;
+    font-size: 16px;
+    background-color: #f6f6f6;
+  }
+  
+  input::placeholder {
+    color: #a8a8a8;
+  }
+  
+  /* Style the form submit button */
+  input[type="submit"] {
+    width: 73%;
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 10px 20px;
+    margin: 40px 0px 0px 0px;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: var(--color-primary);
+  }
+  
+  /* Style the "Forgot password?" link */
+  .forgotPass {
+    margin-top: 10px;
+    font-weight: bolder;
+    font-size: 14px;
+    color: #777;
+    text-align: center;
+    text-decoration: none;
+    color: var(--color-primary);
+  }
+
+  .signUp{
+    color: var(--color-secondary);
+  }
+  
+  .signUp:hover {
+    color: var(--color-primary);
+  }
+  
+  p {
+    color: grey;
+    font-family: "Montserrat", sans-serif;
+  }
+  
+  .forgotPass {
+    display: flex;
+    flex-direction: row-reverse;
+    padding-right: 4.1rem;
+  }
+  
+  small {
+    margin-top: 6rem;
+    display: block;
+  }
+  
+  
+  /* For screens smaller than 1000px */
+  @media (max-width: 1000px) {
+    .midContainer {
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .midRightContainer{
+      padding-top: 6rem;
+    }
+  
+    .midLeftContainer {
+      width: 100%;
+      padding: 0;
+      display: none;
+    }
+  }
+  
+  /* For screens smaller than 768px */
+  @media (max-width: 768px) {
+    .midLeftContainer img {
+      display: none;
+    }
+  
+    .midRightContainer {
+      padding-top: 4rem;
+      width: 90%;
+    }
+  }
