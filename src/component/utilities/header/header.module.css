@@ -37,3 +37,7 @@ img{
     color: var(--color-primary);
     transition: var(--transition);
 }
+
+.mainHeaderLeft span{
+    color: var(--color-primary);
+}

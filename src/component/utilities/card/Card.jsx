@@ -4,7 +4,7 @@ import style from './card.module.css'
 const Card = ({className, children}) => {
   return (
     
-    <article className={`${style.card}${className}`}>
+    <article className={`${style.card} ${className}`}>
             {children}
     </article>
   

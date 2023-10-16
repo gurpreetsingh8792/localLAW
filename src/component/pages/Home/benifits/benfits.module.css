@@ -10,6 +10,8 @@
     border-radius: 1rem;
     border: 0.1px solid var(--color-primary);
     padding: 0.6rem;
-    /* background-color: var(--color-secondary); */
 }
 
+/* Media queries (medium screen) */
+@media screen and(max-width:1024px){
+}
