@@ -12,14 +12,14 @@ const LogIn = () => {
       </div>
       <div className={style.midRightContainer}>
         <div className="container-head">
-          <h2>Let's Get Started</h2>
+          <h2>LawFax</h2>
           <p>Log in to your account</p>
         </div>
 
         <form className={style.formContainer} action="">
-          <input type="email" name="email" placeholder="What is your email?" required />
-          <input type="password" name="password" placeholder="Enter password" required />
-          <input type="submit" value="Continue" />
+          <input className={style.input} type="email" name="email" placeholder="What is your email?" required />
+          <input className={style.input} type="password" name="password" placeholder="Enter password" required />
+          <input className={style.input} type="submit" value="Continue" />
           <NavLink className={style.forgotPass} to={"/forgot"}>Forgot password?</NavLink>
         </form>
         <small>Already have an account? <NavLink className={style.signUp} to={"/register"}>Sign-up</NavLink></small>

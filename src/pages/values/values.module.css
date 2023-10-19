@@ -50,6 +50,10 @@
     .valuseImage {
         height: auto;
     }
+    .valuseImage img{
+        height: 20rem;
+        width: 100%;
+    }
 
     .valuesValue {
         padding: 2rem;
@@ -64,11 +68,13 @@
 /* Styles for smaller screens */
 @media screen and (max-width: 480px) {
     .values {
-        padding: 1rem;
+        padding: 2rem;
+        margin-bottom: 15rem ;
     }
-
+    
     .valuesValue {
-        padding: 1.5rem;
+        padding: 2rem;
+
     }
 
     .valueWrapper {

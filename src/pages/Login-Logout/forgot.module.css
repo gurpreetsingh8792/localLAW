@@ -63,8 +63,7 @@
   }
   
   /* Style the form inputs */
-  input[type="email"],
-  input[type="password"] {
+  .input{
     width: 70%;
     padding: 10px;
     margin: 12px 0;

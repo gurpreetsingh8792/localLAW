@@ -1,8 +1,8 @@
 import React from "react";
 import style from "./values.module.css";
 import { value } from "./data";
-import Card from "../../utilities/card/Card";
-import Image from "../../../assets/value.jpg";
+import Card from "../../component/utilities/card/Card";
+import Image from "../../assets/value.jpg";
 import Benifits from "../Home/benifits/Benifits";
 import { FaCrown } from "react-icons/fa";
 
@@ -12,7 +12,7 @@ const Values = () => {
         <div className={`${style.container}, ${style.valuesContainer}`}>
                 <div className={style.valuesLeft}>
                 <div className={style.valuseImage}>
-                    <img src={Image} alt="" />
+                    <img src={Image} alt=""/>
                 </div>
                 </div>
                 <div className={style.valuesRight}>

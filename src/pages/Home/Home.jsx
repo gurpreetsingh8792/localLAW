@@ -1,13 +1,13 @@
 import React from "react";
 import style from "./home.module.css";
-import Header from "../../utilities/header/Header";
+import Header from "../../component/utilities/MainHeader/Header";
 import Benifits from "./benifits/Benifits";
 import { FaCrown } from "react-icons/fa";
 import { benfit } from "./data";
-import Card from "../../utilities/card/Card";
+import Card from "../../component/utilities/card/Card";
 import Values from "../values/Values";
-import Testimonials from "../../utilities/testimonials/Testimonials";
-import Footer from "../../utilities/footer/footer";
+import Testimonials from "../../component/utilities/testimonials/Testimonials";
+import Footer from "../../component/utilities/footer/footer";
 
 const Home = () => {
   return (
@@ -19,7 +19,7 @@ const Home = () => {
         
         <div className={style.benfitsWrapper}>
             {/* function for render data from data.jsx */}
-          {benfit.map(({ id, icon, title, info, path }) => {
+          {benfit.map(({ id, icon, title, info }) => {
             return (
               <Card className={style.programsProgram} key={id}>
                 <span>{icon}</span>

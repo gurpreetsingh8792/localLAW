@@ -2,7 +2,7 @@ import React from 'react'
 import style from './testimonials.module.css'
 import Card from '../card/Card'
 import { testimonials } from './data'
-import Benifits from '../../pages/Home/benifits/Benifits'
+import Benifits from '../../../pages/Home/benifits/Benifits'
 import { FaCrown } from 'react-icons/fa'
 import { useState } from 'react'
 import { BsArrowLeftCircle } from 'react-icons/bs';

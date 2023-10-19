@@ -11,7 +11,7 @@
     position: relative;
     text-align: center;
     margin-top: 5rem;
-    height: 12rem;
+    height: 14rem;
 }
 
 .testimonialAvatar{
@@ -50,7 +50,7 @@
     height: 3rem;
 }
 
-h5{
+.testimonialInfo h5{
     position: absolute;
     margin-top: 1rem;
     padding-left: 2.2rem 
@@ -62,29 +62,7 @@ h5{
 }
 
 
-/* Default styles for larger screens */
-.testimonials {
-    width: 50rem;
-    margin-inline: auto;
-}
 
-.testimonial {
-    position: relative;
-    text-align: center;
-    margin-top: 5rem;
-    height: 12rem;
-}
-
-.testimonialAvatar {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 1.5rem;
-    overflow: hidden;
-    position: absolute;
-    top: -2rem;
-    left: calc(50% - 2rem);
-    box-shadow: 1rem 1.55rem, 20rem rgba(26, 26, 54, 0.4);
-}
 
 /* Styles for medium-sized screens */
 @media screen and (max-width: 768px) {
@@ -121,11 +99,13 @@ h5{
 
     h5 {
         position: static;
-        margin-top: 0.5rem;
+        margin-top: 1rem;
+        padding-right: 2rem;
+        
     }
 
     .testimonialTitle {
         position: static;
-        padding: 0;
+        padding: 0rem;
     }
 }

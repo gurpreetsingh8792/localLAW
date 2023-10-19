@@ -1,14 +1,15 @@
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 import Navbar from "./component/utilities/Navbar/Navbar"
-import About from "./component/pages/About/About"
-import Home from "./component/pages/Home/Home"
-import DashBoard from "./component/pages/Dashboard/DashBoard"
-import Services from "./component/pages/Services/Services"
-import LogIn from "./component/pages/Login-Logout/LogIn"
-import Register from "./component/pages/Login-Logout/Register"
-import Contact from './component/pages/Contact/Contact';
-import Forgot from './component/pages/Login-Logout/Forgot';
+import About from "./pages/About/About"
+import Home from "./pages/Home/Home"
+import DashBoard from "./pages/Dashboard/DashBoard"
+import Services from "./pages/Services/Services"
+import LogIn from "./pages/Login-Logout/LogIn"
+import Register from "./pages/Login-Logout/Register"
+import Contact from './pages/Contact/Contact';
+import Forgot from './pages/Login-Logout/Forgot';
 import "./App.css"
+import Explore from "./pages/Explore/Explore";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="login" element={<LogIn/>}/>
         <Route path="register" element={<Register/>}/>
         <Route path="forgot" element={<Forgot/>}/>
+        <Route path="explore" element={<Explore/>}/>
       </Routes>
       </div>
     </BrowserRouter>
