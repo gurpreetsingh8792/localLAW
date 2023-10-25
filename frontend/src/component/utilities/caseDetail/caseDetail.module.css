@@ -1,0 +1,105 @@
+/* caseDetail.module.css */
+.container {
+  background-image: url('../../../assets/dashboard.jpg'); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: scroll;
+  width: 100%;
+  height: 110vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px; 
+}
+
+.caseDetailContainer {
+  background-color: var(--color-fourth); 
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.caseDetail {
+  margin-top: 20px;
+}
+
+.caseDetail h1 {
+  color: #333333;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.caseDetail p, .caseDetail strong {
+  color: #333333;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+.caseDetail strong {
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.caseDetail a {
+  color: var(--color-primary); 
+  transition: var(--transition); 
+  font-weight: bolder;
+}
+
+.caseDetail a:hover {
+  font-size: 1rem;
+  padding: 5px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 580px) {
+  .container{
+    /* height: 100%; */
+  }
+  .caseDetail h1 {
+    font-size: 1.5rem; 
+  }
+
+  .caseDetail p, .caseDetail strong {
+    font-size: 0.875rem; 
+  }
+
+  .caseDetail a:hover {
+    font-size: 1rem; 
+  }
+}
+
+/* Media Query for Tablets */
+@media (max-width: 980px) {
+  .caseDetail h1 {
+    font-size: 2rem; 
+  } 
+  .container{
+    /* height: 100%; */
+  }
+  
+}
+/* Media Query for Tablets */
+@media (max-width: 400px) {
+  .caseDetail h1 {
+    font-size: 2rem; 
+  } 
+  .container{
+    height: 100%;
+  }
+  
+}
+

@@ -1,0 +1,111 @@
+.testimonials{
+    width: 50rem;
+    margin-inline: auto;
+}
+
+.testimonialsHead{
+    justify-content: center;
+}
+
+.testimonial{
+    position: relative;
+    text-align: center;
+    margin-top: 5rem;
+    height: 14rem;
+}
+
+.testimonialAvatar{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    position: absolute;
+    top: -2rem;
+    left: calc(50% - 2rem);
+    box-shadow: 1rem 1.55rem, 20rem rgba(26,26,54,0.4);
+}
+.testimonialInfo{
+    font-style: italic;
+    margin: 1rem 0 2rem;
+}
+
+.testimonialBtnContainer{
+    width: fit-content;
+    margin: 2rem auto 0rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.testimonialsBtn{
+    background: transparent;
+    cursor: pointer;
+}
+
+.testimonialsBtn svg{
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+}
+
+.testimonialInfo h5{
+    position: absolute;
+    margin-top: 1rem;
+    padding-left: 2.2rem 
+}
+
+.testimonialTitle{
+    position: absolute;
+    padding: 2rem;
+}
+
+
+
+
+/* Styles for medium-sized screens */
+@media screen and (max-width: 768px) {
+    .testimonials {
+        width: 90%;
+    }
+
+    .testimonial {
+        margin-top: 3rem;
+    }
+}
+
+/* Styles for smaller screens */
+@media screen and (max-width: 480px) {
+    .testimonials {
+        width: 90%;
+    }
+
+    .testimonial {
+        margin-top: 2rem;
+        height: auto;
+    }
+
+    .testimonialAvatar {
+        width: 3rem;
+        height: 3rem;
+        top: 0;
+        left: calc(50% - 1.5rem);
+    }
+
+    .testimonialInfo {
+        font-size: 0.8rem;
+    }
+
+    h5 {
+        position: static;
+        margin-top: 1rem;
+        padding-right: 2rem;
+        
+    }
+
+    .testimonialTitle {
+        position: static;
+        padding: 0rem;
+    }
+}
