@@ -94,7 +94,9 @@ const Search = () => {
   return (
     <>
       <div className={`${style.container} ${style.SearchContainer}`}>
+      {/* search bar */}
         <form onSubmit={handleSearch} className={style.searchContainer}>
+          {/* search input */}
           <input
             className={style.SearchName}
             type="text"
@@ -102,6 +104,8 @@ const Search = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+
+          {/* select category */}
           <select
             className={style.SearchName}
             value={category}
@@ -117,7 +121,8 @@ const Search = () => {
           </select>
           <button className={style.btn}>Search</button>
         </form>
-
+          
+          {/*Result header*/}
         <div className={style.resultContainer}>
           <h2 className={style.resultTitle}>{displayName}</h2>
 
@@ -127,6 +132,8 @@ const Search = () => {
             <div className={style.tableColumn}>Classifier</div>
           </div>
           )}
+
+          {/* Results */}
           <div className={style.tableContainer}>
             <div className={style.table}>
               {results.map((item, index) => (
@@ -143,6 +150,8 @@ const Search = () => {
                 </div>
               ))}
             </div>
+
+            {/* Pie chart */}
             {chartData.labels && chartData.labels.length > 0 && (
               <div className={style.chartContainer}>
                 <Pie
@@ -154,6 +163,7 @@ const Search = () => {
                 />
               </div>
             )}
+
           </div>
         </div>
       </div>

@@ -1,42 +1,82 @@
+/* Contact Form Container */
 .contactFormContainer {
-    background-color: #f5f5f5;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 320px;
-    margin: 0 auto;
-  }
+  background: var(--color-fourth);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 600px;
+  background-image: url(../../assets/dashboard.jpg);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.contactFormContainer h1{
+  color: var(--color-primary);
+}
+
+/* Contact Form Overlay */
+.contactFormOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
   
-  h1 {
-    font-size: 24px;
-    text-align: center;
-  }
-  
-  .formGroup {
-    text-align: left;
-    margin: 10px 0;
-  }
-  
-  label {
-    display: block;
-    font-weight: bold;
-  }
-  
-.input{
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  .submitButton {
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
+}
+
+/* Contact Form Styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+.formGroup {
+  margin: 15px 0;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--color-fourth);
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+.input:focus, .textarea:focus {
+  border: 2px solid var(--color-primary);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.submitButton {
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: bold;
+}
+
+.submitButton:hover {
+  background-color: var(--color-secondary);
+}

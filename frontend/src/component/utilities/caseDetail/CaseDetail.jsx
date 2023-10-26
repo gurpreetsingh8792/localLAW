@@ -64,6 +64,9 @@ const CaseDetail = () => {
             <p>
               <strong>Sections:</strong> {caseData.penal_code}
             </p>
+            <p>
+              <strong>Judgement by:</strong> {caseData.judgement_by}
+            </p>
             </p>
             <p>
               <strong>Summary:</strong> {caseData.summary}
