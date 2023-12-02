@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import emailjs from "emailjs-com";
 import style from "./contact.module.css";
 import Headers from "../../component/utilities/Header/Headers";
 import Footer from "../../component/utilities/footer/footer";
@@ -10,6 +11,8 @@ const Contact = () => {
     email: "",
     message: "",
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,12 +24,31 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    setFormData({
-      name: "",
-      email: "",
-      message: "",
-    });
+    setIsSubmitted(false);
+    setSubmitError("");
+
+    emailjs
+      .sendForm(
+        "service_fay8o8p",
+        "template_d2euhz7",
+        "#contact-form",
+        "90GKjDPQx8XpRzcXr"
+      )
+      .then(
+        (result) => {
+          console.log("Email sent successfully:", result.text);
+          setFormData({
+            name: "",
+            email: "",
+            message: "",
+          });
+          setIsSubmitted(true);
+        },
+        (error) => {
+          console.error("Email sending failed:", error);
+          setSubmitError("Failed to send message. Please try again later.");
+        }
+      );
   };
 
   return (
@@ -36,7 +58,11 @@ const Contact = () => {
       </Headers>
       <div className={style.contactFormContainer}>
         <h1>Contact Us</h1>
-        <form onSubmit={handleSubmit}>
+        {isSubmitted && (
+          <p className={style.successMessage}>Your message has been sent successfully!</p>
+        )}
+        {submitError && <p className={style.errorMessage}>{submitError}</p>}
+        <form id="contact-form" onSubmit={handleSubmit}>
           <div className={style.formGroup}>
             <label htmlFor="name">Name</label>
             <input

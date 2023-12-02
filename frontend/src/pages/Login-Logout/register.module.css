@@ -61,6 +61,11 @@
     align-items: center;
     width: 100%;
   }
+
+  .error{
+    font-size: 0.8rem;
+    color: var(--color-danger);
+  }
   
   /* Style the form inputs */
   .input{
@@ -78,7 +83,7 @@
   }
   
   /* Style the form submit button */
-  input[type="submit"] {
+  .submit{
     width: 73%;
     background-color: var(--color-primary);
     color: #fff;
@@ -91,7 +96,7 @@
     transition: background-color 0.3s ease;
   }
   
-  input[type="submit"]:hover {
+  .submit:hover {
     color: var(--color-primary);
     background-color: white;
     border: 1px solid var(--color-primary);

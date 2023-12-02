@@ -1,0 +1,132 @@
+
+.formContainer {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 58rem;
+
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-secondary);
+  }
+  
+  .text,
+  .date,
+  .file,
+  .time,
+  .select,
+  .textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+ 
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  
+  .btn[type="submit"] {
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    margin-top: 90px;
+    box-shadow: inset 0px 0px 6px 0px ;
+  }
+  .btn[type="submit"]:hover {
+    background-color: var(--color-fourth); 
+    color: var(--color-primary);
+    transform: scale(1.05); 
+    box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+  }
+  .time{
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  .dateOfHearing{
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+
+  }
+  
+  
+  .successPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .successPopup div {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .successPopup button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: px; 
+  }
+  
+  .field {
+    flex: 1;
+    margin-right: 10px; 
+  }
+  
+  
+  @media (max-width: 768px) {
+    .formContainer {
+      max-width: 100%;
+      padding: 10px;
+    }
+    
+    .text,
+    .date,
+    .file,
+    .select,
+    .textarea {
+      margin-bottom: 8px;
+    }
+  }
+  

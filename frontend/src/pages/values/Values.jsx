@@ -18,16 +18,16 @@ const Values = () => {
                 <div className={style.valuesRight}>
                 <Benifits icons={<FaCrown />} title="Values" />
                 <p>
-                    Filler text is text that shares some characteristics of a real
-                    written text, but is random or otherwise generated.
+                At LawFax, these values guide in its mission to provide unparalleled legal support and services, fostering a culture of integrity, innovation, and excellence.
                 </p>
                 <div className={style.valueWrapper}>
-                    {value.map(({ id, icon, title, info }) => {
+                    {value.map(({ id, icon, title, info1, info2 }) => {
                     return (
                         <Card className={style.valuesValue} key={id}>
                         <span>{icon}</span>
                         <h4>{title}</h4>
-                        <p>{info}</p>
+                        <p>{info1}</p>
+                        <p>{info2}</p>
                         </Card>
                     );
                     })}

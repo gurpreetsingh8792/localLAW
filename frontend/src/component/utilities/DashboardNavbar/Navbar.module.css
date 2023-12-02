@@ -1,0 +1,79 @@
+.Container {
+    position: -webkit-sticky;
+    background-color: var(--color-fourth);
+    border-radius: 1rem;
+    width: 70%;
+    margin: auto;
+    padding-top: 1rem;
+    color: var(--color-primary);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .Links {
+    list-style-type: none;
+    padding: 0;
+    margin: auto;
+    text-align: center;
+    display: flex;
+  }
+  
+  .Links li {
+    position: relative;
+    margin: 5px 20px;
+  }
+  
+  .Links a {
+    color: var(--color-primary);
+    text-decoration: none;
+    padding: 5px 10px;
+  }
+  
+  .Links a:hover {
+    /* background-color: #555; */
+  }
+  
+  /* Submenu styles */
+  .DropDown {
+    display: flex; 
+    flex-direction: row;
+    position: absolute;
+    top: 100%;
+    border-radius: 1rem;
+    left: 0;
+    background-color: var(--color-fourth);
+    min-width: 150px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    max-height: 8rem;
+    overflow-y: auto;
+  }
+  
+  .Links li:hover > .DropDown {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Styles for submenu items */
+  .DropDown ul {
+    padding: 0;
+  }
+  
+  .DropDown li {
+    white-space: nowrap;
+  }
+  
+  .DropDown a {
+    display: block;
+    /* color: white; */
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .DropDown a:hover {
+    /* background-color: #555; */
+  }
+  
+  /* ... rest of your CSS */
+  

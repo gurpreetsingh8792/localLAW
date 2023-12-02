@@ -12,7 +12,7 @@ const Header = () => {
       <div className={`${style.container} ${style.mainHeaderContainers}`}>
         <div className={style.mainHeaderLeft}>
           <h1 style={{fontSize:"3rem", color:"white"}}>Law<span>fax</span> Where Facts Meet the Law</h1>
-          <NavLink to={''} className={style.btn}>
+          <NavLink to={'/DemoRequestForm'} className={style.btn}>
             Request for demo
           </NavLink>
         </div>

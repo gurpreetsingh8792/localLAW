@@ -1,0 +1,195 @@
+/* Container */
+.bill-form-container {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    background-color: #f7f7f7;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+  .Heading{
+    text-align: center;
+    color: var(--color-primary);
+  }
+  .billNo {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  /* Labels */
+  .label {
+    
+    margin-top: 1px;
+    color: var(--color-secondary);
+  }
+  
+  /* Input Fields */
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+  .input-fieldCurrentDate{
+    width: 95%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 5px;
+  }
+  .input-fieldDateFrom{
+    width: 99%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 10px;
+  }
+  .input-fieldDateTo{
+    width: 110%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-left: 5px;
+  }
+  /* Textarea */
+  .textarea-field {
+    width: 110%;
+    height: 100px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  
+  /* Select Field */
+  .select-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  
+  /* Horizontal Fields */
+  .horizontal-fields {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-right: 25px;
+    
+  }
+  
+  .submitButton {
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: inset 0px 0px 6px 0px;
+  }
+  
+  .submitButton:hover {
+    background-color: var(--color-fourth);
+    color: var(--color-primary);
+    transform: scale(1.05);
+    box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+  }
+  /* File Upload */
+  .labelFile {
+    margin-left: 15px;
+    margin-top: 1px;
+    color: var(--color-secondary);
+  }
+  .file-upload {
+    width: 105%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-left: 15px;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .bill-form-container {
+      max-width: 100%;
+      padding: 10px; /* Reduce padding for smaller screens */
+    }
+  
+    /* Adjust other styles as needed for smaller screens */
+    .input-field {
+      width: 100%;
+      padding: 5px;
+    }
+  
+    .input-fieldCurrentDate {
+      width: 100%;
+      padding: 5px;
+    }
+  
+    .input-fieldDateFrom {
+      width: 100%;
+      padding: 5px;
+    }
+  
+    .input-fieldDateTo {
+      width: 100%;
+      padding: 5px;
+    }
+  
+    .textarea-field {
+      width: 100%;
+      height: 80px;
+      padding: 5px;
+    }
+  
+    .select-field {
+      width: 100%;
+      padding: 5px;
+    }
+  
+    .horizontal-fields {
+      flex-direction: column; /* Stack fields vertically on smaller screens */
+      margin-bottom: 5px;
+      width: 100%;
+      
+    }
+  
+    .submitButton {
+      padding: 8px 12px; /* Adjust button padding for smaller screens */
+    }
+    .file-upload {
+        width: 95%;
+        padding: 5px;
+        margin-top: 1px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+      }
+  
+    /* Adjust other styles for smaller screens */
+  }
+  

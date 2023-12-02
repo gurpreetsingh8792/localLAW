@@ -1,0 +1,57 @@
+/* InvoicesForm.module.css */
+
+/* Style for the container */
+.container {
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+  }
+  
+  /* Style for the header */
+  .header {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* General styling for the table */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  /* Header row style */
+  .tableHeaderRow {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  /* Header cells style */
+  .tableHeaderCell {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  /* Body row styling */
+  .tableBodyRow {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Body cells styling */
+  .tableBodyCell {
+    padding: 8px;
+    text-align: left;
+  }
+  
+  /* Zebra striping for rows */
+  .tableBodyRow:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  /* Hover effect for rows */
+  .tableBodyRow:hover {
+    background-color: #ddd;
+  }
+  

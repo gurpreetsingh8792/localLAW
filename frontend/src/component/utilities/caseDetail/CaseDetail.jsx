@@ -9,9 +9,10 @@ const CaseDetail = () => {
 
   useEffect(() => {
     // Assemble the URL with the caseNo
-    const URL = `http://localhost:4000/search?searchTerm=${case_no}&category=case_no`;
-    // const URL = `http://localhost:4000/search?case_no=${case_no}&category=case_no`;
-    // `http://localhost:4000/search?${queryParams.toString()}`
+    const URL = `http://34.105.95.235:8052/search?searchTerm=${case_no}&category=case_no`;
+    // fetch(`http://34.105.95.235:8052/search?${queryParams.toString()}`)
+
+    // const URL = `http://34.105.95.235:8052/search?case_no=${case_no}&category=case_no`;
     console.log(case_no);
     // Fetch data when the component mounts and whenever caseNo changes
     fetch(URL)
@@ -72,14 +73,15 @@ const CaseDetail = () => {
               <strong>Summary:</strong> {caseData.summary}
             </p>
             <p>
-              <strong>File:</strong> <NavLink to={caseData.temp_link}> Download Now</NavLink>
+              <strong>Judgement Doc's:</strong> <NavLink to={caseData.temp_link}> Download Now</NavLink>
             </p>
 
             <h3>
                To get in touch
               with our Legal Chat buddy
             </h3>
-            <a href="http://34.83.85.78:8051/">Click ME</a>
+            {/* <a href="http://34.83.85.78:8051/">Click ME</a> */}
+            <a href="http://34.105.95.235:8501">Click ME</a>
             {/* Other case details go here */}
           </div>
         ) : (

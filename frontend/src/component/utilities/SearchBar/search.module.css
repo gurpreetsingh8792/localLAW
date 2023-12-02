@@ -1,6 +1,17 @@
 /* Add these styles to your existing CSS file */
 
 /* Search container start */
+.tagLine{
+  font-size: 1.2rem;
+  margin-top: 4rem;
+  font-weight: 500;
+  font-family: sans-serif;
+}
+
+.law{
+  color: var(--color-primary);
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -14,7 +25,7 @@
   padding: 15px;
   width: 100%;
   max-width: 800px;
-  margin-top: 4rem;
+  /* margin-top: 4rem; */
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -25,6 +36,7 @@
   outline: none;
   font-size: 18px;
   padding: 15px 10px;
+  width: 25rem;
   flex: 1;
   border-radius: 6px;
   background: var(--color-fourth);
@@ -54,22 +66,7 @@
   background-color: var(--color-secondary);
 }
 
-@media (max-width: 768px) {
-  .searchContainer {
-    flex-direction: column;
-  }
 
-  .SearchName,
-  .searchSelect,
-  .btn {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .btn {
-    margin-bottom: 0;
-  }
-}
 
 /* Result container with a Glassmorphism effect */
 .resultContainer {
@@ -143,6 +140,7 @@
   text-decoration: none;
   width: 15rem;
   color: var(--color-primary);
+  /* color: var(--color-fourth); */
   transition: color 0.3s ease;
 }
 
@@ -153,35 +151,23 @@
 /* Chart container with a modern look */
 .chartContainer {
   margin-top: 2rem;
+  width: 1rem;
   text-align: center;
-  flex-basis: 50%;
+  flex-basis: 30%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.pieChart canvas{ 
+  height: 40%;
+  width: 40%;
 }
 
 .chartContainer h4 {
   margin-bottom: 1rem;
   color: var(--color-text);
   font-weight: 500;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .resultContainer {
-    margin: 1rem;
-    padding: 1rem;
-  }
-
-  .resultTitle,
-  .searchTerm {
-    font-size: 1.5rem;
-  }
-
-  .tableHeader {
-    flex-direction: column;
-    align-items: stretch;
-  }
+  font-size: 1.4rem;
 }
 
 /* Additional Styles for Card */
@@ -189,18 +175,95 @@
   width: 100%;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   margin: 1rem;
   padding: 1rem;
   transition: transform 0.2s ease;
+  /* background-color: var(--color-fourth); */
 }
 
 .card:hover {
-  transform: translateY(-5px); /* Add a slight hover effect */
+  transform: translateY(-5px); 
+  background-color: var(--color-fourth);
+
 }
 
 /* Additional Styles for Chart */
 .chartContainer .react-doughnut-chart {
   width: 100%;
   height: 100%;
+}
+
+.suggestionContainer {
+  position: absolute;
+  max-height: 200px;
+  width: 25rem;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.suggestion:hover {
+  background-color: #f2f2f2;
+}
+@media (max-width: 800px) {
+  .searchContainer {
+    flex-direction: column;
+    padding: 15px;
+    align-items: stretch;
+  }
+  .tableHeader{
+    display: none;
+  }
+
+  .SearchName,
+  .searchSelect,
+  .btn {
+    width: 100%;
+    margin: 5px 0; 
+  }
+
+  .suggestionContainer {
+    width: calc(100% - 32px); 
+    left: 16px; 
+  }
+
+  .tableContainer {
+    flex-direction: column-reverse;
+  }
+
+  .tableHeader,
+  .tableColumn {
+    flex-basis: 100%; 
+  }
+
+  .chartContainer {
+    /* flex-basis: 100%; */
+    width: 80%;
+    height: 80%;
+  }
+  .tagLine{
+    text-align: center;
+  }
+  
+}
+
+/* Further adjustments for even smaller screens */
+@media (max-width: 600px) {
+  .resultContainer,
+  .resultTitle,
+  .searchTerm {
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+  
 }

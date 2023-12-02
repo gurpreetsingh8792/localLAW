@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 
-let db = new sqlite3.Database('./judgments4.db', (err) => {
+let db = new sqlite3.Database('./Data_base/New-db/judgments5.db', (err) => {
   if (err) {
     console.error(err.message);
   }
@@ -14,7 +14,7 @@ db.serialize(() => {
     } else {
       // Table just created, creating some rows
       const insert = 'INSERT INTO items (name, category) VALUES (?,?)';
-      db.run(insert, ["Item1","Adcovate"]);
+      db.run(insert, ["Item1","Advocate"]);
       db.run(insert, ["Item2","Judge"]);
       db.run(insert, ["Item3","case_no"]);
     }

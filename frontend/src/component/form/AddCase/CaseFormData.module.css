@@ -1,0 +1,32 @@
+.Container{
+    background-color: #f5f5f5;
+}
+.casesContainer {
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+  
+  .header {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .casesTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .casesTable th,
+  .casesTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .casesTable th {
+    background-color: var(--color-primary);
+    color: white;
+  }
+  

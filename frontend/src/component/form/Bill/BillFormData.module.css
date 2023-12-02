@@ -1,0 +1,61 @@
+/* BillForm.module.css */
+
+/* Style for the container */
+.container {
+    padding: 20px;
+    background-color: #eaeaea;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  /* Style for the header */
+  .header {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  /* General styling for the table */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  /* Header row style */
+  .tableHeaderRow {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  /* Header cells style */
+  .tableHeaderCell {
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  /* Body row styling */
+  .tableBodyRow {
+    border-bottom: 1px solid #ccc;
+  }
+  
+  /* Body cells styling */
+  .tableBodyCell {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  /* Zebra striping for rows */
+  .tableBodyRow:nth-child(odd) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Hover effect for rows */
+  .tableBodyRow:hover {
+    background-color: #f1f1f1;
+  }
+  

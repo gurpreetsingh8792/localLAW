@@ -1,0 +1,237 @@
+.clientForm {
+    width: 600px; 
+            height: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 40px;
+            background-color: #f7f7f7;
+            margin-top: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .Heading{
+    text-align: center;
+    color: var(--color-primary);
+  }
+  
+  .formSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  
+  .formGroup {
+    flex-basis: calc(33.33% - 10px); 
+    margin-right: 105px;
+    
+  }
+  
+  .formGroup3 {
+    flex-basis: calc(33.33% - 10px); 
+    margin-right: 15px;
+    
+  }
+  .inputField {
+    width: 155%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  .inputFieldEmail{
+    width: 310%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  .input3 {
+    width: 103%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+  
+  .submitButton {
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: inset 0px 0px 6px 0px ;
+  }
+  .submitButton:hover {
+    background-color: var(--color-fourth); 
+    color: var(--color-primary);
+    transform: scale(1.05); 
+    box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+  }
+  
+  .label {
+    
+    margin-top: 1px;
+    color: var(--color-secondary);
+  }
+  .inputFieldTextarea{
+
+    width: 155%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    height: 100px;
+  }
+  .link{
+    color: var(--color-primary);
+    
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+  @media screen and (max-width: 768px) {
+    
+
+.clientForm {
+  width: 600px;
+  height: auto; 
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 40px;
+  background-color: #f7f7f7;
+  margin-top: 40px;
+}
+
+.formSection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.formGroup {
+  flex-basis: calc(33.33% - 10px); 
+  margin-right: 20px; 
+}
+
+.formGroup3 {
+  flex-basis: 100%; 
+  margin-right: 0;
+}
+
+.inputField {
+  width: 100%;
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.inputFieldEmail {
+  width: 100%; 
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.input3 {
+  width: 100%; 
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+.submitButton {
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: inset 0px 0px 6px 0px;
+}
+
+.submitButton:hover {
+  background-color: var(--color-fourth);
+  color: var(--color-primary);
+  transform: scale(1.05);
+  box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+}
+
+.label {
+  margin-top: 1px;
+  color: var(--color-secondary);
+}
+
+.inputFieldTextarea {
+  width: 100%; 
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 100px;
+}
+
+.link {
+  color: var(--color-primary);
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
+    .clientForm {
+        width: 100%; 
+        margin-right: 0;
+                
+      }
+      .formGroup {
+        flex-basis: 100%; 
+        margin-right: 0;
+      }
+      .formGroup3 {
+        flex-basis: 100%; 
+        margin-right: 0;
+      }
+    
+}
+}
+
+  

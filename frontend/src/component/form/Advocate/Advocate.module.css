@@ -1,0 +1,96 @@
+.container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    background-color: #f7f7f7;
+    margin-top: 50px;
+    
+  }
+  .Heading{
+    text-align: center;
+    color: var(--color-primary);
+  }
+  
+  /* .title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--color-primary);
+  } */
+  
+  /* .form {
+    display: flex;
+    flex-direction: column;
+  } */
+  
+  .formGroup {
+    margin-bottom: 20px;
+  } 
+  
+  .label {
+    
+    margin-top: 1px;
+    color: var(--color-secondary);
+  }
+  .selectField {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  .inputFieldText {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  .inputFieldCaseYear {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .submitButton {
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: inset 0px 0px 6px 0px;
+  }
+  
+  .submitButton:hover {
+    background-color: var(--color-fourth);
+    color: var(--color-primary);
+    transform: scale(1.05);
+    box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+  }
+  
+  @media screen and (max-width: 480px) {
+    .container {
+      max-width: 100%;
+      padding: 10px;
+    }
+  }
+  

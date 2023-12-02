@@ -1,0 +1,84 @@
+/* Container for the entire component */
+.container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 90%;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* Styling for the title */
+  .title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  /* Styling for the table */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  /* Styling for table headers */
+  .th {
+    background-color: #007bff;
+    color: white;
+    text-align: left;
+    padding: 12px 15px;
+    font-size: 16px;
+  }
+  
+  /* Styling for table rows and cells */
+  .tr {
+    &:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+  
+    &:hover {
+      background-color: #ddd;
+    }
+  }
+  
+  .td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Responsive table */
+  @media screen and (max-width: 768px) {
+    .table, .th, .td {
+      display: block;
+    }
+  
+    .th {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+  
+    .td {
+      border: none;
+      position: relative;
+      padding-left: 50%;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+  
+      &:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 50%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+      }
+    }
+  }
+  

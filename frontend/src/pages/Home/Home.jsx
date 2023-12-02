@@ -8,6 +8,7 @@ import Card from "../../component/utilities/card/Card";
 import Values from "../values/Values";
 import Testimonials from "../../component/utilities/testimonials/Testimonials";
 import Footer from "../../component/utilities/footer/footer";
+import ReviewDocForm from "../../component/form/ReviewFormDoc/ReviewDocForm";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
       <section className={style.benfits}>
         <div className={`${style.container}${style.benfitsContainer}`}>
           <Benifits icons={<FaCrown />} title="Benefits" />
+          <ReviewDocForm />
         
         <div className={style.benfitsWrapper}>
             {/* function for render data from data.jsx */}
