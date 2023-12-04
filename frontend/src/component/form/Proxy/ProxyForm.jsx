@@ -12,7 +12,7 @@ const Proxy = () => {
   const handleSubmit = async (values, { resetForm }) => {
     try {
       // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://34.105.95.235:8051/proxy', values, {
+      const response = await axios.post('http://localhost:8052/proxy', values, {
         headers: {
           'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
         },

@@ -10,7 +10,7 @@ const TeamMemberdata = () => {
     // Fetch team members data from the backend when the component mounts
     const fetchTeamMembers = async () => {
       try {
-        const response = await axios.get('http://34.105.95.235:8052/dashboard/teammemberform', {
+        const response = await axios.get('http://localhost:8052/dashboard/teammemberform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },

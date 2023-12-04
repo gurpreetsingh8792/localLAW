@@ -32,7 +32,7 @@ const GroupForm = () => {
         onSubmit={async (values, { resetForm }) => {
           try {
             // Make an HTTP POST request to the backend with the full server URL
-            const response = await Axios.post('http://34.105.95.235:8052/dashboard/groupform', values, {
+            const response = await Axios.post('http://localhost:8052/dashboard/groupform', values, {
               headers: {
                 'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
               },

@@ -18,7 +18,7 @@ const LogIn = () => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       // Post data to the '/register' endpoint
-      const response = await axios.post('http://34.105.95.235:8052/register', {
+      const response = await axios.post('http://localhost:8052/register', {
         firstname: values.firstname,
         lastname: values.lastname,
         username: values.email,

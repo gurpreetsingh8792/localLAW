@@ -10,7 +10,7 @@ const ClientFormData = () => {
     // Fetch case data from the backend when the component mounts
     const fetchClientData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/clientformdata', {
+        const response = await axios.get('http://localhost:8052/clientformdata', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },

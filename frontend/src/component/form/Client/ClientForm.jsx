@@ -15,7 +15,7 @@ const ClientForm = () => {
     // Fetch alert titles and populate the select options
     const fetchAlertTitles = async () => {
       try {
-        const response = await axios.get('http://34.105.95.235:8052/dashboard/alertsform', {
+        const response = await axios.get('http://localhost:8052/dashboard/alertsform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
@@ -70,7 +70,7 @@ const ClientForm = () => {
   const onSubmit = async (values, { resetForm }) => {
     try {
       // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://34.105.95.235:8052/dashboard/clientform', values, {
+      const response = await axios.post('http://localhost:8052/dashboard/clientform', values, {
         headers: {
           'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
         },

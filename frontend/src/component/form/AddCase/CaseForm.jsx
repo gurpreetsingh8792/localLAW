@@ -16,7 +16,7 @@ const CaseForm = () => {
     // Fetch client first names and populate the select options
     const fetchClientNames = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/clientform', {
+        const response = await axios.get('http://localhost:8052/clientform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
@@ -33,7 +33,7 @@ const CaseForm = () => {
     // Fetch team member full names and populate the select options
     const fetchTeamMembers = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/teammembers', {
+        const response = await axios.get('http://localhost:8052/teammembers', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
@@ -87,7 +87,7 @@ const validationSchema = Yup.object().shape({
   const handleSubmit = async (values, { resetForm }) => {
     try {
       // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://34.105.95.235:8051/caseform', values, {
+      const response = await axios.post('http://localhost:8052/caseform', values, {
         headers: {
           'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
         },

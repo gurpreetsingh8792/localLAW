@@ -46,7 +46,7 @@ const AppointmentForm = () => {
     // Fetch client first names and populate the select options
     const fetchClientNames = async () => {
       try {
-        const response = await axios.get('http://34.105.95.235:8051/clientform', {
+        const response = await axios.get('http://localhost:8052/clientform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
@@ -67,7 +67,7 @@ const AppointmentForm = () => {
   const handleSubmit = async (values, { resetForm }) => {
     try {
       // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://34.105.95.235:8051/appointment', values, {
+      const response = await axios.post('http://localhost:8052/appointment', values, {
         headers: {
           'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
         },

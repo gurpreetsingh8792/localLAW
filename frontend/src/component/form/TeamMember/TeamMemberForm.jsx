@@ -39,7 +39,7 @@ const TeamMembers = () => {
     // Fetch group names and populate the select options
     const fetchGroupNames = async () => {
       try {
-        const response = await Axios.get('http://34.105.95.235:8052/dashboard/groupform', {
+        const response = await Axios.get('http://localhost:8052/dashboard/groupform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
@@ -65,7 +65,7 @@ const TeamMembers = () => {
         onSubmit={async (values, { resetForm }) => {
           try {
             // Make an HTTP POST request to the backend with the full server URL
-            const response = await Axios.post('http://34.105.95.235:8052/dashboard/teammemberform', values, {
+            const response = await Axios.post('http://localhost:8052/dashboard/teammemberform', values, {
               headers: {
                 'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
               },

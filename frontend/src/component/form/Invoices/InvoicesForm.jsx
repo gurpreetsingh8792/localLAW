@@ -68,7 +68,7 @@ const InvoicesForm = () => {
     // Fetch client names and populate the select options
     const fetchClientNames = async () => {
       try {
-        const clientResponse = await axios.get('http://34.105.95.235:8051/clientform', {
+        const clientResponse = await axios.get('http://localhost:8052/clientform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
@@ -85,7 +85,7 @@ const InvoicesForm = () => {
     // Fetch case titles and populate the select options
     const fetchCaseTitles = async () => {
       try {
-        const caseResponse = await axios.get('http://34.105.95.235:8051/caseform', {
+        const caseResponse = await axios.get('http://localhost:8052/caseform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
@@ -106,7 +106,7 @@ const InvoicesForm = () => {
   const handleSubmit = async (values, { resetForm }) => {
     try {
       // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://34.105.95.235:8051/invoiceform', values, {
+      const response = await axios.post('http://localhost:8052/invoiceform', values, {
         headers: {
           'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
         },

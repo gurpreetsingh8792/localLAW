@@ -10,7 +10,7 @@ const BillFormData = () => {
     // Fetch bill data from the backend when the component mounts
     const fetchBillData = async () => {
       try {
-        const response = await axios.get('http://34.105.95.235:8051/billdata', {
+        const response = await axios.get('http://localhost:8052/billdata', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },

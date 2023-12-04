@@ -13,7 +13,7 @@ const AlertsFormData = () => {
     // Fetch alerts data
     const fetchAlertsData = async () => {
       try {
-        const response = await axios.get('http://34.105.95.235:8051/alerts', {
+        const response = await axios.get('http://localhost:8052/alerts', {
           headers: {
             'x-auth-token': localStorage.getItem('token'),
           },

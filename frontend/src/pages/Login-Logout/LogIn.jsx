@@ -18,7 +18,7 @@ const LogIn = () => {
 
   const handleLogin = async (values, actions) => {
     try {
-      const response = await axios.post('http://34.105.95.235:8052/login', {
+      const response = await axios.post('http://localhost:8052/login', {
         username: values.email,
         password: values.password
       });

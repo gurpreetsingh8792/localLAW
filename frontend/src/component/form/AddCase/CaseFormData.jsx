@@ -20,7 +20,7 @@ const CasesFormData = () => {
 
   const fetchCasesData = async () => {
     try {
-      const response = await axios.get('http://34.105.95.235:8051/caseformdata', {
+      const response = await axios.get('http://localhost:8052/caseformdata', {
         headers: {
           'x-auth-token': localStorage.getItem('token'),
         },
@@ -43,7 +43,7 @@ const CasesFormData = () => {
   const handleDeleteClick = async (caseId) => {
     if (window.confirm('Are you sure you want to delete this case?')) {
       try {
-        await axios.delete(`http://34.105.95.235:8051/caseformdata/${caseId}`, {
+        await axios.delete(`http://localhost:8052/caseformdata/${caseId}`, {
           headers: { 'x-auth-token': localStorage.getItem('token') },
         });
         fetchCasesData(); // Refetch the cases to update the UI
@@ -67,7 +67,7 @@ const CasesFormData = () => {
     };
 
     try {
-      await axios.put(`http://34.105.95.235:8051/caseformdata/${editingCase}`, editedCase, {
+      await axios.put(`http://localhost:8052/caseformdata/${editingCase}`, editedCase, {
         headers: { 'x-auth-token': localStorage.getItem('token') },
       });
       setEditingCase(null);

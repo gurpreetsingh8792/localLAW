@@ -10,7 +10,7 @@ const InvoicesFormData = () => {
     // Fetch invoice data from the backend when the component mounts
     const fetchInvoicesData = async () => {
       try {
-        const response = await axios.get('http://34.105.95.235:8051/invoiceformdata', {
+        const response = await axios.get('http://localhost:8052/invoiceformdata', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
