@@ -1,5 +1,5 @@
 .formContainer {
-    width: 400px;
+    width: 490px;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -17,7 +17,23 @@
     margin-bottom: 15px;
     
   }
-  
+/* Add this CSS for the new fields on the same horizontal line */
+.statusPriorityFields {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px; /* Adjust the gap between fields */
+}
+
+.statusPriorityFields select {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+}
+
+
   .label {
     margin-top: 1px;
     color: var(--color-secondary);
@@ -40,12 +56,30 @@
   }
   
   .selectField {
-    width: 130%;
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
     box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  .date {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    
+  }
+  .cdate {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    
   }
   
   .link{
@@ -84,14 +118,20 @@
       max-width: none; 
       padding: 10px; 
     }
+    .statusPriorityFields {
+      flex-direction: column;
+    }
   
+    .statusPriorityFields select {
+      width: 100%; /* Reset the width for mobile */
+    }
     .horizontalFields {
       flex-direction: row; 
       justify-content: space-between; 
     }
   
     .selectField {
-      width: 130%; 
+      width: 160%; 
       
     }
     .link {

@@ -50,7 +50,7 @@ const ClientForm = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('First Name is required'),
+    firstName: Yup.string().required('Full Name is required'),
     lastName: Yup.string(),
     email: Yup.string().email('Invalid email format').required('Email is required'),
     mobileNo: Yup.string(),
@@ -104,7 +104,7 @@ const ClientForm = () => {
       
         <div className={styles.formSection}>
           <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="firstName">First Name</label>
+            <label className={styles.label} htmlFor="firstName">Full Name</label>
             <input
               type="text"
               id="firstName"

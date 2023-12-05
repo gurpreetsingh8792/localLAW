@@ -7,11 +7,13 @@ import Axios from 'axios';
 
 const initialValues = {
   groupName: '',
+  company:'',
   priority: '',
 };
 
 const validationSchema = Yup.object().shape({
   groupName: Yup.string().required('Group Name is required'),
+  company: Yup.string(),
   priority: Yup.string().required('Priority is required'),
 });
 
@@ -19,6 +21,9 @@ const GroupForm = () => {
   const priorityOptions = [
     { value: 'critical', label: 'Critical' },
     { value: 'important', label: 'Important' },
+    { value: 'super critical', label: 'Super Critical' },
+    { value: 'routine', label: 'Routine' },
+    { value: 'normal', label: 'Normal' },
   ];
 
   return (
@@ -58,6 +63,18 @@ const GroupForm = () => {
               className={styles.inputField}
             />
             <ErrorMessage name="groupName" component="div" className={styles.error} />
+          </div>
+          <div className={styles.fieldGroup}>
+            <label htmlFor="company" className={styles.label}>
+               Company
+            </label>
+            <Field
+              type="text"
+              name="company"
+              placeholder="Enter company Name"
+              className={styles.inputField}
+            />
+            <ErrorMessage name="company" component="div" className={styles.error} />
           </div>
 
           <div className={styles.fieldGroup}>

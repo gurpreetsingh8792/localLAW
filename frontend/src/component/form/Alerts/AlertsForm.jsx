@@ -7,7 +7,8 @@ import axios from 'axios';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 
 const AlertsForm = () => {
-  const [teamMembers, setTeamMembers] = useState([]); // State to store team member full names
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [cases, setCases] = useState([]); // State to store cases
 
   useEffect(() => {
     // Fetch team member full names and populate the select options
@@ -18,7 +19,7 @@ const AlertsForm = () => {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
         });
-        
+
         // Extract the full names from the response data
         const fullNamesArray = response.data.map((member) => member.fullName);
         setTeamMembers(fullNamesArray);
@@ -28,12 +29,35 @@ const AlertsForm = () => {
     };
 
     fetchTeamMembers(); // Call the fetchTeamMembers function when the component mounts
+
+    // Fetch cases data
+    const fetchCases = async () => {
+      try {
+        const response = await axios.get('http://localhost:8052/caseform', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'),
+          },
+        });
+
+        // Extract the case titles from the response data
+        const casesArray = response.data.map((caseItem) => caseItem.title);
+        setCases(casesArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCases(); // Call the fetchCases function when the component mounts
   }, []);
+
+
   const initialValues = {
     title: '',
     startDate: '',
     completionDate: '',
     assignTo: '',
+    statusType: '', // Add Status Type field
+    priority: '',   // Add Priority field
   };
 
   const validationSchema = Yup.object().shape({
@@ -41,6 +65,8 @@ const AlertsForm = () => {
     startDate: Yup.date(),
     completionDate: Yup.date(),
     assignTo: Yup.string(),
+    statusType: Yup.string(),
+    priority: Yup.string(),
   });
 
   const onSubmit = async (values, { resetForm }) => {
@@ -59,8 +85,6 @@ const AlertsForm = () => {
       console.error(error);
     }
   };
-
- 
 
   const formik = useFormik({
     initialValues,
@@ -88,7 +112,28 @@ const AlertsForm = () => {
               <div className={styles.error}>{formik.errors.title}</div>
             )}
           </div>
-
+          <div className={styles.formField}>
+              <label className={styles.label} htmlFor="case">
+                Case
+              </label>
+              <select
+                id="case"
+                name="caseTitle"
+                className={styles.selectField}
+                {...formik.getFieldProps('caseTitle')}
+              >
+                <option value="">Select a case</option>
+                {cases.map((caseTitle) => (
+                  <option key={caseTitle} value={caseTitle}>
+                    {caseTitle}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.case && formik.errors.case && (
+                <div className={styles.error}>{formik.errors.case}</div>
+              )}
+            </div>
+          <div className={styles.horizontalFields}>
           <div className={styles.formField}>
             <label className={styles.label} htmlFor="startDate">
               Start Date
@@ -97,7 +142,7 @@ const AlertsForm = () => {
               type="date"
               id="startDate"
               name="startDate"
-              className={styles.inputField}
+              className={styles.date}
               {...formik.getFieldProps('startDate')}
             />
             {formik.touched.startDate && formik.errors.startDate && (
@@ -113,14 +158,14 @@ const AlertsForm = () => {
               type="date"
               id="completionDate"
               name="completionDate"
-              className={styles.inputField}
+              className={styles.cdate}
               {...formik.getFieldProps('completionDate')}
             />
             {formik.touched.completionDate && formik.errors.completionDate && (
               <div className={styles.error}>{formik.errors.completionDate}</div>
             )}
           </div>
-
+          </div>
           <div className={styles.horizontalFields}>
             <div className={styles.formField}>
               <label className={styles.label} htmlFor="assignTo">
@@ -150,6 +195,52 @@ const AlertsForm = () => {
               </NavLink>
             </div>
           </div>
+
+          <div className={styles.horizontalFields}>
+  <div className={styles.statusPriorityFields}>
+    <div className={styles.formField}>
+      <label className={styles.label} htmlFor="statusType">
+        Status Type
+      </label>
+      <select
+        id="statusType"
+        name="statusType"
+        className={styles.selectField}
+        {...formik.getFieldProps('statusType')}
+      >
+        <option value="">Select an option</option>
+        <option value="completed">Completed</option>
+        <option value="open">Open</option>
+        <option value="inProgress">In Progress</option>
+        <option value="timeRunning">Time Running</option>
+      </select>
+      {formik.touched.statusType && formik.errors.statusType && (
+        <div className={styles.error}>{formik.errors.statusType}</div>
+      )}
+    </div>
+
+    <div className={styles.formField}>
+      <label className={styles.label} htmlFor="priority">
+        Priority
+      </label>
+      <select
+        id="priority"
+        name="priority"
+        className={styles.selectField}
+        {...formik.getFieldProps('priority')}
+      >
+        <option value="">Select an option</option>
+        <option value="critical">Critical</option>
+        <option value="superCritical">Super Critical</option>
+        <option value="importantRoutine">Important Routine</option>
+        <option value="normal">Normal</option>
+      </select>
+      {formik.touched.priority && formik.errors.priority && (
+        <div className={styles.error}>{formik.errors.priority}</div>
+      )}
+    </div>
+  </div>
+</div>
 
           <button type="submit" className={styles.submitButton}>
             Submit

@@ -5,6 +5,9 @@ const app = express();
  const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const secretKey = 'your_secret_key';
+const ejs = require('ejs');
+const pdf = require('html-pdf');
+const fs = require('fs');
 const port = 8052;
 
 // Connect to the SQLite database
@@ -235,25 +238,28 @@ app.post('/afterproxy', authenticateJWT, async (req, res) => {
 // alerts forms
 app.post('/alerts', authenticateJWT, async (req, res) => {
   try {
-    const { title, startDate, completionDate, assignTo } = req.body;
+    const {title, startDate,completionDate,assignTo,caseTitle,statusType,priority} = req.body;
     const userId = req.user.id;
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
     }
 
-    db.run('INSERT INTO AlertsForm (title, startDate, completionDate, assignTo, user_id) VALUES (?, ?, ?, ?, ?)', [title, startDate, completionDate, assignTo, userId], function (err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
+    db.run(
+      'INSERT INTO AlertsForm (title, startDate, completionDate, assignTo, caseTitle, statusType, priority, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, startDate, completionDate, assignTo, caseTitle, statusType, priority, userId],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        return res.json({ message: 'Alerts form submitted successfully' });
       }
-      return res.json({ message: 'Alerts form submitted successfully' });
-    });
+    );
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 app.get('/alerts', authenticateJWT, (req, res) => {
   const userId = req.user.id;
@@ -459,7 +465,7 @@ app.post('/caseform', authenticateJWT, async (req, res) => {
 app.get('/caseformdata', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
-    db.all('SELECT title,caseCode,honorableJudge,client, opponentPartyName FROM CasesForm WHERE user_id = ?', [userId], (err, forms) => {
+    db.all('SELECT id,title,caseCode,honorableJudge,client, opponentPartyName FROM CasesForm WHERE user_id = ?', [userId], (err, forms) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -502,6 +508,118 @@ app.get('/teammemberform', authenticateJWT, (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+app.delete('/dashboard/caseformdata/:caseId', authenticateJWT, async (req, res) => {
+  try {
+    const { caseId } = req.params;
+    const userId = req.user.id;
+
+    // Check if the case with the given ID belongs to the authenticated user
+    const caseExists = await db.get(
+      'SELECT id FROM CasesForm WHERE id = ? AND user_id = ?',
+      [caseId, userId]
+    );
+
+    if (!caseExists) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+
+    // Delete the case with the given ID
+    await db.run('DELETE FROM CasesForm WHERE id = ?', [caseId]);
+
+    return res.json({ message: 'Case deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.get('/dashboard/caseformdata/download-pdf/:caseId', authenticateJWT, async (req, res) => {
+  try {
+    const { caseId } = req.params;
+    const userId = req.user.id;
+
+    // Check if the case with the given ID belongs to the authenticated user
+    const caseData = await new Promise((resolve, reject) => {
+      db.get(
+        'SELECT * FROM CasesForm WHERE id = ? AND user_id = ?',
+        [caseId, userId],
+        (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        }
+      );
+    });
+
+    console.log('Fetched Case Data:', caseData);
+
+    if (!caseData) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+
+    // Define an HTML template for your PDF content (you can use a template engine like EJS)
+    const template = `
+      <html>
+        <head>
+          <title>Case Data</title>
+        </head>
+        <body>
+          <h1>Case Data</h1>
+          <p>Title: <%= title %></p>
+          <p>Case Type: <%= caseType %></p>
+          <p>Court Type: <%= courtType %></p>
+          <p>Court Name: <%= courtName %></p>
+          <p>Caveat No: <%= caveatNo %></p>
+          <p>Case Code: <%= caseCode %></p>
+          <p>Case URL: <%= caseURL %></p>
+          <p>Case Status: <%= caseStatus %></p>
+          <p>Honorable Judge: <%= honorableJudge %></p>
+          <p>Court Hall No: <%= courtHallNo %></p>
+          <p>CNR No: <%= cnrNo %></p>
+          <p>Batch No: <%= batchNo %></p>
+          <p>Date of Filing: <%= dateOfFiling %></p>
+          <p>Practice Area: <%= practiceArea %></p>
+          <p>Manage: <%= manage %></p>
+          <p>Client: <%= client %></p>
+          <p>Team: <%= team %></p>
+          <p>Client Designation: <%= clientDesignation %></p>
+          <p>Opponent Party Name: <%= opponentPartyName %></p>
+          <p>Lawyer Name: <%= lawyerName %></p>
+          <p>Mobile No: <%= mobileNo %></p>
+          <p>Email Id: <%= emailId %></p>
+        </body>
+      </html>
+    `;
+
+    // Compile the template with data
+    const htmlContent = ejs.render(template, caseData);
+
+    // Create a PDF from the HTML content
+    pdf.create(htmlContent).toStream((err, stream) => {
+      if (err) {
+        console.error(err);
+        
+        return res.status(500).json({ error: 'Error generating PDF' });
+      }
+
+      // Set the response headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=Case_${caseData.id}.pdf`);
+
+      // Pipe the PDF stream to the response
+      stream.pipe(res);
+
+      // Close the database connection after sending the response
+      
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 
 // POST endpoint to add a new client form
@@ -608,14 +726,14 @@ app.post('/cnr', authenticateJWT, async (req, res) => {
 //Group form endpoints
 app.post('/dashboard/groupform', authenticateJWT, async (req, res) => {
   try {
-    const { groupName, priority } = req.body;
+    const { groupName, company, priority } = req.body;
     const userId = req.user.id;
 
     if (!groupName || !priority) {
       return res.status(400).json({ error: 'Group name and priority are required' });
     }
 
-    db.run('INSERT INTO GroupForm (groupName, priority, user_id) VALUES (?, ?, ?)', [groupName, priority, userId], function (err) {
+    db.run('INSERT INTO GroupForm (groupName, company, priority, user_id) VALUES (?, ?, ?, ?)', [groupName, company, priority, userId], function (err) {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
