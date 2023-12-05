@@ -1,0 +1,232 @@
+/* Calendar.module.css */
+
+.calendarContainer {
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    height: 600px; /* Example height, adjust as needed */
+  }
+  
+  .modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modalContent {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 50%;
+    height: 18rem;
+    max-width: 500px;
+  }
+  
+  .closeButton {
+    float: right;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .inputField {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #45a049;
+  }
+  
+  .header {
+    color: #333;
+  }
+  
+  .rbc-month-row {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    flex: 1 0 0;
+    flex-basis: 50%px;
+    overflow: hidden;
+    height: 100%;
+  }
+  
+  .AlertUpdateContainer {
+    text-align: center;
+    padding: 10px;
+  }
+  
+  /* Button Styles */
+  .btn1 {
+    color: lightcoral;
+    background-color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-right: 1rem;
+    cursor: pointer;
+  }
+  
+  .btn2 {
+    background-color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: lightblue;
+    cursor: pointer;
+  }
+  
+  .btn3 {
+    color: lightgreen;
+    font-size: 1.1rem;
+    font-weight: 700;
+    background-color: white;
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+  
+  .btn {
+    background-color: white;
+    color: var(--color-primary);
+    padding: 10px 15px;
+    border: 1px solid var(--color-primary);
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background-color: var(--color-fourth);
+    color: var(--color-primary);
+  }
+  
+  .btnContainer {
+    display: flex;
+    flex-direction:row-reverse;
+    padding-top: 1rem;
+    gap: 1rem;
+  }
+  
+  .btnOpenEvent {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+  
+  /* Additional styling for Title and Description */
+  h5 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  /* Assuming you want to style the HearingVisibleForm class */
+  
+  /* .HearingVisibleForm {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px; 
+    margin: 0 auto; 
+  } */
+  /* 
+  .HearingVisibleFormTitle {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .HearingVisibleFormInput {
+    width: 35%;
+    padding: 1px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .HearingVisibleFormDate,
+  .HearingVisibleFormTime {
+    width: 48%; 
+    margin-right: 4px; 
+  }
+  
+  /* Optional: Add styling for buttons or any other elements inside the form */
+  .HearingVisibleFormButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .HearingVisibleFormButton:hover {
+    background-color: #45a049;
+  } 
+  
+  
+  /* alert visible form css */
+  /* Add these styles to your existing stylesheet */
+  
+  /* Add these styles to your existing stylesheet */
+  
+  .visibleForm {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+  }
+  
+  .TasksVisibleContainer,
+  .TimeContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .TasksVisibleTitle {
+    
+    margin-top: 1px;
+    margin-bottom: 5px;
+    color: var(--color-primary);
+    font-size: 1rem;
+  }
+  
+  .TasksVisibleInput {
+    width: 25%; /* Adjust as needed */
+    padding: 2px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Optional: Adjust spacing between two inputs */
+  .TimeContainer .TasksVisibleInput {
+    margin-right: 2%; /* Add spacing between two inputs */
+  }
+  

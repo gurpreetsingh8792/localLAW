@@ -8,7 +8,7 @@ const secretKey = 'your_secret_key';
 const port = 8052;
 
 // Connect to the SQLite database
-let db = new sqlite3.Database('./Data_base/New-db/judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
+let db = new sqlite3.Database('./Db-data/judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
     console.error(err.message);
     throw err; // Stop further execution in this callback
