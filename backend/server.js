@@ -263,13 +263,109 @@ app.post('/alerts', authenticateJWT, async (req, res) => {
 
 app.get('/alerts', authenticateJWT, (req, res) => {
   const userId = req.user.id;
-  db.all('SELECT title, startDate, completionDate, assignTo FROM AlertsForm WHERE user_id = ?', [userId], (err, forms) => {
+  db.all('SELECT id,title, startDate, completionDate, assignTo FROM AlertsForm WHERE user_id = ?', [userId], (err, forms) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     return res.json(forms);
   });
 });
+// Delete alert by ID
+app.delete('/alerts/:alertId', authenticateJWT, async (req, res) => {
+  try {
+    const { alertId } = req.params;
+
+    // Check if the alert with the given ID belongs to the authenticated user
+    const alertExists = await db.get(
+      'SELECT id FROM AlertsForm WHERE id = ? AND user_id = ?',
+      [alertId, req.user.id]
+    );
+
+    if (!alertExists) {
+      return res.status(404).json({ error: 'Alert not found' });
+    }
+
+    // Delete the alert with the given ID
+    await db.run('DELETE FROM AlertsForm WHERE id = ?', [alertId]);
+
+    return res.json({ message: 'Alert deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Download alert PDF by ID
+app.get('/alerts/download-pdf/:alertId', authenticateJWT, async (req, res) => {
+  try {
+    const { alertId } = req.params;
+
+    // Check if the alert with the given ID belongs to the authenticated user
+    const alertData = await new Promise((resolve, reject) => {
+      db.get(
+        'SELECT * FROM AlertsForm WHERE id = ? AND user_id = ?',
+        [alertId, req.user.id],
+        (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        }
+      );
+    });
+
+    if (!alertData) {
+      return res.status(404).json({ error: 'Alert not found' });
+    }
+
+    // Define an HTML template for your PDF content (you can use a template engine like EJS)
+    const template = `
+    <html>
+    <head>
+      <title>Alert Data</title>
+    </head>
+    <body>
+      <h1>Alert Data</h1>
+      <p>Title: <%= title %></p>
+      <p>Start Date: <%= startDate %></p>
+      <p>Completion Date: <%= completionDate %></p>
+      <p>Assign To: <%= assignTo %></p>
+      <p>Case Title: <%= caseTitle %></p>
+      <p>Priority: <%= priority %></p>
+      <p>Status Type: <%= statusType %></p>
+      <!-- Add more fields as needed -->
+    </body>
+  </html>
+  
+    `;
+
+    // Compile the template with data
+    const htmlContent = ejs.render(template, alertData);
+
+    // Create a PDF from the HTML content
+    pdf.create(htmlContent).toStream((err, stream) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error generating PDF' });
+      }
+
+      // Set the response headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=Alert_${alertData.id}.pdf`);
+
+      // Pipe the PDF stream to the response
+      stream.pipe(res);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
 
 // endpoint = fetch in alert form only!
 app.get('/dashboard/alert/teammembers', authenticateJWT, (req, res) => {
@@ -310,13 +406,104 @@ app.post('/dashboard/teammemberform', authenticateJWT, async (req, res) => {
 app.get('/dashboard/teammemberform', authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
-  db.all('SELECT fullName, email, designation,selectedGroup FROM TeamMembers WHERE user_id = ?', [userId], (err, forms) => {
+  db.all('SELECT id,fullName, email, designation,selectedGroup FROM TeamMembers WHERE user_id = ?', [userId], (err, forms) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     return res.json(forms);
   });
 });
+app.delete('/dashboard/teammemberform/:memberId', authenticateJWT, async (req, res) => {
+  try {
+    const { memberId } = req.params;
+
+    // Check if the team member with the given ID belongs to the authenticated user
+    const memberExists = await db.get(
+      'SELECT id FROM TeamMembers WHERE id = ? AND user_id = ?',
+      [memberId, req.user.id]
+    );
+
+    if (!memberExists) {
+      return res.status(404).json({ error: 'Team member not found' });
+    }
+
+    // Delete the team member with the given ID
+    await db.run('DELETE FROM TeamMembers WHERE id = ?', [memberId]);
+
+    return res.json({ message: 'Team member deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.get('/dashboard/teammemberform/download-pdf/:memberId', authenticateJWT, async (req, res) => {
+  try {
+    const { memberId } = req.params;
+
+    // Check if the team member with the given ID belongs to the authenticated user
+    const memberData = await new Promise((resolve, reject) => {
+      db.get(
+        'SELECT * FROM TeamMembers WHERE id = ? AND user_id = ?',
+        [memberId, req.user.id],
+        (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        }
+      );
+    });
+
+    if (!memberData) {
+      return res.status(404).json({ error: 'Team member not found' });
+    }
+
+    // Define an HTML template for your PDF content (you can use a template engine like EJS)
+    const template = `
+    <html>
+    <head>
+      <title>Team Member Data</title>
+    </head>
+    <body>
+      <h1>Team Member Data</h1>
+      <p>Full Name: <%= fullName %></p>
+      <p>Email: <%= email %></p>
+      <p>Designation: <%= designation %></p>
+      <p>Address: <%= address %></p>
+      <p>State: <%= state %></p>
+      <p>City: <%= city %></p>
+      <p>Zip Code: <%= zipCode %></p>
+      <p>Selected Group: <%= selectedGroup %></p>
+    </body>
+  </html>
+    `;
+
+    // Compile the template with data
+    const htmlContent = ejs.render(template, memberData);
+
+    // Create a PDF from the HTML content
+    pdf.create(htmlContent).toStream((err, stream) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error generating PDF' });
+      }
+
+      // Set the response headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=TeamMember_${memberData.id}.pdf`);
+
+      // Pipe the PDF stream to the response
+      stream.pipe(res);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 
 app.get('/dashboard/groupform', authenticateJWT, (req, res) => {
   try {
@@ -416,13 +603,113 @@ app.post('/bill', authenticateJWT, async (req, res) => {
 });
 app.get('/billdata', authenticateJWT, (req, res) => {
   const userId = req.user.id;
-  db.all('SELECT billNumber, title, dateFrom, dateTo, amount, totalAmountWithTax FROM BillForm WHERE user_id = ?', [userId], (err, forms) => {
+  db.all('SELECT id,billNumber, title, dateFrom, dateTo, amount, totalAmountWithTax FROM BillForm WHERE user_id = ?', [userId], (err, forms) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     return res.json(forms);
   });
 });
+app.delete('/billdata/:billId', authenticateJWT, async (req, res) => {
+  try {
+    const { billId } = req.params;
+
+    // Check if the bill with the given ID belongs to the authenticated user
+    const billExists = await db.get(
+      'SELECT id FROM BillForm WHERE id = ? AND user_id = ?',
+      [billId, req.user.id]
+    );
+
+    if (!billExists) {
+      return res.status(404).json({ error: 'Bill not found' });
+    }
+
+    // Delete the bill with the given ID
+    await db.run('DELETE FROM BillForm WHERE id = ?', [billId]);
+
+    return res.json({ message: 'Bill deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Download bill PDF by ID
+app.get('/billdata/download-pdf/:billId', authenticateJWT, async (req, res) => {
+  try {
+    const { billId } = req.params;
+
+    // Check if the bill with the given ID belongs to the authenticated user
+    const billData = await new Promise((resolve, reject) => {
+      db.get(
+        'SELECT * FROM BillForm WHERE id = ? AND user_id = ?',
+        [billId, req.user.id],
+        (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        }
+      );
+    });
+
+    if (!billData) {
+      return res.status(404).json({ error: 'Bill not found' });
+    }
+
+    // Define an HTML template for your PDF content (you can use a template engine like EJS)
+    const template = `
+    <html>
+  <head>
+    <title>Bill Data</title>
+  </head>
+  <body>
+    <h1>Bill Data</h1>
+    <p>Bill Number: <%= billNumber %></p>
+    <p>Title: <%= title %></p>
+    <p>Current Date: <%= currentDate %></p>
+    <p>Date From: <%= dateFrom %></p>
+    <p>Date To: <%= dateTo %></p>
+    <p>Full Address: <%= fullAddress %></p>
+    <p>Billing Type: <%= billingType %></p>
+    <p>Total Hours: <%= totalHours %></p>
+    <p>No. of Hearings: <%= noOfHearings %></p>
+    <p>Total Amount: <%= totalAmount %></p>
+    <p>Amount: <%= amount %></p>
+    <p>Tax Type: <%= taxType %></p>
+    <p>Tax Percentage: <%= taxPercentage %></p>
+    <p>Total Amount With Tax: <%= totalAmountWithTax %></p>
+    <p>Description: <%= description %></p>
+    <!-- Add more fields as needed -->
+  </body>
+</html>
+
+    `;
+
+    // Compile the template with data
+    const htmlContent = ejs.render(template, billData);
+
+    // Create a PDF from the HTML content
+    pdf.create(htmlContent).toStream((err, stream) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error generating PDF' });
+      }
+
+      // Set the response headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=Bill_${billData.id}.pdf`);
+
+      // Pipe the PDF stream to the response
+      stream.pipe(res);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 // POST endpoint to add a new case form
@@ -662,7 +949,7 @@ app.post('/dashboard/clientform', authenticateJWT, async (req, res) => {
 app.get('/clientformdata', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
-    db.all('SELECT firstName,email,mobileNo,assignAlerts,scheduleAppointment FROM ClientForm WHERE user_id = ?', [userId], (err, forms) => {
+    db.all('SELECT id,firstName,email,mobileNo,assignAlerts,scheduleAppointment FROM ClientForm WHERE user_id = ?', [userId], (err, forms) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -674,6 +961,106 @@ app.get('/clientformdata', authenticateJWT, (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+app.delete('/clientformdata/:clientId', authenticateJWT, async (req, res) => {
+  try {
+    const { clientId } = req.params;
+
+    // Check if the client with the given ID belongs to the authenticated user
+    const clientExists = await db.get(
+      'SELECT id FROM ClientForm WHERE id = ? AND user_id = ?',
+      [clientId, req.user.id]
+    );
+
+    if (!clientExists) {
+      return res.status(404).json({ error: 'Client not found' });
+    }
+
+    // Delete the client with the given ID
+    await db.run('DELETE FROM ClientForm WHERE id = ?', [clientId]);
+
+    return res.json({ message: 'Client deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Download client PDF by ID
+app.get('/clientformdata/download-pdf/:clientId', authenticateJWT, async (req, res) => {
+  try {
+    const { clientId } = req.params;
+
+    // Check if the client with the given ID belongs to the authenticated user
+    const clientData = await new Promise((resolve, reject) => {
+      db.get(
+        'SELECT * FROM ClientForm WHERE id = ? AND user_id = ?',
+        [clientId, req.user.id],
+        (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        }
+      );
+    });
+
+    if (!clientData) {
+      return res.status(404).json({ error: 'Client not found' });
+    }
+
+    // Define an HTML template for your PDF content (you can use a template engine like EJS)
+    const template = `
+    <html>
+    <head>
+      <title>Client Data</title>
+    </head>
+    <body>
+      <h1>Client Data</h1>
+      <p>First Name: <%= firstName %></p>
+      <p>Last Name: <%= lastName %></p>
+      <p>Email: <%= email %></p>
+      <p>Mobile No: <%= mobileNo %></p>
+      <p>Alternate Mobile No: <%= alternateMobileNo %></p>
+      <p>Organization Name: <%= organizationName %></p>
+      <p>Organization Type: <%= organizationType %></p>
+      <p>Organization Website: <%= organizationWebsite %></p>
+      <p>GST No: <%= gstNo %></p>
+      <p>PAN No: <%= panNo %></p>
+      <p>Home Address: <%= homeAddress %></p>
+      <p>Office Address: <%= officeAddress %></p>
+      <p>Assign Alerts: <%= assignAlerts %></p>
+      <p>Schedule Appointment: <%= scheduleAppointment %></p>
+    </body>
+  </html>
+    `;
+
+    // Compile the template with data
+    const htmlContent = ejs.render(template, clientData);
+
+    // Create a PDF from the HTML content
+    pdf.create(htmlContent).toStream((err, stream) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error generating PDF' });
+      }
+
+      // Set the response headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=Client_${clientData.id}.pdf`);
+
+      // Pipe the PDF stream to the response
+      stream.pipe(res);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
 app.get('/dashboard/alertsform', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
@@ -770,13 +1157,117 @@ app.post('/invoiceform', authenticateJWT, async (req, res) => {
 app.get('/invoiceformdata', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   
-  db.all('SELECT title, invoiceNumber , date, client,expensesCumulativeAmount FROM InvoicesForm WHERE user_id = ?', [userId], (err, forms) => {
+  db.all('SELECT id,title, invoiceNumber , date, client,expensesCumulativeAmount FROM InvoicesForm WHERE user_id = ?', [userId], (err, forms) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     return res.json(forms);
   });
 });
+app.delete('/invoiceformdata/:invoiceId', authenticateJWT, async (req, res) => {
+  try {
+    const { invoiceId } = req.params;
+
+    // Check if the invoice with the given ID belongs to the authenticated user
+    const invoiceExists = await db.get(
+      'SELECT id FROM InvoicesForm WHERE id = ? AND user_id = ?',
+      [invoiceId, req.user.id]
+    );
+
+    if (!invoiceExists) {
+      return res.status(404).json({ error: 'Invoice not found' });
+    }
+
+    // Delete the invoice with the given ID
+    await db.run('DELETE FROM InvoicesForm WHERE id = ?', [invoiceId]);
+
+    return res.json({ message: 'Invoice deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Download invoice PDF by ID
+app.get('/invoiceformdata/download-pdf/:invoiceId', authenticateJWT, async (req, res) => {
+  try {
+    const { invoiceId } = req.params;
+
+    // Check if the invoice with the given ID belongs to the authenticated user
+    const invoiceData = await new Promise((resolve, reject) => {
+      db.get(
+        'SELECT * FROM InvoicesForm WHERE id = ? AND user_id = ?',
+        [invoiceId, req.user.id],
+        (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        }
+      );
+    });
+
+    if (!invoiceData) {
+      return res.status(404).json({ error: 'Invoice not found' });
+    }
+
+    // Define an HTML template for your PDF content (you can use a template engine like EJS)
+    const template = `
+    <html>
+<head>
+  <title>Invoice Data</title>
+</head>
+<body>
+  <h1>Invoice Data</h1>
+  <p>Title: <%= title %></p>
+  <p>Invoice Number: <%= invoiceNumber %></p>
+  <p>Date: <%= date %></p>
+  <p>Client: <%= client %></p>
+  <p>Case Type: <%= caseType %></p>
+  <p>Amount: <%= amount %></p>
+  <p>Tax Type: <%= taxType %></p>
+  <p>Tax Percentage: <%= taxPercentage %></p>
+  <p>Full Address: <%= fullAddress %></p>
+  <p>Hearing Date: <%= hearingDate %></p>
+  <p>Date From: <%= dateFrom %></p>
+  <p>Date To: <%= dateTo %></p>
+  <p>Expenses Amount: <%= expensesAmount %></p>
+  <p>Expenses Tax Type: <%= expensesTaxType %></p>
+  <p>Expenses Tax Percentage: <%= expensesTaxPercentage %></p>
+  <p>Expenses Cumulative Amount: <%= expensesCumulativeAmount %></p>
+  <!-- Add more fields as needed -->
+</body>
+</html>
+    `;
+
+    // Compile the template with data
+    const htmlContent = ejs.render(template, invoiceData);
+
+    // Create a PDF from the HTML content
+    pdf.create(htmlContent).toStream((err, stream) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error generating PDF' });
+      }
+
+      // Set the response headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=Invoice_${invoiceData.id}.pdf`);
+
+      // Pipe the PDF stream to the response
+      stream.pipe(res);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
 app.get('/clientform', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;

@@ -127,11 +127,17 @@ const validationSchema = Yup.object().shape({
             <div className={styles.row}>
             <div className={styles.column}>
             <label className={styles.label}>Case Type:</label>
-              <div className={styles.radioGroup}>
-                <Field type="radio" name="caseType" value="litigation" className={styles.radio} />Litigation
-                <Field type="radio" name="caseType" value="non-litigation" className={styles.radio} />Non-Litigation
-                <Field type="radio" name="caseType" value="caveat" className={styles.radio} />Caveat
-              </div>
+            <div className={styles.radioGroup}>
+                    <label>
+                      <Field type="radio" name="caseType" value="litigation" className={styles.radio} /> Litigation
+                    </label>
+                    <label>
+                      <Field type="radio" name="caseType" value="non-litigation" className={styles.radio} /> Non-Litigation
+                    </label>
+                    <label>
+                      <Field type="radio" name="caseType" value="caveat" className={styles.radio} /> Caveat
+                    </label>
+                  </div>
               <ErrorMessage name="caseType" component="div" className={styles.error} />
             </div>
             </div>
@@ -143,17 +149,34 @@ const validationSchema = Yup.object().shape({
                 <label className={styles.label}>Court Type:</label>
                 {/* Add radio buttons for Court Type */}
                 <div className={styles.radioGroup}>
-                
-                <Field type="radio" name="HighCourt" value="High" className={styles.radio} />High 
-                <Field type="radio" name="ConsumerCourt" value="Consumer" className={styles.radio} />Consumer 
-                <Field type="radio" name="SupremeCourt" value="Supreme" className={styles.radio} />Supreme 
-                <Field type="radio" name="DistrictCourt" value="District" className={styles.radio} />District
-                <Field type="radio" name="Tribunal" value="Tribunal" className={styles.radio} />Tribunal
-                <Field type="radio" name="Revenue" value="Revenue" className={styles.radio} />Revenue
-                <Field type="radio" name="Department" value="Department" className={styles.radio} />Department
-                <Field type="radio" name="LokAdalat" value="LokAdalat" className={styles.radio} />Lok Adalat
-                <Field type="radio" name="OtherCourt" value="Other" className={styles.radio} />Other 
-              </div>
+        <label>
+          <Field type="radio" name="courtType" value="High" className={styles.radio} />High
+        </label>
+        <label>
+          <Field type="radio" name="courtType" value="Consumer" className={styles.radio} />Consumer
+        </label>
+        <label>
+          <Field type="radio" name="courtType" value="Supreme" className={styles.radio} />Supreme
+        </label>
+        <label>
+          <Field type="radio" name="courtType" value="District" className={styles.radio} />District
+        </label>
+        <label>
+          <Field type="radio" name="courtType" value="Tribunal" className={styles.radio} />Tribunal
+        </label>
+        <label>
+          <Field type="radio" name="courtType" value="Revenue" className={styles.radio} />Revenue
+        </label>
+        <label>
+          <Field type="radio" name="courtType" value="Department" className={styles.radio} />Department
+        </label>
+        <label>
+          <Field type="radio" name="courtType" value="LokAdalat" className={styles.radio} />Lok Adalat
+        </label>
+        <label>
+          <Field type="radio" name="courtType" value="Other" className={styles.radio} />Other
+        </label>
+      </div>
               </div>
               </div>
             )}
@@ -274,8 +297,10 @@ const validationSchema = Yup.object().shape({
             <label className={styles.labelManage}>Priority:</label>
               <Field as="select" name="manage" className={styles.selectManage}>
                 <option value="">Select</option>
+                <option value="Super Critical"> Super Critical</option>
                 <option value="Critical">Critical</option>
                 <option value="Important">Important</option>
+                <option value="Routine">Routine</option>
                 <option value="Normal">Normal</option>
               </Field>
             </div>

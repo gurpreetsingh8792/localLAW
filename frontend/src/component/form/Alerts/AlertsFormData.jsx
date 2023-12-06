@@ -1,60 +1,111 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import style from './AlertsFormData.module.css'
+import style from './AlertsFormData.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 
-
 const AlertsFormData = () => {
-  const [alertsData, setAlertsData] = useState([]); // State to store alerts data
+  const [alertsData, setAlertsData] = useState([]);
+
+  const fetchAlertsData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8052/alerts', {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+        },
+      });
+
+      setAlertsData(response.data); // Set the alerts data received from the backend
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    // ... fetch team members as before
+    // Fetch alerts data from the backend when the component mounts
+    fetchAlertsData();
+  }, []);
 
-    // Fetch alerts data
-    const fetchAlertsData = async () => {
+  const handleDeleteClick = async (alertId) => {
+    if (window.confirm('Are you sure you want to delete this alert?')) {
       try {
-        const response = await axios.get('http://localhost:8052/alerts', {
-          headers: {
-            'x-auth-token': localStorage.getItem('token'),
-          },
+        await axios.delete(`http://localhost:8052/alerts/${alertId}`, {
+          headers: { 'x-auth-token': localStorage.getItem('token') },
         });
-        setAlertsData(response.data); // Set the alerts data received from the backend
+        fetchAlertsData(); // Refetch the alerts to update the UI
       } catch (error) {
         console.error(error);
       }
-    };
+    }
+    console.log('Delete button clicked with alertId:', alertId); // Add this line for debugging
+  };
 
-    fetchAlertsData();
-  }, []);
+  const handleDownloadClick = async (alertId) => {
+    try {
+      // Make an HTTP GET request to download the PDF for the specified alert ID
+      const response = await axios.get(`http://localhost:8052/alerts/download-pdf/${alertId}`, {
+        responseType: 'blob', // Set responseType to 'blob' to receive binary data
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      });
+
+      // Create a URL for the blob data
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+
+      // Create an anchor element and trigger the download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Alert_${alertId}.pdf`;
+      a.click();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <DashboardNavbar />
-    <div className={style.container}>
-  <h2 className={style.heading}>Alerts Form Data</h2>
-  <table className={style.table}>
-    <thead className={style.tableHead}>
-      <tr>
-        <th>Title</th>
-        <th>Start Date</th>
-        <th>Completion Date</th>
-        <th>Assign To</th>
-      </tr>
-    </thead>
-    <tbody className={style.tableBody}>
-      {alertsData.map((alert, index) => (
-        <tr key={index}>
-          <td>{alert.title}</td>
-          <td>{alert.startDate}</td>
-          <td>{alert.completionDate}</td>
-          <td>{alert.assignTo}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+      <div className={style.container}>
+        <h2 className={style.heading}>Alerts Form Data</h2>
+        <table className={style.table}>
+          <thead className={style.tableHead}>
+            <tr>
+              <th>Title</th>
+              <th>Start Date</th>
+              <th>Completion Date</th>
+              <th>Assign To</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody className={style.tableBody}>
+            {alertsData.map((alert, index) => (
+              <tr key={index}>
+                <td>{alert.title}</td>
+                <td>{alert.startDate}</td>
+                <td>{alert.completionDate}</td>
+                <td>{alert.assignTo}</td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteClick(alert.id)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDownloadClick(alert.id)}
+                  >
+                    Download PDF
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
+  );
+};
 
-  )
-}
-
-export default AlertsFormData
+export default AlertsFormData;

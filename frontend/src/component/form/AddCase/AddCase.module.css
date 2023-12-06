@@ -238,7 +238,7 @@
     
   }
   .selectTeam {
-    width: 320%;
+    width: 300%;
     padding: 5px;
     border: 1px solid #ccc;
     box-shadow: inset 0px 0px 4px 0px var(--color-Third);
@@ -256,7 +256,7 @@
     
   }
   .selectManage {
-    width: 445%;
+    width: 330%;
     padding: 5px;
     border: 1px solid #ccc;
     box-shadow: inset 0px 0px 4px 0px var(--color-Third);

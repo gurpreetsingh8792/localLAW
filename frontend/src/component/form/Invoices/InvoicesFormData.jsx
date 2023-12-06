@@ -1,58 +1,109 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import style from './InvoicesFormData.module.css'
-import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
+import style from './InvoicesFormData.module.css';
+import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 
 const InvoicesFormData = () => {
   const [invoicesData, setInvoicesData] = useState([]);
 
+  const fetchInvoicesData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8052/invoiceformdata', {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      });
+
+      setInvoicesData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     // Fetch invoice data from the backend when the component mounts
-    const fetchInvoicesData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8052/invoiceformdata', {
-          headers: {
-            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
-          },
-        });
-
-        setInvoicesData(response.data); // Set the invoice data received from the backend
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchInvoicesData();
   }, []);
 
+  const handleDeleteClick = async (invoiceId) => {
+    if (window.confirm('Are you sure you want to delete this invoice?')) {
+      try {
+        await axios.delete(`http://localhost:8052/invoiceformdata/${invoiceId}`, {
+          headers: { 'x-auth-token': localStorage.getItem('token') },
+        });
+        // Refetch the invoices to update the UI
+        fetchInvoicesData();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    console.log('Delete button clicked with invoiceId:', invoiceId);
+  };
+
+  const handleDownloadClick = async (invoiceId) => {
+    try {
+      const response = await axios.get(`http://localhost:8052/invoiceformdata/download-pdf/${invoiceId}`, {
+        responseType: 'blob',
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      });
+
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Invoice_${invoiceId}.pdf`;
+      a.click();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
-    <DashboardNavbar />
-    <div className={style.container}>
-      <h2 className={style.header}>Invoices Form Data</h2>
-      <table className={style.table}>
-        <thead>
-          <tr className={style.tableHeaderRow}>
-            <th className={style.tableHeaderCell}>Title</th>
-            <th className={style.tableHeaderCell}>Invoice Number</th>
-            <th className={style.tableHeaderCell}>Date</th>
-            <th className={style.tableHeaderCell}>Client</th>
-            <th className={style.tableHeaderCell}>Expenses Cumulative Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {invoicesData.map((invoice, index) => (
-            <tr key={index} className={style.tableBodyRow}>
-              <td className={style.tableBodyCell}>{invoice.title}</td>
-              <td className={style.tableBodyCell}>{invoice.invoiceNumber}</td>
-              <td className={style.tableBodyCell}>{invoice.date}</td>
-              <td className={style.tableBodyCell}>{invoice.client}</td>
-              <td className={style.tableBodyCell}>{invoice.expensesCumulativeAmount}</td>
+      <DashboardNavbar />
+      <div className={style.container}>
+        <h2 className={style.header}>Invoices Form Data</h2>
+        <table className={style.table}>
+          <thead>
+            <tr className={style.tableHeaderRow}>
+              <th className={style.tableHeaderCell}>Title</th>
+              <th className={style.tableHeaderCell}>Invoice Number</th>
+              <th className={style.tableHeaderCell}>Date</th>
+              <th className={style.tableHeaderCell}>Client</th>
+              <th className={style.tableHeaderCell}>Expenses Cumulative Amount</th>
+              <th className={style.tableHeaderCell}>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {invoicesData.map((invoice, index) => (
+              <tr key={index} className={style.tableBodyRow}>
+                <td className={style.tableBodyCell}>{invoice.title}</td>
+                <td className={style.tableBodyCell}>{invoice.invoiceNumber}</td>
+                <td className={style.tableBodyCell}>{invoice.date}</td>
+                <td className={style.tableBodyCell}>{invoice.client}</td>
+                <td className={style.tableBodyCell}>{invoice.expensesCumulativeAmount}</td>
+                <td className={style.tableBodyCell}>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteClick(invoice.id)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDownloadClick(invoice.id)}
+                  >
+                    Download PDF
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
