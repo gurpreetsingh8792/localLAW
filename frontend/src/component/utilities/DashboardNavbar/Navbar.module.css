@@ -10,6 +10,21 @@
     display: flex;
     justify-content: center;
   }
+
+  .BellIcon{
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    height: 10px;
+    padding: 0;
+    width: 0;
+    position: relative;
+    bottom: 2rem;
+  }
+
+  .BellIcon svg{
+    color: rgb(235, 252, 44);
+  }
   
   .Links {
     list-style-type: none;
@@ -37,7 +52,7 @@
   /* Submenu styles */
   .DropDown {
     display: flex; 
-    flex-direction: row;
+    flex-direction: column;
     position: absolute;
     top: 100%;
     border-radius: 1rem;
@@ -46,8 +61,14 @@
     min-width: 150px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     z-index: 1;
-    max-height: 8rem;
+    height: 3.5rem;
+    /* max-height: 8rem; */
     overflow-y: auto;
+  }
+  .NotifiCount{
+    color: red;
+    font-weight: 700;
+    font-size: 1rem;
   }
   
   .Links li:hover > .DropDown {

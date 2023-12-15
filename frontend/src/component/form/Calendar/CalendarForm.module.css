@@ -3,9 +3,9 @@
 .calendarContainer {
     font-family: 'Arial', sans-serif;
     padding: 20px;
-    height: 600px; /* Example height, adjust as needed */
+    height: 600px; 
   }
-  
+ 
   .modal {
     position: fixed;
     left: 0;
@@ -25,7 +25,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 50%;
-    height: 18rem;
+    height: 25rem;
     max-width: 500px;
   }
   
@@ -80,7 +80,7 @@
   
   /* Button Styles */
   .btn1 {
-    color: lightcoral;
+    /* color: var(--color-secondary); */
     background-color: white;
     font-size: 1.1rem;
     font-weight: 700;
@@ -89,15 +89,15 @@
   }
   
   .btn2 {
+    /* color: var(--color-primary); */
     background-color: white;
     font-size: 1.1rem;
     font-weight: 700;
-    color: lightblue;
     cursor: pointer;
   }
   
   .btn3 {
-    color: lightgreen;
+    /* color: var(--color-primary); */
     font-size: 1.1rem;
     font-weight: 700;
     background-color: white;
@@ -108,7 +108,7 @@
   .btn {
     background-color: white;
     color: var(--color-primary);
-    padding: 10px 15px;
+    padding: 5px 12px;
     border: 1px solid var(--color-primary);
     border-radius: 0.5rem;
     cursor: pointer;
@@ -122,8 +122,8 @@
   .btnContainer {
     display: flex;
     flex-direction:row-reverse;
-    padding-top: 1rem;
     gap: 1rem;
+   
   }
   
   .btnOpenEvent {
@@ -188,45 +188,148 @@
   } 
   
   
-  /* alert visible form css */
-  /* Add these styles to your existing stylesheet */
-  
-  /* Add these styles to your existing stylesheet */
-  
+  /* Task visible form css */
   .visibleForm {
-    display: flex;
-    flex-direction: column;
-    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    max-width: 100%;
+    margin: auto;
   }
   
-  .TasksVisibleContainer,
-  .TimeContainer {
+  .TasksVisibleContainer {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    flex-direction: column;
   }
   
   .TasksVisibleTitle {
-    
-    margin-top: 1px;
     margin-bottom: 5px;
-    color: var(--color-primary);
-    font-size: 1rem;
+    font-size: 14px;
   }
   
   .TasksVisibleInput {
-    width: 25%; /* Adjust as needed */
-    padding: 2px;
-    margin: 8px 0;
-    box-sizing: border-box;
+    width: calc(100% - 10px); 
+    margin-bottom: 23.2px;
+    /* padding: 8px; */
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 14px;
   }
   
-  /* Optional: Adjust spacing between two inputs */
-  .TimeContainer .TasksVisibleInput {
-    margin-right: 2%; /* Add spacing between two inputs */
+  .TimeContainer {
+    display: flex;
+    flex-direction: column;
   }
   
+
+  
+  
+  /* css for hearing */
+  .HearingVisibleForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 5px; 
+    max-width: 100%;
+    margin: auto;
+  }
+  
+  .formRow {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .HearingVisibleFormTitle {
+    margin-bottom: 5px;
+    font-size: 4px;
+  }
+  
+  .HearingVisibleFormInput,
+  .HearingVisibleFormTime,
+  .HearingVisibleFormDate {
+    width: 100%; 
+    margin-bottom: 24.5px;
+  }
+  
+  .HearingVisibleFormInput {
+    padding: 0px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .HearingVisibleFormTime {
+    margin-right: 0;
+  }
+  
+  /* Convert h6 to label */
+  .HearingVisibleForm label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    display: block;
+  }
+  
+  /* appointment css */
+  .AppointmentVisibleForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 5px; 
+    max-width: 100%; 
+    margin: auto;
+  }
+
+  .formRow {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .AppointmentFormTitle {
+    margin-bottom: 5px;
+    font-size: 4px;
+  }
+  
+  .AppointmentVisibleFormInput,
+  .AppointmentVisibleFormTime,
+  .AppointmentVisibleFormDate {
+    width: 100%; 
+    margin-bottom: 24.5px;
+  }
+  
+  .AppointmentVisibleFormInput {
+    padding: 0px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .AppointmentVisibleFormTime {
+    margin-right: 0; 
+  }
+  
+  /* Convert h6 to label */
+  .AppointmentVisibleForm label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    display: block;
+  }
+
+
+  .BtnContainerAppoint{
+    display: flex;
+    flex-direction: row-reverse;
+    padding-top: 0.3rem;
+    gap: 1rem;
+    position: relative;
+    bottom: 4.8rem;
+  }
+
+  
+  
+  
+  
+  /* Update clickedEvent */
+  .btnContainerclickedEvent{
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 1rem;
+  }

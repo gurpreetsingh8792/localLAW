@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import styles from './ClientForm.module.css';
-import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import styles from './People.module.css'
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import DashboardNavbar from '../../../utilities/DashboardNavbar/DashboardNavbar';
 
 
-const ClientForm = () => {
-  const [alertTitles, setAlertTitles] = useState([]); // State to store alert titles
+
+const PeopleForm = () => {
+
+    const [alertTitles, setAlertTitles] = useState([]); // State to store alert titles
 
   useEffect(() => {
     // Fetch alert titles and populate the select options
@@ -31,8 +33,8 @@ const ClientForm = () => {
     fetchAlertTitles(); // Call the fetchAlertTitles function when the component mounts
   }, []);
   const initialValues = {
-    firstName: '',
-    lastName: '',
+    case: '',
+    type: '',
     email: '',
     mobileNo: '',
     alternateMobileNo: '',
@@ -49,8 +51,8 @@ const ClientForm = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('First Name is required'),
-    lastName: Yup.string(),
+    case: Yup.string().required('Case is required'),
+    type: Yup.string(),
     email: Yup.string().email('Invalid email format').required('Email is required'),
     mobileNo: Yup.string(),
     alternateMobileNo: Yup.string(),
@@ -88,7 +90,6 @@ const ClientForm = () => {
     validationSchema,
     onSubmit,
   });
-  
 
   return (
     <>
@@ -100,31 +101,39 @@ const ClientForm = () => {
       
         <div className={styles.formSection}>
           <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="firstName">First Name</label>
+            <label className={styles.label} htmlFor="case">Case</label>
             <input
               type="text"
-              id="firstName"
-              name="firstName"
+              id="case"
+              name="case"
               className={styles.inputField}
-              {...formik.getFieldProps('firstName')}
+              {...formik.getFieldProps('case')}
             />
-            {formik.touched.firstName && formik.errors.firstName && (
-              <div className={styles.error}>{formik.errors.firstName}</div>
+
+            {formik.touched.case && formik.errors.case && (
+              <div className={styles.error}>{formik.errors.case}</div>
             )}
           </div>
 
           <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="lastName">Last Name</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              className={styles.inputField}
-              {...formik.getFieldProps('lastName')}
-            />
-            {formik.touched.lastName && formik.errors.lastName && (
-              <div className={styles.error}>{formik.errors.lastName}</div>
-            )}
+          <label className={styles.label} htmlFor="type">Type</label>
+<select
+  id="type"
+  name="type"
+  className={styles.inputField}
+  {...formik.getFieldProps('type')}
+>
+  <option value="">Select Type</option> 
+  <option value="Client">Client</option>
+  <option value="Lawyers">Lawyers</option>
+  <option value="OpposingClient">Opposing Client</option>
+  <option value="Witness">Witness</option>
+</select>
+
+{formik.touched.type && formik.errors.type && (
+  <div className={styles.error}>{formik.errors.type}</div>
+)}
+
           </div>
         </div>
         
@@ -222,7 +231,7 @@ const ClientForm = () => {
         </div>
         
         <div className={styles.formSection}>
-          <div className={styles.formGroup}>
+          {/* <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="gstNo">GST No.</label>
             <input
               type="text"
@@ -231,9 +240,9 @@ const ClientForm = () => {
               className={styles.inputField}
               {...formik.getFieldProps('gstNo')}
             />
-          </div>
+          </div> */}
 
-          <div className={styles.formGroup}>
+          {/* <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="panNo">PAN No.</label>
             <input
               type="text"
@@ -242,7 +251,7 @@ const ClientForm = () => {
               className={styles.inputField}
               {...formik.getFieldProps('panNo')}
             />
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.formSection}>
@@ -333,6 +342,7 @@ const ClientForm = () => {
       </form>
     </div>
 </>
-  );
-};
-export default ClientForm;
+  )
+}
+
+export default PeopleForm

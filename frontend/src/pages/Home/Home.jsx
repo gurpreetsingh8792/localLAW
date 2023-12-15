@@ -17,7 +17,7 @@ const Home = () => {
       <section className={style.benfits}>
         <div className={`${style.container}${style.benfitsContainer}`}>
           <Benifits icons={<FaCrown />} title="Benefits" />
-          <ReviewDocForm />
+          {/* <ReviewDocForm /> */}
         
         <div className={style.benfitsWrapper}>
             {/* function for render data from data.jsx */}

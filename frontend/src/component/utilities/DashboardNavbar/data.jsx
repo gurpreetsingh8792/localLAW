@@ -1,3 +1,6 @@
+import { FaBell } from "react-icons/fa";
+
+
 export const links = [
   {
     name: "Case",
@@ -26,14 +29,14 @@ export const links = [
     ]
   },
   {
-    name: "Team",
+    name: "People",
     submenu:[
       {
-          name:'Add Team',
-          path:'/dashboard/teammemberform'
+          name:'Add Peoples',
+          path:'/dashboard/peopleform'
       },
       {
-          name:'Show Team Members',
+          name:'Show Peoples',
           path:'/dashboard/teammemberdata'
       }
     ]
@@ -46,8 +49,8 @@ export const links = [
     name: "Document",
     submenu: [ 
       {
-        name: "Add Documents",
-        path: "/Importcase"
+        name: "Genrate Doc's",
+        path: "/genrationdocs"
       },
       {
         name: "Show Documents",
@@ -112,4 +115,9 @@ export const links = [
       }
     ]
   },
+
+  {
+    bell: <FaBell />,
+    path: "/dashboard/notifications"
+},
 ];
