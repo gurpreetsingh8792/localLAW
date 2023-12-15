@@ -53,7 +53,7 @@ const AdvocateForm = () => {
               as="select"
               id="hearingCourt"
               name="hearingCourt"
-              required
+              
               className={styles.selectField}
             >
               <option value="" disabled selected>
@@ -127,7 +127,7 @@ const AdvocateForm = () => {
               type="text"
               id="advocateName"
               name="advocateName"
-              required
+              
               className={styles.inputFieldText}
             />
             <ErrorMessage name="advocateName" component="div" className={styles.error} />

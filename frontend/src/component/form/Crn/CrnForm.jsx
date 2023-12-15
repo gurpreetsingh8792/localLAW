@@ -7,10 +7,9 @@ import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
   hearingCourt: Yup.string().required('Hearing Court is required'),
-  caseType: Yup.string().required('Case Type is required'),
-  caseNo: Yup.string(),
+  caseType: Yup.string(),
+  caseNo: Yup.string().required('Case Number is required'),
   caseYear: Yup.string()
-    .required('Case Year is required')
     .matches(/^\d{4}$/, 'Please enter a valid year (e.g., 2023)'),
   
 
@@ -58,7 +57,7 @@ const CnrForm = () => {
               as="select"
               id="hearingCourt"
               name="hearingCourt"
-              required
+              
               className={styles.selectField}
             >
               <option value="" disabled selected>
@@ -132,7 +131,7 @@ const CnrForm = () => {
               type="text"
               id="caseType"
               name="caseType"
-              required
+              
               className={styles.inputFieldText}
             />
             <ErrorMessage name="caseType" component="div" className={styles.error} />
@@ -143,7 +142,7 @@ const CnrForm = () => {
               type="text"
               id="caseNo"
               name="caseNo"
-              required
+              
               className={styles.inputFieldText}
             />
             <ErrorMessage name="caseNo" component="div" className={styles.error} />
@@ -154,9 +153,9 @@ const CnrForm = () => {
               type="text"
               id="caseYear"
               name="caseYear"
-              required
-              pattern="[0-9]{4}"
-              title="Please enter a valid year (e.g., 2023)"
+              // required
+              // pattern="[0-9]{4}"
+              // title="Please enter a valid year (e.g., 2023)"
               className={styles.inputFieldCaseYear}
             />
             <ErrorMessage name="caseYear" component="div" className={styles.error} />

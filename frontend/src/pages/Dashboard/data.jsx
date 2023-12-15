@@ -14,6 +14,8 @@ export const data = [
     info: "View Cases ",
     pathAdd: "/dashboard/Importcase",
     pathView: "/dashboard/caseformdata",
+    details: "Click to add a Case manually or import a Case",
+
     
   },
 
@@ -25,7 +27,8 @@ export const data = [
     title: "Clients",
     info: "View Clients ",
     pathAdd:"/dashboard/clientform",
-    pathView:"/dashboard/clientformdata"
+    pathView:"/dashboard/clientformdata",
+    details: "Click to add a Client",
   },
   {
     id: 3,
@@ -35,7 +38,8 @@ export const data = [
     title: "Documents",
     info: "View Documents ",
     pathAdd:"/documentform",
-    pathView:"/documentformdata"
+    pathView:"/documentformdata",
+    details: "Click to generate a Document or to see Ready Document Templates",
   },
   {
     id: 4,
@@ -45,7 +49,8 @@ export const data = [
     title: "Team Members",
     info: "View Team Members ",
     pathAdd:"/dashboard/teammemberform",
-    pathView:"/dashboard/teammemberdata"
+    pathView:"/dashboard/teammemberdata",
+    details: "Click to add a Member in your Team",
   },
   {
     id: 5,
@@ -55,7 +60,8 @@ export const data = [
     title: "Tasks to do",
     info: "View Alerts ",
     pathAdd:"/dashboard/alertsform",
-    pathView:"/dashboard/alertsformdata"
+    pathView:"/dashboard/alertsformdata",
+    details: "Click to add a Task",
   },
 
   {
@@ -66,6 +72,7 @@ export const data = [
     title: "Finances",
     info: "View Finances ",
     pathAdd:"/dashboard/finances",
-    pathView:"/dashboard/financesview"
+    pathView:"/dashboard/financesview",
+    details: "Click to add a Bill or an Invoice",
   },
 ];

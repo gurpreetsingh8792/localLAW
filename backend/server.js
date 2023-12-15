@@ -8,8 +8,40 @@ const secretKey = 'your_secret_key';
 const ejs = require('ejs');
 const pdf = require('html-pdf');
 const fs = require('fs');
+const { Storage } = require('@google-cloud/storage');
 const port = 8052;
 
+
+async function uploadFile() {
+  // Initialize the Google Cloud Storage client
+  const storage = new Storage({
+    keyFilename: '/path/to/your/keyfile.json', // Replace with your key file path
+    projectId: 'your-project-id', // Replace with your GCP project ID
+  });
+
+  // Define the name of the bucket and file you want to upload
+  const bucketName = 'your-bucket-name';
+  const fileName = 'example.txt';
+  const fileContents = 'Hello, GCP!';
+
+  // Reference to the Cloud Storage bucket
+  const bucket = storage.bucket(bucketName);
+  
+  // Reference to the file you want to upload
+  const file = bucket.file(fileName);
+
+  try {
+    // Upload the file to Cloud Storage
+    await file.save(fileContents);
+
+    console.log(`File ${fileName} uploaded to ${bucketName}.`);
+  } catch (err) {
+    console.error('Error uploading file:', err);
+  }
+}
+
+// Call the function to upload the file
+uploadFile();
 // Connect to the SQLite database
 let db = new sqlite3.Database('./Db-data/judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
@@ -1320,41 +1352,9 @@ app.post('/partyname', authenticateJWT, async (req, res) => {
   }
 });
 
-//Proxy Form endpoints
-app.post('/proxy', authenticateJWT, async (req, res) => {
-  try {
-    const {
-      fullName,
-      streetAddress,
-      city,
-      zipStateProvince,
-      zipPostalCode,
-      date,
-      caseFile,
-      causeTitle,
-      honorableJudge,
-      courtNumber,
-      type,
-      timeOfHearing,
-      dateOfHearing,
-      comments
-    } = req.body;
-    const userId = req.user.id;
 
-    if (!fullName || !zipPostalCode || !dateOfHearing || !courtNumber) {
-      return res.status(400).json({ error: 'Required fields are missing' });
-    }
 
-    db.run('INSERT INTO ProxyForm (fullName, streetAddress, city, zipStateProvince, zipPostalCode, date, caseFile, causeTitle, honorableJudge, courtNumber, type, timeOfHearing, dateOfHearing, comments, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [fullName, streetAddress, city, zipStateProvince, zipPostalCode, date, caseFile, causeTitle, honorableJudge, courtNumber, type, timeOfHearing, dateOfHearing, comments, userId], function (err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      return res.json({ message: 'Proxy form submitted successfully' });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
+
 
 //review doc form endpoints
 app.post('/reviewdoc', authenticateJWT, async (req, res) => {
@@ -1376,6 +1376,242 @@ app.post('/reviewdoc', authenticateJWT, async (req, res) => {
     console.log(error);
   }
 });
+// NOTIFICATIONS FOR ALERTS
+app.get('/dashboard/user/:userId/notifications', authenticateJWT, (req, res) => {
+  const userId = req.params.userId;
+  const currentDate = new Date();
+  const threeDaysAhead = new Date();
+  threeDaysAhead.setDate(currentDate.getDate() + 15); // Calculate the date 15 days ahead
+
+  console.log('userId:', userId);
+  console.log('currentDate:', currentDate.toISOString());
+  console.log('threeDaysAhead:', threeDaysAhead.toISOString());
+
+  db.all(
+    'SELECT title, completionDate FROM AlertsForm WHERE user_id = ?',
+    [userId],
+    (err, rows) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      try {
+        // Create an array to store notifications
+        const notifications = [];
+
+        // Iterate through the rows and format the notifications
+        rows.forEach((row) => {
+          // Convert the completionDate from the database to a Date object
+          const completionDate = new Date(row.completionDate);
+
+          // Calculate the difference in days between completionDate and currentDate
+          const daysDifference = Math.floor(
+            (completionDate - currentDate) / (24 * 60 * 60 * 1000)
+          );
+
+          // Check if the task completion date is within the next 3 days
+          if (daysDifference <= 15 && daysDifference >= 0) {
+            const notificationMessage = `Few days left for Task '${row.title}' Completion. Completion Date is '${row.completionDate}'`;
+
+            // Calculate the expiration date for the notification (e.g., 15 days from now)
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 15); // Adjust the duration as needed
+
+            // Store the notification in the NotificationTable with an expiration date
+            db.run(
+              'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
+              [userId, notificationMessage, expirationDate.toISOString()],
+              (err) => {
+                if (err) {
+                  console.error('Database error:', err);
+                } else {
+                  console.log('Notification stored in NotificationTable.');
+                }
+              }
+            );
+
+            notifications.push(notificationMessage);
+          }
+        });
+
+        console.log('Retrieved rows:', rows);
+
+        return res.json(notifications);
+      } catch (error) {
+        console.error('Processing error:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+  );
+});
+// notifications for proxy
+app.post('/proxy', authenticateJWT, async (req, res) => {
+  const userId = req.user.id;
+  const currentDate = new Date().toISOString();
+  const expirationDate = new Date(req.body.dateOfHearing).toISOString(); // Set expiration date based on the hearing date
+
+  try {
+    const {
+      fullName,
+      streetAddress,
+      city,
+      zipStateProvince,
+      zipPostalCode,
+      date,
+      case: caseDescription, // Renamed "case" to "caseDescription"
+      causeTitle,
+      honorableJudge,
+      courtNumber,
+      type,
+      timeOfHearing,
+      dateOfHearing,
+      comments,
+    } = req.body;
+
+    // Insert proxy into ProxyForm table
+    db.run(
+      `INSERT INTO ProxyForm (
+        fullName,
+        streetAddress,
+        city,
+        zipStateProvince,
+        zipPostalCode,
+        date,
+        caseDescription,
+        causeTitle,
+        honorableJudge,
+        courtNumber,
+        type,
+        timeOfHearing,
+        dateOfHearing,
+        comments,
+        user_id,
+        expirationDate
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        fullName,
+        streetAddress,
+        city,
+        zipStateProvince,
+        zipPostalCode,
+        date,
+        caseDescription,
+        causeTitle,
+        honorableJudge,
+        courtNumber,
+        type,
+        timeOfHearing,
+        dateOfHearing,
+        comments,
+        userId,
+        expirationDate,
+      ],
+      (err) => {
+        if (err) {
+          console.error('Database error:', err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        // Create a notification for the user
+        const notificationMessage = `You have created a new proxy for a hearing on ${req.body.dateOfHearing}`;
+        db.run(
+          'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
+          [userId, notificationMessage, expirationDate],
+          (err) => {
+            if (err) {
+              console.error('Database error:', err);
+            }
+          }
+        );
+
+        return res.status(201).json({ message: 'Proxy created successfully' });
+      }
+    );
+  } catch (error) {
+    console.error('Processing error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+// Endpoint to list proxy notifications
+app.get('/dashboard/user/:userId/proxy-notifications', authenticateJWT, (req, res) => {
+  const userId = req.params.userId;
+  const currentDate = new Date().toISOString();
+
+  db.all(
+    'SELECT id, fullName, dateOfHearing, expirationDate, status, zipStateProvince, city FROM ProxyForm WHERE user_id != ? AND expirationDate > ? AND status = "pending"',
+    [userId, currentDate],
+    (err, rows) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      try {
+        // Create an array to store proxy notifications
+        const notifications = rows.map((row) => {
+          const { fullName, dateOfHearing, zipStateProvince, city } = row;
+          return `The proxy has been generated by ${fullName}. The date of hearing is ${dateOfHearing} in state ${zipStateProvince} City - ${city}`;
+        });
+
+        return res.json(notifications);
+      } catch (error) {
+        console.error('Processing error:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+  );
+});
+
+
+// Endpoint to accept a proxy
+app.post('/dashboard/user/:userId/accept-proxy/:proxyId', authenticateJWT, (req, res) => {
+  const userId = req.params.userId;
+  const proxyId = req.params.proxyId;
+
+  // Update the status of the proxy to "accepted" and set the acceptance date
+  const acceptanceDate = new Date().toISOString();
+
+  db.run(
+    'UPDATE ProxyForm SET status = "accepted", acceptanceDate = ? WHERE id = ? AND user_id != ? AND status = "pending"',
+    [acceptanceDate, proxyId, userId],
+    (err) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      // Retrieve the creator's user_id, fullName, dateOfHearing, and expirationDate from the ProxyForm table
+      db.get(
+        'SELECT user_id, fullName, dateOfHearing, expirationDate FROM ProxyForm WHERE id = ?',
+        [proxyId],
+        (err, row) => {
+          if (err) {
+            console.error('Database error:', err);
+          } else {
+            if (row.user_id) {
+              // Notify the user who created the proxy
+              const creatorNotificationMessage = `Your proxy for hearing on ${row.dateOfHearing} in state ${req.body.zipStateProvince}, City ${req.body.city} has been accepted by user ${req.user.username}`;
+              db.run(
+                'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
+                [row.user_id, creatorNotificationMessage, row.expirationDate],
+                (err) => {
+                  if (err) {
+                    console.error('Database error:', err);
+                  }
+                }
+              );
+            }
+          }
+        }
+      );
+
+      return res.json({ message: 'Proxy accepted successfully' });
+    }
+  );
+});
+
+
 
 // Error handler middleware
 app.use((err, req, res, next) => {

@@ -80,6 +80,7 @@ const initialValues = {
 const validationSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
   caseType: Yup.string().required('Case type is required'),
+  cnrNo: Yup.string().required('CNR No. is required'),
   // Add validation for other fields as needed
 });
 
@@ -246,7 +247,8 @@ const validationSchema = Yup.object().shape({
             
             <div className={styles.column}>
             <label className={styles.label}>CNR No:</label>
-              <Field type="text" name="cnrNo" className={styles.input} />
+              <Field type="text" name="cnrNo" className={styles.input} required />
+              
             </div>
 
             {/* Batch No */}

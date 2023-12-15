@@ -33,9 +33,9 @@ const DashBoard = () => {
       <div className={style.benfitsWrapper}>
 
             {/* function for render data from data.jsx */}
-          {data.map(({ id, icon, title, info, caseNo, plusIcon, pathAdd, pathView, plusIcon2, addBill, addInvoice }) => {
-            return (
-              <Card className={style.programsProgram} key={id}>
+            {data.map(({ id, icon, title, info, caseNo, plusIcon, pathAdd, pathView, plusIcon2, addBill, addInvoice, details }) => {
+          return (
+            <Card className={style.programsProgram} key={id} details={details}>
   <span>{icon}</span>
   <h4>{caseNo}</h4>
   <NavLink to={pathAdd}><h4 className={style.btnAdd1}>{addBill}{plusIcon} </h4></NavLink>

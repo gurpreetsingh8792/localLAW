@@ -53,7 +53,7 @@ const PartyNameForm = () => {
               as="select"
               id="hearingCourt"
               name="hearingCourt"
-              required
+              
               className={styles.selectField}
             >
               <option value="" disabled selected>
@@ -127,7 +127,7 @@ const PartyNameForm = () => {
               type="text"
               id="partyName"
               name="partyName"
-              required
+              
               className={styles.inputFieldText}
             />
             <ErrorMessage name="partyName" component="div" className={styles.error} />
@@ -138,9 +138,9 @@ const PartyNameForm = () => {
               type="text"
               id="caseYear"
               name="caseYear"
-              required
-              pattern="[0-9]{4}"
-              title="Please enter a valid year (e.g., 2023)"
+              // required
+              // pattern="[0-9]{4}"
+              // title="Please enter a valid year (e.g., 2023)"
               className={styles.inputFieldCaseYear}
             />
             <ErrorMessage name="caseYear" component="div" className={styles.error} />
