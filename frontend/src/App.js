@@ -1,6 +1,9 @@
 import "./App.css";
+import { NotificationProvider } from './component/utilities/Notifications/NotificationsContext.jsx'; // adjust path as needed
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./pages/Login-Logout/AuthContext";
+// UI Library Chakra ui
+import { ChakraProvider } from '@chakra-ui/react'
 
 import Navbar from "./component/utilities/Navbar/Navbar";
 import About from "./pages/About/About";
@@ -40,19 +43,25 @@ import BillFormData from "./component/form/Bill/BillFormData";
 import AlertsFormData from "./component/form/Alerts/AlertsFormData";
 import TeamMemberdata from "./component/form/TeamMember/TeamMemberData";
 import CalendarForm from "./component/form/Calendar/CalendarForm";
+import PeopleForm from "./component/form/Client/People/PeopleForm";
+import GenrationDocs from "./component/form/DocumentGenration/GenrateDocs.jsx";
+import Notification from "./component/utilities/Notifications/Notifications.jsx";
+import DashboardNavbar from "./component/utilities/DashboardNavbar/DashboardNavbar.jsx";
 
 function App() {
   return (
     <>
     <AuthProvider>
       <BrowserRouter>
+            <NotificationProvider>
         <div className="App">
           <Navbar />
           <Routes>
             {/* Pages Routes */}
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
-            <Route path="dashboard" element={<DashBoard />} />       
+            <Route path="dashboard" element={<DashBoard />} />      
+            <Route path="dashboard/DashboardNavbar" element={<DashboardNavbar />} />      
             <Route path="services" element={<Services />} />
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<LogIn />} />
@@ -60,6 +69,10 @@ function App() {
             <Route path="forgot" element={<Forgot />} />
             <Route path="explore" element={<Explore />} />
             <Route path="DemoRequestForm" element={<DemoRequestForm />} />
+            <Route path="dashboard/notifications" element={<Notification />} />
+
+
+            
             
             {/* Forms Routes */}
             <Route path="dashboard/caseform" element={<CaseForm />} />
@@ -69,6 +82,7 @@ function App() {
             <Route path="appointmentform" element={<AppointmentForm />} />
             <Route path="dashboard/groupform" element={<GroupForm />} />
             <Route path="documentgenrationform" element={<DocumentGenrationForm />} />
+            <Route path="genrationdocs" element={<GenrationDocs />} />
             <Route path="dashboard/proxy" element={<Proxy />} />
             <Route path="partynameform" element={<PartyNameForm />} />
             <Route path="cnrform" element={<CnrForm />} />
@@ -77,6 +91,7 @@ function App() {
             <Route path="dashboard/invoicesform" element={<InvoicesForm />} />
             <Route path="dashboard/reviewdocform" element={<ReviewDocForm />} />
             <Route path="dashboard/calendarform" element={<CalendarForm />} />
+            <Route path="dashboard/peopleform" element={<PeopleForm />} />
 
             {/* Form data routes */}
             <Route path="dashboard/caseformdata" element={<CasesFormData />} />
@@ -99,6 +114,7 @@ function App() {
             <Route path="case/:case_no" element={<CaseDetail />} />
           </Routes>
         </div>
+          </NotificationProvider>
       </BrowserRouter>
       </AuthProvider>
     </>
