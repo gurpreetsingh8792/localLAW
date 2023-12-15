@@ -17,7 +17,7 @@
   align-items: center;
   font-size: 24px;
   margin-bottom: 20px;
-  color: #66fcf1; /* Bright accent color */
+  color: var(--color-primary); 
 }
 
 /* Individual notification item styling */
@@ -32,7 +32,7 @@
   justify-content: space-between;
   align-items: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-left: 4px solid #45a29e; /* Bright border for active element */
+  border-left: 4px solid var(--color-primary); /* Bright border for active element */
 }
 
 /* .notificationItem:hover {
@@ -53,7 +53,7 @@
 .dropdownToggle {
   cursor: pointer;
   font-size: 24px;
-  color: #66fcf1; /* Matching the header color */
+  color: var(--color-primary); 
 }
 
 /* Dropdown menu styling */
