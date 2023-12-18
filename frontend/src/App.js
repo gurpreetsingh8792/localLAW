@@ -47,6 +47,7 @@ import PeopleForm from "./component/form/Client/People/PeopleForm";
 import GenrationDocs from "./component/form/DocumentGenration/GenrateDocs.jsx";
 import Notification from "./component/utilities/Notifications/Notifications.jsx";
 import DashboardNavbar from "./component/utilities/DashboardNavbar/DashboardNavbar.jsx";
+import ConvertDocument from "./component/form/ConvertDocument/ConvertDocument.jsx";
 
 function App() {
   return (
@@ -92,6 +93,7 @@ function App() {
             <Route path="dashboard/reviewdocform" element={<ReviewDocForm />} />
             <Route path="dashboard/calendarform" element={<CalendarForm />} />
             <Route path="dashboard/peopleform" element={<PeopleForm />} />
+            <Route path="dashboard/convertdocument" element={<ConvertDocument />} />
 
             {/* Form data routes */}
             <Route path="dashboard/caseformdata" element={<CasesFormData />} />

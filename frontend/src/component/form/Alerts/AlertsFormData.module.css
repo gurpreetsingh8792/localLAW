@@ -1,17 +1,25 @@
 /* AlertsFormData.module.css */
 
 .container {
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-  }
+  /* padding: 20px; */
+  padding-top: 35px;
+  margin: 0 auto;
+  max-width: 94.5%;
+  background-color: #f9f9f9; 
+  /* box-shadow: 0 20px 40px 10px rgba(0, 0, 0, 0.1); */
+  border-radius: 8px;
+  height: auto; /* Adjusted from 100vh to auto for dynamic height */
+  height: 100vh;
+  background-color: transparent;
+}
   
   .heading {
     color: #333;
     margin-bottom: 15px;
     text-align: center;
+  }
+  .td{
+    color: white;
   }
   
   .table {
@@ -20,7 +28,7 @@
   }
   
   .tableHead {
-    background-color: #007bff;
+    background-color: var(--color-fourth);
     color: white;
   }
   
@@ -31,20 +39,50 @@
   }
   
   .tableBody {
-    background-color: #fff;
+    /* background-color: #fff; */
   }
   
   .tableBody tr:nth-child(odd) {
-    background-color: #f2f2f2;
+    /* background-color: #f2f2f2; */
   }
   
   .tableBody tr:hover {
-    background-color: #ddd;
+    /* background-color: #ddd;   */
   }
   
   .tableBody td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+  }
+  
+
+  .btn {
+    background-color: var(--primary-color); /* Replace with your primary color variable */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  
+    /* Add a slight shadow for depth (optional) */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+    /* Hover effect */
+    &:hover {
+      background-color: var(--hover-color); /* Replace with your hover color variable */
+    }
+  
+    /* Active/Focus state */
+    &:active, &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* This is an example, adjust as needed */
+    }
+  
+    /* Add a margin if necessary */
+    margin-right: 10px; /* Adjust or remove based on your layout */
   }
   

@@ -81,18 +81,27 @@ const AlertsFormData = () => {
           <tbody className={style.tableBody}>
             {alertsData.map((alert, index) => (
               <tr key={index}>
-                <td>{alert.title}</td>
-                <td>{alert.startDate}</td>
-                <td>{alert.completionDate}</td>
-                <td>{alert.assignTo}</td>
+                <td className={style.td}>{alert.title}</td>
+                <td className={style.td}>{alert.startDate}</td>
+                <td className={style.td}>{alert.completionDate}</td>
+                <td className={style.td}>{alert.assignTo}</td>
                 <td>
                   <button
+                  className={style.btn}
+                    type="button"
+                    onClick={() => handleDeleteClick(alert.id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDeleteClick(alert.id)}
                   >
                     Delete
                   </button>
                   <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDownloadClick(alert.id)}
                   >

@@ -9,25 +9,26 @@
 }
 
 /* black blue and grey need to try this color */
-:root{
-    /* --color-primary: #924a4a; */
-    /* --color-fourth: rgb(255, 244, 244); */
-    /* --color-primary: #4db5ff; */
-    --color-primary: darkblue;
-    --color-secondary: #171A1FFF;
-    --color-Third: rgb(180, 180, 180);
-    --color-fourth: #171A1FFF;
-    
+:root {
+    --color-primary: #000000; /* Frost White */
+    --color-secondary: #6A0DAD; /* Twilight Purple */
+    --color-third: #CCFF00; /* Laser Lime */
+    --color-fourth: #5F6A7D; /* Galactic Grey */
+    --color-fifth: #fff;
+    --color-accent1: #87CEEB; /* Sky Blue */
+    --color-accent2: #FFA500; /* Digital Orange */
+    --bg-primary: #00020D; /* Cosmic Black */
+    --bg-secondary: #C0C0C0; /* Starlight Silver */
+    --bg-accent: #004E64; /* Neptune Teal */
+
     --container-width-lg: 80%;
     --container-width-md: 90%;
-
     --transition: all 500ms ease;
 }
 
-/* Genrel style */
-body{
+body {
     font-family: 'Montserrat', sans-serif;
-    /* background-color: #2b6cb0; */
+    background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary), var(--bg-accent));
 }
 
 .container{

@@ -38,7 +38,7 @@ const Calendar = () => {
   const [contactperson, setContactPerson] = useState("");
   const [openSlot, setOpenSlot] = useState(false);
   const [openEvent, setOpenEvent] = useState(false);
-  const [clickedEvent, setClickedEvent] = useState({});
+  const [clickedEvent, setClickedEvent] = useState(null);
 
   // chakra ui
 
@@ -781,6 +781,111 @@ const Calendar = () => {
                   </button>
                   </div>
                 </>
+              )}
+
+              {clickedEvent.type === "Appointment" && (
+                <>
+                  <div>
+                    <input
+                      type="text"
+                      value={casetitle}
+                      placeholder="Title"
+                      onChange={(e) => setCaseTitle(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      value={casetype}
+                      placeholder="Case type"
+                      onChange={(e) => setCaseType(e.target.value)}
+                    />
+                    <br />
+                    <input
+                      type="date"
+                      value={desc}
+                      onChange={(e) => setDesc(e.target.value)}
+                    />
+                    <br />
+                    <input
+                      type="text"
+                      value={client}
+                      placeholder="Assign Team Member"
+                      onChange={(e) => setClient(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      value={location}
+                      placeholder="Location"
+                      onChange={(e) => setLocation(e.target.value)}
+                    />
+                    <br />
+                    <input
+                      type="time"
+                      value={start ? start.toISOString().substring(11, 16) : ""}
+                      onChange={(e) => {
+                        if (start) {
+                          const [hours, minutes] = e.target.value.split(":");
+                          const newStartTime = new Date(
+                            start.setHours(hours, minutes)
+                          );
+                          handleStartTime(newStartTime);
+                        }
+                      }}
+                    />
+                    <input
+                      type="time"
+                      value={end ? end.toISOString().substring(11, 16) : ""}
+                      onChange={(e) =>
+                        handleEndTime(
+                          new Date(end.setHours(...e.target.value.split(":")))
+                        )
+                      }
+                    />
+
+                    <input
+                      type="text"
+                      value={client}
+                      placeholder="Client Name"
+                      onChange={(e) => setClient(e.target.value)}
+                    />
+
+                    <br />
+                    <input
+                      type="time"
+                      value={start ? start.toISOString().substring(11, 16) : ""}
+                      onChange={(e) => {
+                        // Check if start is a valid Date object
+                        if (start) {
+                          const [hours, minutes] = e.target.value.split(":");
+                          const newStartTime = new Date(
+                            start.setHours(hours, minutes)
+                          );
+                          handleStartTime(newStartTime);
+                        }
+                      }}
+                    />
+                    <input
+                      type="time"
+                      value={end ? end.toISOString().substring(11, 16) : ""}
+                      onChange={(e) =>
+                        handleEndTime(
+                          new Date(end.setHours(...e.target.value.split(":")))
+                        )
+                      }
+                    />
+                  </div>
+                  <div className={style.btnContainer}>
+                  <button className={style.btn} onClick={handleClose}>
+                    Cancel
+                  </button>
+                  <button className={style.btn} onClick={updateEvent}>
+                    Update
+                  </button>
+                  <button className={style.btn} onClick={deleteEvent}>
+                    delete
+                  </button>
+                  </div>
+                </>
+                
               )}
 
               {/* Common buttons like Cancel, Confirm Edit, Delete */}

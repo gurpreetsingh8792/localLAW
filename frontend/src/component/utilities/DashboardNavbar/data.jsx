@@ -59,6 +59,10 @@ export const links = [
       {
         name: "Review Doc",
         path: "/dashboard/reviewdocform"
+      },
+      {
+        name: "Review Doc",
+        path: "/dashboard/convertdocument"
       }
     ]
   },

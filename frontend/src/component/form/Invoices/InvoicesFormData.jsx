@@ -87,12 +87,21 @@ const InvoicesFormData = () => {
                 <td className={style.tableBodyCell}>{invoice.expensesCumulativeAmount}</td>
                 <td className={style.tableBodyCell}>
                   <button
+                  className={style.btn}
+                    type="button"
+                    onClick={() => handleDeleteClick(invoice.id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDeleteClick(invoice.id)}
                   >
                     Delete
                   </button>
                   <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDownloadClick(invoice.id)}
                   >

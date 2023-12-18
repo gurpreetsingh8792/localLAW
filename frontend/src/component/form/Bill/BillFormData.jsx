@@ -87,12 +87,21 @@ const BillFormData = () => {
                 <td className={style.tableBodyCell}>{bill.totalAmountWithTax}</td>
                 <td className={style.tableBodyCell}>
                   <button
+                  className={style.btn}
+                    type="button"
+                    onClick={() => handleDeleteClick(bill.id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDeleteClick(bill.id)}
                   >
                     Delete
                   </button>
                   <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDownloadClick(bill.id)}
                   >
