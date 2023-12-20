@@ -67,7 +67,7 @@ const AlertsFormData = () => {
     <>
       <DashboardNavbar />
       <div className={style.container}>
-        <h2 className={style.heading}>Alerts Form Data</h2>
+        <h2 className={style.heading}>Tasks Form Data</h2>
         <table className={style.table}>
           <thead className={style.tableHead}>
             <tr>
@@ -81,18 +81,27 @@ const AlertsFormData = () => {
           <tbody className={style.tableBody}>
             {alertsData.map((alert, index) => (
               <tr key={index}>
-                <td>{alert.title}</td>
-                <td>{alert.startDate}</td>
-                <td>{alert.completionDate}</td>
-                <td>{alert.assignTo}</td>
+                <td className={style.td}>{alert.title}</td>
+                <td className={style.td}>{alert.startDate}</td>
+                <td className={style.td}>{alert.completionDate}</td>
+                <td className={style.td}>{alert.assignTo}</td>
                 <td>
                   <button
+                  className={style.btn}
+                    type="button"
+                    onClick={() => handleDeleteClick(alert.id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDeleteClick(alert.id)}
                   >
                     Delete
                   </button>
                   <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDownloadClick(alert.id)}
                   >

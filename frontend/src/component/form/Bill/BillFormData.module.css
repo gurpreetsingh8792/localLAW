@@ -2,19 +2,23 @@
 
 /* Style for the container */
 .container {
-    padding: 20px;
-    background-color: #eaeaea;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    max-width: 800px;
-  }
+  /* padding: 20px; */
+  padding-top: 35px;
+  margin: 0 auto;
+  max-width: 94.5%;
+  background-color: #f9f9f9; 
+  /* box-shadow: 0 20px 40px 10px rgba(0, 0, 0, 0.1); */
+  border-radius: 8px;
+  height: auto; /* Adjusted from 100vh to auto for dynamic height */
+  height: 100vh;
+  background-color: transparent;
+}
   
   /* Style for the header */
   .header {
     color: #333;
     margin-bottom: 15px;
-    font-size: 24px;
+    /* font-size: 24px; */
     text-align: center;
   }
   
@@ -27,7 +31,7 @@
   
   /* Header row style */
   .tableHeaderRow {
-    background-color: #007bff;
+    background-color: var(--color-fourth);
     color: white;
   }
   
@@ -35,7 +39,7 @@
   .tableHeaderCell {
     padding: 12px;
     text-align: left;
-    font-weight: bold;
+    /* font-weight: bold; */
   }
   
   /* Body row styling */
@@ -47,15 +51,46 @@
   .tableBodyCell {
     padding: 10px;
     text-align: left;
+    color: white;
   }
   
   /* Zebra striping for rows */
   .tableBodyRow:nth-child(odd) {
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */
   }
   
   /* Hover effect for rows */
   .tableBodyRow:hover {
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+  }
+  
+
+  .btn {
+    background-color: var(--primary-color); /* Replace with your primary color variable */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  
+    /* Add a slight shadow for depth (optional) */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+    /* Hover effect */
+    &:hover {
+      background-color: var(--hover-color); /* Replace with your hover color variable */
+    }
+  
+    /* Active/Focus state */
+    &:active, &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* This is an example, adjust as needed */
+    }
+  
+    /* Add a margin if necessary */
+    margin-right: 10px; /* Adjust or remove based on your layout */
   }
   

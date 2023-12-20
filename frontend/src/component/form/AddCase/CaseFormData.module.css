@@ -1,32 +1,87 @@
-.Container{
-    background-color: #f5f5f5;
+.Container {
+  /* background-color: #f5f5f5; */
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
 }
+
 .casesContainer {
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
+  /* background-color: #f5f5f5; */
+  border-radius: 8px;
+  width: 60%; /* Adjust as needed */
+  max-width: 600px; /* Adjust for maximum width */
+}
+
+.header {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: #cec8c8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.cardHeader {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.cardBody p {
+  margin: 5px 0;
+}
+
+.cardActions {
+  text-align: right;
+}
+
+.cardActions button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-primary); /* Replace with your primary color */
+  color: white;
+  cursor: pointer;
+}
+
+.cardActions button:hover {
+  opacity: 0.8;
+}
+
+/* Add more styles as needed */
+
+.btn {
+  background-color: var(--primary-color); /* Replace with your primary color variable */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+
+  /* Add a slight shadow for depth (optional) */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  /* Hover effect */
+  &:hover {
+    background-color: var(--hover-color); /* Replace with your hover color variable */
   }
-  
-  .header {
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
+
+  /* Active/Focus state */
+  &:active, &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* This is an example, adjust as needed */
   }
-  
-  .casesTable {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .casesTable th,
-  .casesTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .casesTable th {
-    background-color: var(--color-primary);
-    color: white;
-  }
-  
+
+  /* Add a margin if necessary */
+  margin-right: 10px; /* Adjust or remove based on your layout */
+}

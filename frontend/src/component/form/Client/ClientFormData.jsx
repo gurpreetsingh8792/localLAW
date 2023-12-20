@@ -81,20 +81,29 @@ const ClientFormData = () => {
           </thead>
           <tbody className={style.tableBody}>
             {clientData.map((clientItem, index) => (
-              <tr key={index}>
+              <tr className={style.DataColume} key={index}>
                 <td>{clientItem.firstName}</td>
                 <td>{clientItem.email}</td>
                 <td>{clientItem.mobileNo}</td>
                 <td>{clientItem.assignAlerts}</td>
                 <td>{clientItem.scheduleAppointment}</td>
                 <td>
+                <button
+                    className={style.btn}
+                    type="button"
+                    onClick={() => handleDeleteClick(clientItem.id)}
+                  >
+                    Edit
+                  </button>
                   <button
+                    className={style.btn}
                     type="button"
                     onClick={() => handleDeleteClick(clientItem.id)}
                   >
                     Delete
                   </button>
                   <button
+                             className={style.btn}
                     type="button"
                     onClick={() => handleDownloadClick(clientItem.id)}
                   >

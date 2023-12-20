@@ -1,0 +1,85 @@
+.Container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    height: 100vh; 
+  }
+  
+  .FormContainer {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .formGroup {
+    margin-bottom: 20px;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .input,
+  .textarea,
+  .fileInput,
+  .select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .textarea {
+    height: 100px;
+    resize: vertical; /* Allows the user to resize the textarea vertically */
+  }
+  
+  .fileInput {
+    background-color: #f8f8f8;
+    border: 1px dashed #ccc;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .select {
+    display: block;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .buttonGroup {
+    text-align: center;
+  }
+  
+  .button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    display: inline-block;
+  }
+  
+  .button:hover {
+    background-color: #45a049;
+  }
+  
+  .button[type="reset"] {
+    background-color: #f44336; /* Red */
+  }
+  
+  .button[type="reset"]:hover {
+    background-color: #d32f2f;
+  }
+  

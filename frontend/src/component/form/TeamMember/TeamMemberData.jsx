@@ -70,8 +70,11 @@ const TeamMemberdata = () => {
             <tr className={style.tr}>
               <th className={style.th}>Full Name</th>
               <th className={style.th}>Email</th>
-              <th className={style.th}>Designation</th>
-              <th className={style.th}>Selected Group</th>
+              <th className={style.th}>Contact number</th>
+              <th className={style.th}>Assigned Group</th>
+              <th className={style.th}>Assigned Campany</th>
+              {/* <th className={style.th}>Designation</th>
+              <th className={style.th}>Selected Group</th> */}
               <th className={style.th}>Actions</th>
             </tr>
           </thead>
@@ -82,14 +85,24 @@ const TeamMemberdata = () => {
                 <td className={style.td}>{member.email}</td>
                 <td className={style.td}>{member.designation}</td>
                 <td className={style.td}>{member.selectedGroup}</td>
+                <td className={style.td}>{member.selectedGroup}</td>
                 <td className={style.td}>
                   <button
+                  className={style.btn}
+                    type="button"
+                    onClick={() => handleDeleteClick(member.id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDeleteClick(member.id)}
                   >
                     Delete
                   </button>
                   <button
+                  className={style.btn}
                     type="button"
                     onClick={() => handleDownloadClick(member.id)}
                   >

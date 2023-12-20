@@ -279,7 +279,7 @@ const ClientForm = () => {
 
         <div className={styles.formSection}>
           <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="assignAlerts">Assign Alerts</label>
+            <label className={styles.label} htmlFor="assignAlerts">Assign Tasks</label>
             <select
                 id="assignAlerts"
                 name="assignAlerts"
@@ -304,7 +304,7 @@ const ClientForm = () => {
             className={styles.link}
             // onClick={handleAddNewAlertClick}
           >
-            Add New Alert
+            Add New Tasks
           </NavLink>
         </div>
         </div>

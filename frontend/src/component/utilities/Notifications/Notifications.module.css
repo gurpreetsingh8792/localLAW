@@ -5,10 +5,11 @@
   align-items: center;
   padding: 20px;
   margin: 20px;
-  background-color: #1f1f1f; /* Dark background for a futuristic look */
+  /* background-color: #1f1f1f; */
   border-radius: 10px;
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.5); 
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.5);  
   color: #c5c6c7; /* Light text color for contrast */
+  height: 80vh;
 }
 
 /* Header styling */
@@ -32,7 +33,7 @@
   justify-content: space-between;
   align-items: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-left: 4px solid var(--color-primary); /* Bright border for active element */
+  border-left: 4px solid var(--color-secondary); /* Bright border for active element */
 }
 
 /* .notificationItem:hover {
@@ -53,10 +54,28 @@
 .dropdownToggle {
   cursor: pointer;
   font-size: 24px;
-  color: var(--color-primary); 
+  color: var(--color-secondary); 
+  background-color: var(--color-primary);
+  transition: transform 0.3s ease;
+}
+
+.dropdownToggle:hover {
+  transform: rotate(90deg); /* Rotate 90 degrees on hover */
 }
 
 /* Dropdown menu styling */
+
+@keyframes dropdownAnimation {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) rotateX(-10deg);
+    transform-origin: top;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateX(0deg);
+  }
+}
 .dropdownMenu {
   /* display: none;  */
   flex-direction: column;
@@ -68,6 +87,14 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   z-index: 10;
   padding: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0.3s linear;
+  animation: dropdownAnimation 0.5s ease forwards;
+}
+
+.dropdownMenuVisible {
+  visibility: visible;
 }
 
 /* Menu Items */

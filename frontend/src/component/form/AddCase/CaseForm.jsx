@@ -106,6 +106,7 @@ const validationSchema = Yup.object().shape({
     <>
       <DashboardNavbar />
       <div className={styles.container}>
+      <h2 style={{textAlign:'center'}}>Add Case</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

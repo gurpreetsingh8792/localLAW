@@ -8,42 +8,42 @@ const secretKey = 'your_secret_key';
 const ejs = require('ejs');
 const pdf = require('html-pdf');
 const fs = require('fs');
-const { Storage } = require('@google-cloud/storage');
+// const { Storage } = require('@google-cloud/storage');
 const port = 8052;
 
 
-async function uploadFile() {
-  // Initialize the Google Cloud Storage client
-  const storage = new Storage({
-    keyFilename: '/path/to/your/keyfile.json', // Replace with your key file path
-    projectId: 'your-project-id', // Replace with your GCP project ID
-  });
+// async function uploadFile() {
+//   // Initialize the Google Cloud Storage client
+//   const storage = new Storage({
+//     keyFilename: '/path/to/your/keyfile.json', // Replace with your key file path
+//     projectId: 'your-project-id', // Replace with your GCP project ID
+//   });
 
   // Define the name of the bucket and file you want to upload
-  const bucketName = 'your-bucket-name';
-  const fileName = 'example.txt';
-  const fileContents = 'Hello, GCP!';
+  // const bucketName = 'your-bucket-name';
+  // const fileName = 'example.txt';
+  // const fileContents = 'Hello, GCP!';
 
   // Reference to the Cloud Storage bucket
-  const bucket = storage.bucket(bucketName);
+  // const bucket = storage.bucket(bucketName);
   
   // Reference to the file you want to upload
-  const file = bucket.file(fileName);
+  // const file = bucket.file(fileName);
 
-  try {
-    // Upload the file to Cloud Storage
-    await file.save(fileContents);
+//   try {
+//     // Upload the file to Cloud Storage
+//     await file.save(fileContents);
 
-    console.log(`File ${fileName} uploaded to ${bucketName}.`);
-  } catch (err) {
-    console.error('Error uploading file:', err);
-  }
-}
+//     console.log(`File ${fileName} uploaded to ${bucketName}.`);
+//   } catch (err) {
+//     console.error('Error uploading file:', err);
+//   }
+// }
 
 // Call the function to upload the file
-uploadFile();
+// uploadFile();
 // Connect to the SQLite database
-let db = new sqlite3.Database('./Db-data/judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
+let db = new sqlite3.Database('../../../judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
     console.error(err.message);
     throw err; // Stop further execution in this callback
@@ -1414,7 +1414,7 @@ app.get('/dashboard/user/notifications', authenticateJWT, (req, res) => {
 
          
           if (daysDifference <= 15 && daysDifference >= 0) {
-            const notificationMessage = `Few days left for Task '${row.title}' Completion. Completion Date is '${row.completionDate}'`;
+            const notificationMessage = `Few days left for Task ${row.title} Completion. Completion Date is   ${row.completionDate}`;
 
             
             const expirationDate = new Date();
@@ -1582,7 +1582,6 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
         console.error('Database error:', err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
-
      
       db.get(
         'SELECT user_id, fullName, dateOfHearing, expirationDate FROM ProxyForm WHERE id = ?',
@@ -1609,11 +1608,9 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
       );
 
       return res.json({ message: 'Proxy accepted successfully' });
-    }
-  );
+    }
+  );
 });
-
-
 
 
 // Error handler middleware

@@ -15,8 +15,6 @@ export const data = [
     pathAdd: "/dashboard/Importcase",
     pathView: "/dashboard/caseformdata",
     details: "Click to add a Case manually or import a Case",
-
-    
   },
 
   {
