@@ -270,7 +270,7 @@ app.post('/afterproxy', authenticateJWT, async (req, res) => {
 // alerts forms
 app.post('/alerts', authenticateJWT, async (req, res) => {
   try {
-    const {title, startDate,completionDate,assignTo,caseTitle,statusType,priority} = req.body;
+    const { title, startDate, completionDate, assignFrom, assignTo, caseTitle, caseType } = req.body;
     const userId = req.user.id;
 
     if (!title) {
@@ -278,8 +278,8 @@ app.post('/alerts', authenticateJWT, async (req, res) => {
     }
 
     db.run(
-      'INSERT INTO AlertsForm (title, startDate, completionDate, assignTo, caseTitle, statusType, priority, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, startDate, completionDate, assignTo, caseTitle, statusType, priority, userId],
+      'INSERT INTO AlertsForm (title, startDate, completionDate, assignFrom, assignTo, caseTitle, caseType, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, startDate, completionDate, assignFrom, assignTo, caseTitle, caseType, userId],
       function (err) {
         if (err) {
           return res.status(500).json({ error: err.message });
@@ -292,6 +292,7 @@ app.post('/alerts', authenticateJWT, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.get('/alerts', authenticateJWT, (req, res) => {
   const userId = req.user.id;
@@ -1315,15 +1316,16 @@ app.get('/clientform', authenticateJWT, (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 app.get('/caseform', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
-    db.all('SELECT title FROM CasesForm WHERE user_id = ?', [userId], (err, title) => {
+    db.all('SELECT id, title, caseType FROM CasesForm WHERE user_id = ?', [userId], (err, cases) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
-      return res.json(title);
+      return res.json(cases);
     });
   } catch (error) {
     console.error(error);
@@ -1377,18 +1379,18 @@ app.post('/reviewdoc', authenticateJWT, async (req, res) => {
   }
 });
 // NOTIFICATIONS FOR ALERTS
-app.get('/dashboard/user/:userId/notifications', authenticateJWT, (req, res) => {
-  const userId = req.params.userId;
+app.get('/dashboard/user/notifications', authenticateJWT, (req, res) => {
+  const userId = req.user.id; 
   const currentDate = new Date();
   const threeDaysAhead = new Date();
-  threeDaysAhead.setDate(currentDate.getDate() + 15); // Calculate the date 15 days ahead
+  threeDaysAhead.setDate(currentDate.getDate() + 15); 
 
   console.log('userId:', userId);
   console.log('currentDate:', currentDate.toISOString());
   console.log('threeDaysAhead:', threeDaysAhead.toISOString());
 
   db.all(
-    'SELECT title, completionDate FROM AlertsForm WHERE user_id = ?',
+    'SELECT id, title, completionDate FROM AlertsForm WHERE user_id = ?',
     [userId],
     (err, rows) => {
       if (err) {
@@ -1397,30 +1399,30 @@ app.get('/dashboard/user/:userId/notifications', authenticateJWT, (req, res) => 
       }
 
       try {
-        // Create an array to store notifications
+        
         const notifications = [];
 
-        // Iterate through the rows and format the notifications
+        
         rows.forEach((row) => {
-          // Convert the completionDate from the database to a Date object
+        
           const completionDate = new Date(row.completionDate);
 
-          // Calculate the difference in days between completionDate and currentDate
+        
           const daysDifference = Math.floor(
             (completionDate - currentDate) / (24 * 60 * 60 * 1000)
           );
 
-          // Check if the task completion date is within the next 3 days
+         
           if (daysDifference <= 15 && daysDifference >= 0) {
             const notificationMessage = `Few days left for Task '${row.title}' Completion. Completion Date is '${row.completionDate}'`;
 
-            // Calculate the expiration date for the notification (e.g., 15 days from now)
+            
             const expirationDate = new Date();
-            expirationDate.setDate(expirationDate.getDate() + 15); // Adjust the duration as needed
+            expirationDate.setDate(expirationDate.getDate() + 15); 
 
-            // Store the notification in the NotificationTable with an expiration date
+            
             db.run(
-              'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
+              'INSERT OR REPLACE INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
               [userId, notificationMessage, expirationDate.toISOString()],
               (err) => {
                 if (err) {
@@ -1449,7 +1451,7 @@ app.get('/dashboard/user/:userId/notifications', authenticateJWT, (req, res) => 
 app.post('/proxy', authenticateJWT, async (req, res) => {
   const userId = req.user.id;
   const currentDate = new Date().toISOString();
-  const expirationDate = new Date(req.body.dateOfHearing).toISOString(); // Set expiration date based on the hearing date
+  const expirationDate = new Date(req.body.dateOfHearing).toISOString(); 
 
   try {
     const {
@@ -1459,7 +1461,7 @@ app.post('/proxy', authenticateJWT, async (req, res) => {
       zipStateProvince,
       zipPostalCode,
       date,
-      case: caseDescription, // Renamed "case" to "caseDescription"
+      case: caseDescription, 
       causeTitle,
       honorableJudge,
       courtNumber,
@@ -1513,7 +1515,7 @@ app.post('/proxy', authenticateJWT, async (req, res) => {
           return res.status(500).json({ error: 'Internal Server Error' });
         }
 
-        // Create a notification for the user
+        
         const notificationMessage = `You have created a new proxy for a hearing on ${req.body.dateOfHearing}`;
         db.run(
           'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
@@ -1534,8 +1536,8 @@ app.post('/proxy', authenticateJWT, async (req, res) => {
   }
 });
 // Endpoint to list proxy notifications
-app.get('/dashboard/user/:userId/proxy-notifications', authenticateJWT, (req, res) => {
-  const userId = req.params.userId;
+app.get('/dashboard/user/proxy-notifications', authenticateJWT, (req, res) => {
+  const userId = req.user.id; 
   const currentDate = new Date().toISOString();
 
   db.all(
@@ -1548,7 +1550,7 @@ app.get('/dashboard/user/:userId/proxy-notifications', authenticateJWT, (req, re
       }
 
       try {
-        // Create an array to store proxy notifications
+       
         const notifications = rows.map((row) => {
           const { fullName, dateOfHearing, zipStateProvince, city } = row;
           return `The proxy has been generated by ${fullName}. The date of hearing is ${dateOfHearing} in state ${zipStateProvince} City - ${city}`;
@@ -1565,11 +1567,11 @@ app.get('/dashboard/user/:userId/proxy-notifications', authenticateJWT, (req, re
 
 
 // Endpoint to accept a proxy
-app.post('/dashboard/user/:userId/accept-proxy/:proxyId', authenticateJWT, (req, res) => {
-  const userId = req.params.userId;
+app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) => {
+  const userId = req.user.id; 
   const proxyId = req.params.proxyId;
 
-  // Update the status of the proxy to "accepted" and set the acceptance date
+  
   const acceptanceDate = new Date().toISOString();
 
   db.run(
@@ -1581,7 +1583,7 @@ app.post('/dashboard/user/:userId/accept-proxy/:proxyId', authenticateJWT, (req,
         return res.status(500).json({ error: 'Internal Server Error' });
       }
 
-      // Retrieve the creator's user_id, fullName, dateOfHearing, and expirationDate from the ProxyForm table
+     
       db.get(
         'SELECT user_id, fullName, dateOfHearing, expirationDate FROM ProxyForm WHERE id = ?',
         [proxyId],
@@ -1590,7 +1592,7 @@ app.post('/dashboard/user/:userId/accept-proxy/:proxyId', authenticateJWT, (req,
             console.error('Database error:', err);
           } else {
             if (row.user_id) {
-              // Notify the user who created the proxy
+              
               const creatorNotificationMessage = `Your proxy for hearing on ${row.dateOfHearing} in state ${req.body.zipStateProvince}, City ${req.body.city} has been accepted by user ${req.user.username}`;
               db.run(
                 'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
@@ -1610,6 +1612,7 @@ app.post('/dashboard/user/:userId/accept-proxy/:proxyId', authenticateJWT, (req,
     }
   );
 });
+
 
 
 
