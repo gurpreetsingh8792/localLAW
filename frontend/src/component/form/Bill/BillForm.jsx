@@ -102,6 +102,7 @@ const onSubmit = (values, { resetForm }) => {
     <>
     <DashboardNavbar />
     <div className={styles['bill-form-container']}>
+    <h2 style={{textAlign:'center'}}>Generate Bills</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

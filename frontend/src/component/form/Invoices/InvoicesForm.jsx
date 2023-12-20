@@ -124,6 +124,7 @@ const InvoicesForm = () => {
     <>
     <DashboardNavbar />
     <div className={styles.formContainer}>
+    <h2 style={{textAlign:'center'}}>Generate Invoice's</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

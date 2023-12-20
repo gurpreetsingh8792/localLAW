@@ -95,7 +95,7 @@ const PeopleForm = () => {
     <>
     <DashboardNavbar />
     <div className={styles.clientForm}>
-      
+      <h2 style={{textAlign:'center'}}> Add People's</h2>
 
       <form onSubmit={formik.handleSubmit}>
       

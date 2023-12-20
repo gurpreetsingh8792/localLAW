@@ -67,7 +67,7 @@ const AlertsFormData = () => {
     <>
       <DashboardNavbar />
       <div className={style.container}>
-        <h2 className={style.heading}>Alerts Form Data</h2>
+        <h2 className={style.heading}>Tasks Form Data</h2>
         <table className={style.table}>
           <thead className={style.tableHead}>
             <tr>

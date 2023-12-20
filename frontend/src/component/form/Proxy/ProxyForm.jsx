@@ -77,6 +77,7 @@ const Proxy = () => {
       <DashboardNavbar/>
       
       <form className={style.formContainer} onSubmit={formik.handleSubmit}>
+      <h2 style={{textAlign:'center'}}>Proxy</h2>
         <div className={style.row}>
           <div className={style.field}>
             <label className={style.label} htmlFor="fullName">Full Name</label>

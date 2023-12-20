@@ -19,7 +19,7 @@ const localizer = momentLocalizer(moment);
 const Calendar = () => {
   const [errors, setErrors] = useState({ title: "", desc: "" });
 
-  const [visibleForm, setVisibleForm] = useState(null);
+  const [visibleForm, setVisibleForm] = useState("Tasks");
   const showForm1 = () => setVisibleForm("Tasks");
   const showForm2 = () => setVisibleForm("Hearing Date");
   const showForm3 = () => setVisibleForm("Appointment");
@@ -77,6 +77,7 @@ const Calendar = () => {
     setStart(slotInfo.start);
     setEnd(slotInfo.end);
     setOpenSlot(true);
+    setVisibleForm("Tasks")
   };
 
   const handleEventSelected = (event) => {

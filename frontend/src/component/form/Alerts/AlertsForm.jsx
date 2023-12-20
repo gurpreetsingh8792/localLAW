@@ -96,6 +96,7 @@ const AlertsForm = () => {
     <>
       <DashboardNavbar />
       <div className={styles.formContainer}>
+      <h2 style={{textAlign:'center'}}> Tasks</h2>
         <form onSubmit={formik.handleSubmit}>
           <div className={styles.formField}>
             <label className={styles.label} htmlFor="title">

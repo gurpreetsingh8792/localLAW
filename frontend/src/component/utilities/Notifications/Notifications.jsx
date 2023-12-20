@@ -1,169 +1,118 @@
-import React, { useState } from "react";
-import style from "./Notifications.module.css";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import DashboardNavbar from "../DashboardNavbar/DashboardNavbar";
-import { FaBell, FaTrashAlt, FaCaretDown, FaCheck } from "react-icons/fa";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import style from './Notifications.module.css'
 
 const Notifications = () => {
-  
-  const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [tasks, setTasks] = useState([]);
+  const [proxy, setProxy] = useState([]);
+  const [tasksLoading, setTasksLoading] = useState(true);
+  const [proxyLoading, setProxyLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showDropdown, setShowDropdown] = useState({});
 
-  // Toggle dropdown
-  const toggleDropdown = (notificationId, notificationType, event) => {
-    event.stopPropagation();
-    const dropdownId = `${notificationType}-${notificationId}`;
-    setDropdownOpen(dropdownOpen === dropdownId ? null : dropdownId);
+  useEffect(() => {
+    axios.get('http://localhost:8052/dashboard/user/notifications', {
+      headers: {
+        'x-auth-token': localStorage.getItem('token'),
+      },
+    })
+    .then((response) => {
+      setTasks(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+      setError(error);
+    })
+    .finally(() => {
+      setTasksLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios.get('http://localhost:8052/dashboard/user/proxy-notifications', {
+      headers: {
+        'x-auth-token': localStorage.getItem('token'),
+      },
+    })
+    .then((response) => {
+      setProxy(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+      setError(error);
+    })
+    .finally(() => {
+      setProxyLoading(false);
+    });
+  }, []);
+
+  // Method to handle delete action
+  const handleDelete = (id, type) => {
+    console.log(`Delete ${type} with ID: ${id}`);
+    // Implement delete logic here
   };
 
-  // Render dropdown menu
-  const renderDropdown = (notificationId, includeAccept) => (
-    <div className={style.dropdownMenu}>
-      {includeAccept && (
-        <button onClick={() => handleAccept(notificationId)} className={style.MenuItem}>
-          Accept <FaCheck />
-        </button>
-      )}
-      <button onClick={() => handleDelete(notificationId)} className={style.MenuItem}>
-        Delete <FaTrashAlt />
-      </button>
-    </div>
-  );
-
-  // Handle delete notification (logic to be implemented)
-  const handleDelete = (notificationId) => {
-    console.log("Delete notification with id:", notificationId);
-    // Logic to delete the notification
-    setDropdownOpen(null); // Close dropdown after action
+  // Method to handle accept action
+  const handleAccept = (id, type) => {
+    console.log(`Accept ${type} with ID: ${id}`);
+    // Implement accept logic here
   };
 
-  // Handle accept notification (logic to be implemented)
-  const handleAccept = (notificationId) => {
-    console.log("Accept notification with id:", notificationId);
-    // Logic to accept the notification
-    setDropdownOpen(null); // Close dropdown after action
+  const toggleDropdown = (index, type) => {
+    setShowDropdown(prevState => ({
+      ...prevState,
+      [`${type}-${index}`]: !prevState[`${type}-${index}`]
+    }));
   };
 
-  // Sample notifications data (You can replace this with actual data)
-  const notificationsAppints = [
-    {
-      id: 1,
-      text: "New message from John Doe",
-      date: "2022-12-01",
-      read: false,
-      type: "appointment",
-    },
-    {
-      id: 2,
-      text: "Meeting scheduled at 3 PM",
-      date: "2022-12-02",
-      read: true,
-      type: "appointment",
-    },
-    {
-      id: 3,
-      text: "Meeting scheduled at 3 PM",
-      date: "2022-12-02",
-      read: true,
-      type: "appointment",
-    },
-    {
-      id: 4,
-      text: "Meeting scheduled at 3 PM",
-      date: "2022-12-02",
-      read: true,
-      type: "appointment",
-    },
-    // ... more notifications
-  ];
-  const notificationsProxy = [
-    {
-      id: 1,
-      text: "New message from John : proxy",
-      date: "2022-12-01",
-      read: false,
-      type: "proxy",
-    },
-    {
-      id: 2,
-      text: "Meeting scheduled at 3 PM : proxy",
-      date: "2022-12-02",
-      read: true,
-      type: "proxy",
-    },
-    {
-      id: 3,
-      text: "Meeting scheduled at 3 PM : proxy",
-      date: "2022-12-02",
-      read: true,
-      type: "proxy",
-    },
-    {
-      id: 4,
-      text: "Meeting scheduled at 3 PM : proxy",
-      date: "2022-12-02",
-      read: true,
-      type: "proxy",
-    },
-    // ... more notifications
-  ];
-
-  // Render individual notification item
-  const renderalerts = (notification) => (
-    <div key={notification.id} className={style.notificationItem}>
-      <div className={style.notificationContent}>
-        <div
-          className={
-            notification.read
-              ? style.notificationTextRead
-              : style.notificationTextUnread
-          }
-        >
-          {notification.text}
-        </div>
-      </div>
-      {/* Attach onClick event handler to HiOutlineDotsHorizontal icon */}
-      <HiOutlineDotsHorizontal className={style.dropdownToggle} onClick={(e) => toggleDropdown(notification.id, 'alerts', e)} /> 
-      {dropdownOpen === `alerts-${notification.id}` && renderDropdown(notification.id, false)}
-          </div>
-  );
-
-  const renderproxy = (notification) => (
-    <div key={notification.id} className={style.notificationItem}>
-      <div className={style.notificationContent}>
-        <div
-          className={
-            notification.read
-              ? style.notificationTextRead
-              : style.notificationTextUnread
-          }
-        >
-          {notification.text}
-        </div>
-      </div>
-      {/* Attach onClick event handler to HiOutlineDotsHorizontal icon */}
-      <HiOutlineDotsHorizontal className={style.dropdownToggle} onClick={(e) => toggleDropdown(notification.id, 'proxy', e)} />
-  {dropdownOpen === `proxy-${notification.id}` && renderDropdown(notification.id, true)}
-  </div>
-  );
 
   return (
     <>
-      <DashboardNavbar />
-      <div className={style.notificationsContainer}>
-        <div className={style.header}>
-          <FaBell />
-          <h2>Notifications</h2>
-        </div>
-        <p>alerts</p>
-        <div className={style.notificationsList}>
-          {notificationsAppints.map(renderalerts)}
-        </div>
-        <p>proxy's</p>
-        <div className={style.notificationsList}>
-          {notificationsProxy.map(renderproxy)}
-        </div>
+    <DashboardNavbar/>
+    <div className={style.notificationsContainer}>
+      {/* ... (header and loading indicators remain the same) */}
+
+      {/* Alerts Section */}
+      <div>
+        <h2 className="header">Alerts</h2>
+        {tasksLoading ? <p>Loading alerts...</p> : (
+          <ul>
+            {tasks.map((alert, index) => (
+              <li key={index} className={style.notificationItem}>
+                <span className={style.notificationTextUnread}>{alert}</span>
+                <button onClick={() => toggleDropdown(index, 'alert')} className={style.dropdownToggle}>⋮</button>
+                {showDropdown[`alert-${index}`] && (
+                  <div className={`${style.dropdownMenu} ${showDropdown[`alert-${index}`] ? style.dropdownMenuVisible : ''}`}>                    <div className={style.MenuItem} onClick={() => handleDelete(alert.id, 'alert')}>Delete</div>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-    </>
+
+      {/* Proxies Section */}
+      <div>
+        <h2 className="header">Proxies</h2>
+        {proxyLoading ? <p>Loading proxies...</p> : (
+          <ul>
+            {proxy.map((proxyItem, index) => (
+              <li key={index} className={style.notificationItem}>
+                <span className={style.notificationTextUnread}>{proxyItem}</span>
+                <button onClick={() => toggleDropdown(index, 'proxy')} className={style.dropdownToggle}>⋮</button>
+                {showDropdown[`proxy-${index}`] && (
+                  <div className={`${style.dropdownMenu} ${showDropdown[`proxy-${index}`] ? style.dropdownMenuVisible : ''}`}>                    <div className={style.MenuItem} onClick={() => handleDelete(proxyItem.id, 'proxy')}>Delete</div>
+                    <div className={style.MenuItem} onClick={() => handleAccept(proxyItem.id, 'proxy')}>Accept</div>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  </>
   );
 };
 
