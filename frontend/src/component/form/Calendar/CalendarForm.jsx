@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar as BigCalendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import style from "./CalendarForm.module.css";
+import axios from 'axios';
 import DashboardNavBar from "../../utilities/DashboardNavbar/DashboardNavbar";
 import {
   ChakraProvider,
@@ -25,7 +26,11 @@ const Calendar = () => {
   const showForm3 = () => setVisibleForm("Appointment");
 
   const [events, setEvents] = useState([]);
-  const [casetitle, setCaseTitle] = useState("");
+  const [caseTitles, setCaseTitles] = useState([]); // Store fetched case titles
+  const [caseTypeMap, setCaseTypeMap] = useState({}); // Store case types based on titles
+  const [casetitle, setCaseTitle] = useState('');
+  const [casetype, setCaseType] = useState('');
+  
   const [assignmentfrom, setAssignmentFrom] = useState("");
   const [assignmentto, setAssignmentTo] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +39,7 @@ const Calendar = () => {
   const [client, setClient] = useState("");
   const [desc, setDesc] = useState("");
   const [location, setLocation] = useState("");
-  const [casetype, setCaseType] = useState("");
+  
   const [contactperson, setContactPerson] = useState("");
   const [openSlot, setOpenSlot] = useState(false);
   const [openEvent, setOpenEvent] = useState(false);
@@ -48,6 +53,31 @@ const Calendar = () => {
     appointment: "lightgreen",
   };
 
+
+  useEffect(() => {
+    const fetchCaseTitlesAndTypes = async () => {
+      try {
+        const response = await axios.get('http://localhost:8052/caseform', {
+          headers: { 'x-auth-token': localStorage.getItem('token') },
+        });
+        const data = response.data; // Assuming the API response is an array of objects with "title" and "caseType" properties
+
+        // Process the data and update the state
+        const titles = data.map((item) => item.title);
+        const typeMap = {};
+        data.forEach((item) => {
+          typeMap[item.title] = item.caseType;
+        });
+
+        setCaseTitles(titles);
+        setCaseTypeMap(typeMap);
+      } catch (error) {
+        console.error('Error fetching case titles and types:', error);
+      }
+    };
+
+    fetchCaseTitlesAndTypes(); // Call the new function to fetch case titles and types
+  }, []);
   // validation
   const handleValidation = () => {
     let isValid = true;
@@ -263,20 +293,22 @@ const Calendar = () => {
                     <div className={style.visibleForm}>
                       <div className={style.TasksVisibleContainer}>
                         <label className={style.TasksVisibleTitle}>
-                          Case
+                          Case Title
                         </label>
                         <select
-                          className={style.TasksVisibleInput}
-                          value={casetype}
-                          onChange={(e) => setCaseType(e.target.value)}
-                        >
-                          <option value="" disabled selected>
-                            Select Case Type
-                          </option>
-                          <option value="Type1">Type 1</option>
-                          <option value="Type2">Type 2</option>
-                          {/* Add more options as needed */}
-                        </select>
+      className={style.TasksVisibleInput}
+      value={casetitle}
+      onChange={(e) => setCaseTitle(e.target.value)}
+    >
+      <option value="" disabled>
+        Select Case Title
+      </option>
+      {caseTitles.map((title) => (
+        <option key={title} value={title}>
+          {title}
+        </option>
+      ))}
+    </select>
                         <label className={style.TasksVisibleTitle}>
                           Start Date
                         </label>
@@ -302,15 +334,15 @@ const Calendar = () => {
                       <div className={style.TimeContainer}>
                         
                       <label className={style.TasksVisibleTitle}>
-                          Case Title
+                          Case Type
                         </label>
                         <input
-                          className={style.TasksVisibleInput}
-                          type="text"
-                          value={casetitle}
-                          placeholder="Case Title"
-                          onChange={(e) => setCaseTitle(e.target.value)}
-                        />
+          className={style.TasksVisibleInput}
+          type="text"
+          value={caseTypeMap[casetitle] || ''}
+          readOnly
+          placeholder="Case Type"
+        />
                         
                         <label className={style.TasksVisibleTitle}>
                           End Date
@@ -351,20 +383,22 @@ const Calendar = () => {
                     <div className={style.HearingVisibleForm}>
                       <div className={style.formRow}>
                       <label className={style.TasksVisibleTitle}>
-                          Case
+                          Case Title
                         </label>
                         <select
-                          className={style.TasksVisibleInput}
-                          value={casetype}
-                          onChange={(e) => setCaseType(e.target.value)}
-                        >
-                          <option value="" disabled selected>
-                            Select Case Type
-                          </option>
-                          <option value="Type1">Type 1</option>
-                          <option value="Type2">Type 2</option>
-                          {/* Add more options as needed */}
-                        </select>
+      className={style.TasksVisibleInput}
+      value={casetitle}
+      onChange={(e) => setCaseTitle(e.target.value)}
+    >
+      <option value="" disabled>
+        Select Case Title
+      </option>
+      {caseTitles.map((title) => (
+        <option key={title} value={title}>
+          {title}
+        </option>
+      ))}
+    </select>
                       </div>
                       <div className={style.formRow}>
                         <label className={style.HearingVisibleFormTitle}>
@@ -459,32 +493,34 @@ const Calendar = () => {
                     <div className={style.AppointmentVisibleForm}>
                       <div className={style.formRow}>
                       <label className={style.TasksVisibleTitle}>
-                          Case
+                          Case Title
                         </label>
                         <select
-                          className={style.TasksVisibleInput}
-                          value={casetype}
-                          onChange={(e) => setCaseType(e.target.value)}
-                        >
-                          <option value="" disabled selected>
-                            Select Case Type
-                          </option>
-                          <option value="Type1">Type 1</option>
-                          <option value="Type2">Type 2</option>
-                          {/* Add more options as needed */}
-                        </select>
+      className={style.TasksVisibleInput}
+      value={casetitle}
+      onChange={(e) => setCaseTitle(e.target.value)}
+    >
+      <option value="" disabled>
+        Select Case Title
+      </option>
+      {caseTitles.map((title) => (
+        <option key={title} value={title}>
+          {title}
+        </option>
+      ))}
+    </select>
                       </div>
                       <div className={style.formRow}>
                       <label className={style.AppointmentFormTitle}>
-                          Case Title
+                          Case Type
                         </label>
                         <input
-                          className={style.HearingVisibleFormInput}
-                          type="text"
-                          value={casetitle}
-                          placeholder="Title"
-                          onChange={(e) => setCaseTitle(e.target.value)}
-                        />
+          className={style.TasksVisibleInput}
+          type="text"
+          value={caseTypeMap[casetitle] || ''}
+          readOnly
+          placeholder="Case Type"
+        />
                       </div>
                       <div className={style.formRow}>
 

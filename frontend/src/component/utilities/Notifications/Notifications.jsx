@@ -56,8 +56,21 @@ const Notifications = () => {
   // Method to handle accept action
   const handleAccept = (id, type) => {
     console.log(`Accept ${type} with ID: ${id}`);
-    // Implement accept logic here
+    axios.post(`http://localhost:8052/dashboard/user/accept-proxy/${id}`, null, {
+      headers: {
+        'x-auth-token': localStorage.getItem('token'),
+      },
+    })
+    .then((response) => {
+      console.log('Proxy accepted successfully');
+      // You can update your UI or perform any necessary actions upon success
+    })
+    .catch((error) => {
+      console.error('Error accepting proxy:', error);
+      // Handle errors if needed
+    });
   };
+  
 
   const toggleDropdown = (index, type) => {
     setShowDropdown(prevState => ({

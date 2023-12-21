@@ -43,7 +43,7 @@ const port = 8052;
 // Call the function to upload the file
 // uploadFile();
 // Connect to the SQLite database
-let db = new sqlite3.Database('../../../judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
+let db = new sqlite3.Database('./Db-data/judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
     console.error(err.message);
     throw err; // Stop further execution in this callback
@@ -1568,10 +1568,10 @@ app.get('/dashboard/user/proxy-notifications', authenticateJWT, (req, res) => {
 
 // Endpoint to accept a proxy
 app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) => {
-  const userId = req.user.id; 
+  const userId = req.user.id; // Automatically fetched from the JWT token
   const proxyId = req.params.proxyId;
 
-  
+  // Update the status of the proxy to "accepted" and set the acceptance date
   const acceptanceDate = new Date().toISOString();
 
   db.run(
@@ -1582,7 +1582,8 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
         console.error('Database error:', err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
-     
+
+      // Retrieve the creator's user_id, fullName, dateOfHearing, and expirationDate from the ProxyForm table
       db.get(
         'SELECT user_id, fullName, dateOfHearing, expirationDate FROM ProxyForm WHERE id = ?',
         [proxyId],
@@ -1591,7 +1592,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
             console.error('Database error:', err);
           } else {
             if (row.user_id) {
-              
+              // Notify the user who created the proxy
               const creatorNotificationMessage = `Your proxy for hearing on ${row.dateOfHearing} in state ${req.body.zipStateProvince}, City ${req.body.city} has been accepted by user ${req.user.username}`;
               db.run(
                 'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
@@ -1608,8 +1609,8 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
       );
 
       return res.json({ message: 'Proxy accepted successfully' });
-    }
-  );
+    }
+  );
 });
 
 
