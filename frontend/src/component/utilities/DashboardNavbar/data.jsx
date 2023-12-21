@@ -15,29 +15,29 @@ export const links = [
       }
     ]
   },
-  {
-    name: "Client",
-    submenu:[
-      {
-          name:'Add Client',
-          path:'/dashboard/clientform'
-      },
-      {
-          name:'Show Client',
-          path:'/dashboard/clientformdata'
-      }
-    ]
-  },
+  // {
+  //   name: "Client",
+  //   submenu:[
+  //     {
+  //         name:'Add Client',
+  //         path:'/dashboard/clientform'
+  //     },
+  //     {
+  //         name:'Show Client',
+  //         path:'/dashboard/clientformdata'
+  //     }
+  //   ]
+  // },
   {
     name: "People",
     submenu:[
       {
-          name:'Add Peoples',
+          name:'Add People',
           path:'/dashboard/peopleform'
       },
       {
-          name:'Show Peoples',
-          path:'/dashboard/teammemberdata'
+          name:'Show People',
+          path:'/dashboard/clientformdata'
       }
     ]
   },
@@ -89,6 +89,19 @@ export const links = [
       {
           name:'Show Bills',
           path:'/dashboard/billformdata'
+      }
+    ]
+  },
+  {
+    name: "Teams",
+    submenu:[
+      {
+          name:'Add Teams',
+          path:'/dashboard/teammemberform'
+      },
+      {
+          name:'Show Team',
+          path:'/dashboard/teammemberdata'
       }
     ]
   },
