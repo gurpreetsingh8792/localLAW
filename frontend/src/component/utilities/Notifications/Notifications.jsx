@@ -88,15 +88,16 @@ const Notifications = () => {
 
       {/* Alerts Section */}
       <div>
-        <h2 className="header">Alerts</h2>
-        {tasksLoading ? <p>Loading alerts...</p> : (
+        <h2 className="header">Tasks</h2>
+        {tasksLoading ? <p>Loading Tasks...</p> : (
           <ul>
             {tasks.map((alert, index) => (
               <li key={index} className={style.notificationItem}>
                 <span className={style.notificationTextUnread}>{alert}</span>
                 <button onClick={() => toggleDropdown(index, 'alert')} className={style.dropdownToggle}>⋮</button>
                 {showDropdown[`alert-${index}`] && (
-                  <div className={`${style.dropdownMenu} ${showDropdown[`alert-${index}`] ? style.dropdownMenuVisible : ''}`}>                    <div className={style.MenuItem} onClick={() => handleDelete(alert.id, 'alert')}>Delete</div>
+                  <div className={`${style.dropdownMenu} ${showDropdown[`alert-${index}`] ? style.dropdownMenuVisible : ''}`}>                  
+                    <div className={style.MenuItem} onClick={() => handleDelete(alert.id, 'alert')}>Delete</div>
                   </div>
                 )}
               </li>

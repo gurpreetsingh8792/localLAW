@@ -103,7 +103,7 @@
 
   /* Hover effect */
   &:hover {
-    background-color: var(--hover-color); /* Replace with your hover color variable */
+    /* background-color: var(--hover-color);  */
   }
 
   /* Active/Focus state */
