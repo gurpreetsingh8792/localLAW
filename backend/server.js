@@ -293,6 +293,101 @@ app.post('/alerts', authenticateJWT, async (req, res) => {
   }
 });
 
+app.post('/hearings', authenticateJWT, (req, res) => {
+  try {
+    const { title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime } = req.body;
+    const userId = req.user.id; // Assuming you have user information attached to the request
+
+    if (!title) {
+      return res.status(400).json({ error: 'Title is required' });
+    }
+
+    db.run(
+      'INSERT INTO CourtHearing (title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime, userId],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        return res.json({ message: 'Hearing form submitted successfully' });
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/appointments', authenticateJWT, (req, res) => {
+  try {
+    const {title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email} = req.body;
+
+    const userId = req.user.id; // Assuming you have user information attached to the request
+
+    if (!title) {
+      return res.status(400).json({ error: 'Title is required' });
+    }
+
+    db.run(
+      'INSERT INTO Appointments (title, caseTitle, caseType, appointmentDate, contactPerson, location, startTime, endTime, email, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email, userId],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        return res.json({ message: 'Apointment added successfully' });
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get("/calendar/alerts", authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+
+  db.all(
+    "SELECT id, title, startDate, completionDate, assignTo, caseTitle, caseType FROM AlertsForm WHERE user_id = ?",
+    [userId],
+    (err, forms) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(forms);
+    }
+  );
+});
+
+app.get("/calendar/hearings", authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+
+  db.all(
+    "SELECT id, title, assignedLawyer, status, hearingDate, caseTitle, startTime, endTime FROM CourtHearing WHERE user_id = ?",
+    [userId],
+    (err, forms) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(forms);
+    }
+  );
+});
+
+app.get("/calendar/appointments", authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+
+  db.all(
+    "SELECT id, title, caseTitle, caseType, appointmentDate, contactPerson, location, startTime, endTime, email FROM Appointments WHERE user_id = ?",
+    [userId],
+    (err, forms) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(forms);
+    }
+  );
+});
 
 app.get('/alerts', authenticateJWT, (req, res) => {
   const userId = req.user.id;
@@ -303,6 +398,166 @@ app.get('/alerts', authenticateJWT, (req, res) => {
     return res.json(forms);
   });
 });
+
+app.get('/calendar/alerts/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+
+  db.get(
+    'SELECT id, title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo FROM AlertsForm WHERE id = ? AND user_id = ?',
+    [taskId, userId],
+    (err, event) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      if (!event) {
+        return res.status(404).json({ message: 'Event not found' });
+      }
+
+      res.json(event);
+    }
+  );
+});
+
+app.get('/calendar/hearings/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+
+  db.get(
+    'SELECT id, title, assignedLawyer, status, hearingDate, caseTitle, startTime, endTime FROM CourtHearing WHERE id = ? AND user_id = ?',
+    [taskId, userId],
+    (err, event) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      if (!event) {
+        return res.status(404).json({ message: 'Event not found' });
+      }
+
+      res.json(event);
+    }
+  );
+});
+
+app.get('/calendar/appointments/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+
+  db.get(
+    'SELECT id, title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email FROM Appointments WHERE id = ? AND user_id = ?',
+    [taskId, userId],
+    (err, event) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      if (!event) {
+        return res.status(404).json({ message: 'Event not found' });
+      }
+
+      res.json(event);
+    }
+  );
+});
+
+// Update a specific task event by ID
+app.put('/calendar/alerts/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+  const { title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo } = req.body;
+
+  db.run(
+    'UPDATE AlertsForm SET title = ?, startDate = ?, completionDate = ?, caseTitle = ?, caseType = ?, assignFrom = ?, assignTo = ? WHERE id = ? AND user_id = ?',
+    [title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo, taskId, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Event updated successfully' });
+    }
+  );
+});
+
+app.put('/calendar/hearings/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+  const { title, assignedLawyer, status, hearingDate, caseTitle, startTime, endTime } = req.body;
+
+  db.run(
+    'UPDATE CourtHearing SET title = ?, assignedLawyer = ?, status = ?, hearingDate = ?, caseTitle = ?, startTime = ?, endTime = ? WHERE id = ? AND user_id = ?',
+    [title, assignedLawyer, status, hearingDate, caseTitle, startTime, endTime, taskId, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Event updated successfully' });
+    }
+  );
+});
+
+app.put('/calendar/appointments/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+  const { title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email } = req.body;
+
+  db.run(
+    'UPDATE Appointments SET title = ?, caseTitle = ?, caseType = ?,  appointmentDate = ?, contactPerson = ?, location = ?, startTime = ?, endTime = ?, email = ? WHERE id = ? AND user_id = ?',
+    [title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Event updated successfully' });
+    }
+  );
+});
+
+
+// Delete a specific task event by ID
+app.delete('/calendar/alerts/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+
+  db.run('DELETE FROM AlertsForm WHERE id = ? AND user_id = ?', [taskId, userId], (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    res.json({ message: 'Event deleted successfully' });
+  });
+});
+
+app.delete('/calendar/hearings/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+
+  db.run('DELETE FROM CourtHearing WHERE id = ? AND user_id = ?', [taskId, userId], (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    res.json({ message: 'Event deleted successfully' });
+  });
+});
+
+app.delete('/calendar/appointments/:taskId', authenticateJWT, (req, res) => {
+  const taskId = req.params.taskId;
+  const userId = req.user.id;
+
+  db.run('DELETE FROM Appointments WHERE id = ? AND user_id = ?', [taskId, userId], (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    res.json({ message: 'Event deleted successfully' });
+  });
+});
+
 // Delete alert by ID
 app.delete('/alerts/:alertId', authenticateJWT, async (req, res) => {
   try {
@@ -404,18 +659,27 @@ app.get('/alerts/download-pdf/:alertId', authenticateJWT, async (req, res) => {
 app.get('/dashboard/alert/teammembers', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
-    db.all('SELECT fullName FROM TeamMembers WHERE user_id = ?', [userId], (err, fullName) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: 'Internal Server Error' });
+    
+    db.all(
+      'SELECT fullName AS name FROM TeamMembers WHERE user_id = ? ' +
+      'UNION ' +
+      'SELECT firstName || " " || lastName AS name FROM ClientForm WHERE user_id = ?',
+      [userId, userId],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        return res.json(result);
       }
-      return res.json(fullName);
-    });
+    );
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 
 //Team Members form endpoints
@@ -946,7 +1210,7 @@ app.get('/dashboard/caseformdata/download-pdf/:caseId', authenticateJWT, async (
 app.post('/dashboard/clientform', authenticateJWT, async (req, res) => {
   try {
     const {
-      firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,gstNo,panNo,homeAddress,officeAddress,assignAlerts,scheduleAppointment,} = req.body;
+      firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,caseTitle,type,homeAddress,officeAddress,assignAlerts,} = req.body;
     if (!firstName || !email) {
       return res.status(400).json({ error: 'First Name and Email are required fields' });
     }
@@ -954,16 +1218,16 @@ app.post('/dashboard/clientform', authenticateJWT, async (req, res) => {
     const query = `
       INSERT INTO ClientForm (
         firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, 
-        organizationType, organizationWebsite, gstNo, panNo, homeAddress, officeAddress, 
-        assignAlerts, scheduleAppointment, user_id
+        organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, 
+        assignAlerts, user_id
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     db.run(
       query,
       [
-        firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,gstNo,panNo,homeAddress,officeAddress,assignAlerts,scheduleAppointment,userId,
+        firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,caseTitle,type,homeAddress,officeAddress,assignAlerts,userId,
       ],
       function (err) {
         if (err) {
@@ -1612,6 +1876,33 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
     }
   );
 });
+
+
+// Delete a notification by ID
+app.delete('/dashboard/user/deletenotification/:notificationId', authenticateJWT, async (req, res) => {
+  try {
+    const { notificationId } = req.params;
+
+    // Check if the notification with the given ID belongs to the authenticated user
+    const notificationExists = await db.get(
+      'SELECT id FROM NotificationTable WHERE id = ? AND userId = ?',
+      [notificationId, req.user.id]
+    );
+
+    if (!notificationExists) {
+      return res.status(404).json({ error: 'Notification not found' });
+    }
+
+    // Delete the notification with the given ID
+    await db.run('DELETE FROM NotificationTable WHERE id = ?', [notificationId]);
+
+    return res.json({ message: 'Notification deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 // Error handler middleware

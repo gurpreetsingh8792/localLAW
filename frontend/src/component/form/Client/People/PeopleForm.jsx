@@ -10,6 +10,7 @@ import Modal from './ModelPop/Modal'
 import TaskForm from "./ModelPop/TaskForm";
 
 const PeopleForm = () => {
+  const [caseTitles, setCaseTitles] = useState([]);
   const [alertTitles, setAlertTitles] = useState([]); // State to store alert titles
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -36,10 +37,30 @@ const PeopleForm = () => {
       }
     };
 
-    fetchAlertTitles(); // Call the fetchAlertTitles function when the component mounts
+    const fetchCaseTitles = async () => {
+      try {
+        const response = await axios.get("http://localhost:8052/caseform", {
+          headers: {
+            "x-auth-token": localStorage.getItem("token"),
+          },
+        });
+  
+        // Extract the case titles from the response data
+        const caseTitlesArray = response.data.map((caseItem) => caseItem.title);
+        setCaseTitles(caseTitlesArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAlertTitles();
+    fetchCaseTitles();
+
+    // Call the fetchAlertTitles function when the component mounts
   }, []);
   const initialValues = {
-    case: "",
+    firstName: "",
+    lastName: "",
+    caseTitle: "",
     type: "",
     email: "",
     mobileNo: "",
@@ -57,7 +78,9 @@ const PeopleForm = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    case: Yup.string().required("Case is required"),
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+    caseTitle: Yup.string().required("Case is required"),
     type: Yup.string(),
     email: Yup.string()
       .email("Invalid email format")
@@ -90,7 +113,7 @@ const PeopleForm = () => {
       );
 
       console.log(response.data); // Log the response from the backend
-      alert("Client Added successfully!");
+      alert("People Added successfully!");
       resetForm();
     } catch (error) {
       console.error(error);
@@ -145,22 +168,28 @@ const PeopleForm = () => {
           </div>
 
           <div className={styles.formSection}>
-            <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="case">
-                Case
-              </label>
-              <input
-                type="text"
-                id="case"
-                name="case"
-                className={styles.inputField}
-                {...formik.getFieldProps("case")}
-              />
+          <div className={styles.formGroup}>
+  <label className={styles.label} htmlFor="caseTitle">
+    Case
+  </label>
+  <select
+    id="caseTitle"
+    name="caseTitle"
+    className={styles.inputField}
+    {...formik.getFieldProps("caseTitle")}
+  >
+    <option value="">Select a case Title</option>
+    {caseTitles.map((title) => (
+      <option key={title} value={title}>
+        {title}
+      </option>
+    ))}
+  </select>
 
-              {formik.touched.case && formik.errors.case && (
-                <div className={styles.error}>{formik.errors.case}</div>
-              )}
-            </div>
+  {formik.touched.case && formik.errors.case && (
+    <div className={styles.error}>{formik.errors.case}</div>
+  )}
+</div>
 
             <div className={styles.formGroup}>
               <label className={styles.label} htmlFor="type">

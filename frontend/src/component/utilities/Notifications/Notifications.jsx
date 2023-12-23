@@ -54,23 +54,53 @@ const Notifications = () => {
   };
 
   // Method to handle accept action
-  const handleAccept = (id, type) => {
-    console.log(`Accept ${type} with ID: ${id}`);
-    axios.post(`http://localhost:8052/dashboard/user/accept-proxy/${id}`, null, {
-      headers: {
-        'x-auth-token': localStorage.getItem('token'),
-      },
-    })
-    .then((response) => {
-      console.log('Proxy accepted successfully');
-      // You can update your UI or perform any necessary actions upon success
-    })
-    .catch((error) => {
-      console.error('Error accepting proxy:', error);
-      // Handle errors if needed
-    });
-  };
+  // const handleAccept = (id, type) => {
+  //   console.log(`Accept ${type} with ID: ${id}`);
+  //   axios.post(`http://localhost:8052/dashboard/user/accept-proxy/${id}`, null, {
+  //     headers: {
+  //       'x-auth-token': localStorage.getItem('token'),
+  //     },
+  //   })
+  //   .then((response) => {
+  //     console.log('Proxy accepted successfully');
+  //     // You can update your UI or perform any necessary actions upon success
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error accepting proxy:', error);
+  //     // Handle errors if needed
+  //   });
+  // };
   
+
+  const handleAccept = async (id, type) => {
+    console.log(`Accept ${type} with ID: ${id}`);
+  
+    try {
+      // Replace with your server URL and the appropriate endpoint
+      const response = await axios.post(`http://localhost:8052/dashboard/user/accept-proxy/${id}`, {
+        // You might need to send additional data in the request body
+      }, {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'), // assuming you're using token-based authentication
+        },
+      });
+  
+      console.log('Proxy accepted successfully:', response.data);
+  
+      // You might want to update your local state to reflect the change
+      // For example, removing the accepted proxy from the list
+      if (type === 'proxy') {
+        setProxy(prevProxies => prevProxies.filter(proxy => proxy.id !== id));
+      }
+  
+      // Or fetch the updated list of proxies again
+      // fetchProxies(); // if you have a function to fetch proxies
+  
+    } catch (error) {
+      console.error('Error accepting proxy:', error);
+      // Handle error (e.g., show an error message to the user)
+    }
+  };
 
   const toggleDropdown = (index, type) => {
     setShowDropdown(prevState => ({

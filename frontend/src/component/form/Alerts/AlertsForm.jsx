@@ -16,7 +16,7 @@ const AlertsForm = () => {
         const response = await axios.get('http://localhost:8052/dashboard/alert/teammembers', {
           headers: { 'x-auth-token': localStorage.getItem('token') },
         });
-        setTeamMembers(response.data.map((member) => member.fullName));
+        setTeamMembers(response.data.map((member) => member.name));
       } catch (error) {
         console.error('Error fetching team members:', error);
       }
@@ -198,7 +198,11 @@ const AlertsForm = () => {
                   {...formik.getFieldProps('assignFrom')}
                 >
                   <option value="">Select an option</option>
-                  {/* Add your assign from options here */}
+                  {teamMembers.map((fullName) => (
+                    <option key={fullName} value={fullName}>
+                      {fullName}
+                    </option>
+                  ))}
                 </select>
                 {formik.touched.assignFrom && formik.errors.assignFrom && (
                   <div className={styles.error}>{formik.errors.assignFrom}</div>
