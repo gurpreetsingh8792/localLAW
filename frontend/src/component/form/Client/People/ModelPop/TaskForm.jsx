@@ -12,12 +12,19 @@ const TaskForm = () => {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [email, setEmail] = useState("");
-
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
   // const handleClose = () => {
   //   setOpenEvent(false);
   //   setOpenSlot(false);
   // };
-
+  const handleStartTime = (newStartTime) => {
+    setStart(newStartTime);
+  };
+  
+  const handleEndTime = (newEndTime) => {
+    setEnd(newEndTime);
+  };
   useEffect(() => {
     const fetchCaseTitlesAndTypes = async () => {
       try {
@@ -42,17 +49,60 @@ const TaskForm = () => {
 
     fetchCaseTitlesAndTypes(); // Call the new function to fetch case titles and types
   }, []);
-  const setNewAppointment = () => {
-    // Logic for setting new tasks
+  const setNewAppointment = async () => {
+    try {
+      const formData = {
+        title,
+        caseTitle: casetitle,
+        caseType: caseTypeMap[casetitle] || '',
+        appointmentDate: desc,
+        contactPerson: contactperson, // Use the correct variable name 'contactperson'
+        location,
+        startTime: start,
+        endTime: end,
+        email,
+      };
+  
+      // Send a POST request to your backend API
+      const response = await axios.post('http://localhost:8052/appointments', formData, {
+        headers: { 'x-auth-token': localStorage.getItem('token') },
+      });
+  
+      // Handle the response from the server
+      if (response.status === 200) {
+        // Appointment was successfully added
+        console.log('Appointment added successfully');
+        // You can perform any additional actions or show a success message here.
+      } else {
+        // Handle errors here
+        console.error('Error adding appointment:', response.data.error);
+        // You can show an error message to the user if needed.
+      }
+    } catch (error) {
+      console.error('Error adding appointment:', error);
+      // Handle any other errors here
+    }
   };
+  
 
   return (
     <div>
       <h2 style={{}}>Appointment </h2>
       <div className={style.AppointmentVisibleForm}>
-        <div className={style.formRow}>
-          <label className={style.TasksVisibleTitle}>Case</label>
-          <select
+                    <div className={style.formRow}>
+        <label className={style.AppointmentFormTitle}>Title</label>
+        <input
+          className={style.TasksVisibleInput}
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+                      <div className={style.formRow}>
+                      <label className={style.TasksVisibleTitle}>
+                          Case Title
+                        </label>
+                        <select
       className={style.TasksVisibleInput}
       value={casetitle}
       onChange={(e) => setCaseTitle(e.target.value)}
@@ -66,83 +116,98 @@ const TaskForm = () => {
         </option>
       ))}
     </select>
-        </div>
-        <div className={style.formRow}>
-          <label className={style.AppointmentFormTitle}>Case Type</label>
-          <input
+                      </div>
+                      <div className={style.formRow}>
+                      <label className={style.AppointmentFormTitle}>
+                          Case Type
+                        </label>
+                        <input
           className={style.TasksVisibleInput}
           type="text"
           value={caseTypeMap[casetitle] || ''}
           readOnly
           placeholder="Case Type"
         />
-        </div>
-        <div className={style.formRow}>
-          <label className={style.AppointmentFormTitle}>Contact Person</label>
-          <select
-            className={style.TasksVisibleInput}
-            value={contactperson}
-            onChange={(e) => setContactPerson(e.target.value)}
-          >
-            <option value="" disabled selected>
-              Contact Person
-            </option>
-            <option value="Person 1">Person 1</option>
-            <option value="Person 2">Person 2</option>
-            {/* Add more options as needed */}
-          </select>
-        </div>
-        <div className={style.formRow}>
-          <label className={style.AppointmentFormTitle}>Location</label>
-          <input
-            className={style.HearingVisibleFormInput}
-            type="text"
-            value={location}
-            placeholder="Location"
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </div>
-        <div className={style.formRow}>
-          <label className={style.AppointmentFormTitle}>Start Time</label>
-          <input
-            className={style.HearingVisibleFormTime}
-            type="time"
-            value={start ? start.toISOString().substring(11, 16) : ""}
-            onChange={(e) => {
-              if (start) {
-                const [hours, minutes] = e.target.value.split(":");
-                const newStartTime = new Date(start.setHours(hours, minutes));
-                // handleStartTime(newStartTime);
-              }
-            }}
-          />
-        </div>
-        <div className={style.formRow}>
-          <label className={style.AppointmentFormTitle}>End Time</label>
-          <input
-            className={style.HearingVisibleFormTime}
-            type="time"
-            value={end ? end.toISOString().substring(11, 16) : ""}
-            // onChange={(e) =>
-            //   handleEndTime(
-            //     new Date(
-            //       end.setHours(...e.target.value.split(":"))
-            //     )
-            //   )
-            // }
-          />
-        </div>
-        <div className={style.formRow}>
-          <label className={style.HearingVisibleFormTitle}>Email</label>
-          <input
-            className={style.HearingVisibleFormInput}
-            type="email"
-            // value={email}
-            placeholder="Email"
-            // onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-      </div>
+                      </div>
+                      <div className={style.formRow}>
+                        <label className={style.HearingVisibleFormTitle}>
+                        Appointment Date
+                        </label>
+                        <input
+                          className={style.HearingVisibleFormDate}
+                          type="date"
+                          value={desc}
+                          onChange={(e) => setDesc(e.target.value)}
+                        />
+                      </div>
+                      <div className={style.formRow}>
+
+                      <label className={style.AppointmentFormTitle}>
+                        Contact Person
+                        </label>
+                        <select
+                          className={style.TasksVisibleInput}
+                          value={contactperson}
+                          onChange={(e) => setContactPerson(e.target.value)}
+                        >
+                          <option value="" disabled selected>
+                          Contact Person
+                          </option>
+                          <option value="Person 1">Person 1</option>
+                          <option value="Person 2">Person 2</option>
+                          {/* Add more options as needed */}
+                        </select>
+                      </div>
+                      
+                      <div className={style.formRow}>
+                        <label className={style.AppointmentFormTitle}>
+                          Location
+                        </label>
+                        <input
+                          className={style.HearingVisibleFormInput}
+                          type="text"
+                          value={location}
+                          placeholder="Location"
+                          onChange={(e) => setLocation(e.target.value)}
+                        />
+                      </div>
+                      <div className={style.formRow}>
+  <label className={style.AppointmentFormTitle}>Start Time</label>
+  <input
+    className={style.HearingVisibleFormTime}
+    type="time"
+    value={start || ""}
+    onChange={(e) => {
+      const newStartTime = e.target.value;
+      handleStartTime(newStartTime);
+    }}
+  />
+</div>
+<div className={style.formRow}>
+  <label className={style.AppointmentFormTitle}>End Time</label>
+  <input
+    className={style.HearingVisibleFormTime}
+    type="time"
+    value={end || ""}
+    onChange={(e) => {
+      const newEndTime = e.target.value;
+      handleEndTime(newEndTime);
+    }}
+  />
+</div>
+                      <div className={style.formRow}>
+                        <label className={style.HearingVisibleFormTitle}>
+                          Email
+                        </label>
+                        <input
+                          className={style.HearingVisibleFormInput}
+                          type="email"
+                          value={email}
+                          placeholder="Email"
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </div>
+                    </div>
       <div className={style.BtnContainerAppoint}>
         <button className={style.btn}
         //  onClick={}
