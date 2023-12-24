@@ -1049,7 +1049,7 @@ app.post('/caseform', authenticateJWT, async (req, res) => {
 app.get('/caseformdata', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
-    db.all('SELECT id,title,caseCode,honorableJudge,client, opponentPartyName FROM CasesForm WHERE user_id = ?', [userId], (err, forms) => {
+    db.all('SELECT id,title,caseCode,client,honorableJudge, opponentPartyName FROM CasesForm WHERE user_id = ?', [userId], (err, forms) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -1246,7 +1246,7 @@ app.post('/dashboard/clientform', authenticateJWT, async (req, res) => {
 app.get('/clientformdata', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
-    db.all('SELECT id,firstName,email,mobileNo,assignAlerts,scheduleAppointment FROM ClientForm WHERE user_id = ?', [userId], (err, forms) => {
+    db.all('SELECT id,firstName,email,mobileNo,assignAlerts FROM ClientForm WHERE user_id = ?', [userId], (err, forms) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -1644,18 +1644,25 @@ app.post('/reviewdoc', authenticateJWT, async (req, res) => {
 });
 // NOTIFICATIONS FOR ALERTS
 app.get('/dashboard/user/notifications', authenticateJWT, (req, res) => {
-  const userId = req.user.id; 
+  const userId = req.user.id;
   const currentDate = new Date();
   const threeDaysAhead = new Date();
-  threeDaysAhead.setDate(currentDate.getDate() + 15); 
+  threeDaysAhead.setDate(currentDate.getDate() + 15);
+
 
   console.log('userId:', userId);
   console.log('currentDate:', currentDate.toISOString());
   console.log('threeDaysAhead:', threeDaysAhead.toISOString());
 
   db.all(
-    'SELECT id, title, completionDate FROM AlertsForm WHERE user_id = ?',
-    [userId],
+    `
+    SELECT id, 'alert' AS type, title, completionDate AS date FROM AlertsForm WHERE user_id = ?
+    UNION ALL
+    SELECT id, 'appointment' AS type, title, appointmentDate AS date FROM Appointments WHERE user_id = ?
+    UNION ALL
+    SELECT id, 'hearing' AS type, title, hearingDate AS date FROM CourtHearing WHERE user_id = ?
+    `,
+    [userId, userId, userId],
     (err, rows) => {
       if (err) {
         console.error('Database error:', err);
@@ -1663,36 +1670,70 @@ app.get('/dashboard/user/notifications', authenticateJWT, (req, res) => {
       }
 
       try {
-        
         const notifications = [];
-
         
+
         rows.forEach((row) => {
-        
-          const completionDate = new Date(row.completionDate);
+          const eventDate = new Date(row.date);
 
-        
           const daysDifference = Math.floor(
-            (completionDate - currentDate) / (24 * 60 * 60 * 1000)
+            (eventDate - currentDate) / (24 * 60 * 60 * 1000)
           );
 
-         
           if (daysDifference <= 15 && daysDifference >= 0) {
-            const notificationMessage = `Few days left for Task ${row.title} Completion. Completion Date is   ${row.completionDate}`;
+            let notificationMessage = '';
 
-            
-            const expirationDate = new Date();
-            expirationDate.setDate(expirationDate.getDate() + 15); 
+            if (row.type === 'alert') {
+              notificationMessage = `Few days left for Task ${row.title} Completion. Completion Date is ${row.date}`;
+            } else if (row.type === 'appointment') {
+              notificationMessage = `Few days left for ${row.title} appointment. Appointment Date is ${row.date}`;
+            } else if (row.type === 'hearing') {
+              notificationMessage = `Few days left for ${row.title} Hearing. Hearing Date is ${row.date}`;
+            }
 
-            
-            db.run(
-              'INSERT OR REPLACE INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
-              [userId, notificationMessage, expirationDate.toISOString()],
-              (err) => {
+            // Check if a notification with the same message exists and has status 'Visible'
+            db.get(
+              'SELECT * FROM NotificationTable WHERE userId = ? AND message = ? AND status = "Visible"',
+              [userId, notificationMessage],
+              (err, existingRow) => {
                 if (err) {
                   console.error('Database error:', err);
+                }
+
+                if (!existingRow) {
+                  // If no existing record with this message, insert a new record with status 'Visible'
+                  db.run(
+                    'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
+                    [userId, notificationMessage, threeDaysAhead.toISOString(),],
+                    (err) => {
+                      if (err) {
+                        console.error('Database error:', err);
+                      } else {
+                        console.log('New notification stored in NotificationTable.');
+                      }
+                    }
+                  );
                 } else {
-                  console.log('Notification stored in NotificationTable.');
+                  // Update the existing record's message (status remains the same)
+                  
+                    // Update the existing record's message (status remains the same)
+// Update the existing record's userId, message, and status
+// Update the existing record's userId, message, and status
+db.run(
+  'UPDATE NotificationTable SET userId = ?, message = ? WHERE userId = ? AND message = ?',
+  [userId, notificationMessage, userId, notificationMessage],
+  (err) => {
+    if (err) {
+      console.error('Database error:', err);
+    } else {
+      console.log('Existing notification message updated.');
+    }
+  }
+);
+
+
+
+                  
                 }
               }
             );
@@ -1711,6 +1752,11 @@ app.get('/dashboard/user/notifications', authenticateJWT, (req, res) => {
     }
   );
 });
+
+
+
+
+
 // notifications for proxy
 app.post('/proxy', authenticateJWT, async (req, res) => {
   const userId = req.user.id;
@@ -1877,31 +1923,46 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
   );
 });
 
+app.delete('/dashboard/user/notifications/:notificationId', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+  const notificationId = req.params.notificationId;
+  console.log('Notification ID to delete:', notificationId);
 
-// Delete a notification by ID
-app.delete('/dashboard/user/deletenotification/:notificationId', authenticateJWT, async (req, res) => {
-  try {
-    const { notificationId } = req.params;
+  // Check if the notification belongs to the authenticated user and has 'visible' status
+  db.get(
+    'SELECT * FROM NotificationTable WHERE id = ? AND userId = ? AND status = "Visible"',
+    [notificationId, userId],
+    (err, notification) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+        
+      }
+      console.log('Notification:', notification);
 
-    // Check if the notification with the given ID belongs to the authenticated user
-    const notificationExists = await db.get(
-      'SELECT id FROM NotificationTable WHERE id = ? AND userId = ?',
-      [notificationId, req.user.id]
-    );
+      if (!notification) {
+        // If the notification doesn't exist, doesn't belong to the user, or is already deleted, return a 404 error
+        return res.status(404).json({ error: 'Notification not found' });
+      }
 
-    if (!notificationExists) {
-      return res.status(404).json({ error: 'Notification not found' });
+      // Update the status of the notification to 'deleted'
+      db.run(
+        'UPDATE NotificationTable SET status = "deleted" WHERE id = ?',
+        [notificationId],
+        (err) => {
+          if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+          }
+
+          console.log('Notification marked as deleted.');
+          return res.status(204).end(); // Respond with a 204 status code (No Content) to indicate successful update
+        }
+      );
     }
-
-    // Delete the notification with the given ID
-    await db.run('DELETE FROM NotificationTable WHERE id = ?', [notificationId]);
-
-    return res.json({ message: 'Notification deleted successfully' });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
+  );
 });
+
 
 
 

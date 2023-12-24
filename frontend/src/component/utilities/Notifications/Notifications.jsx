@@ -50,26 +50,27 @@ const Notifications = () => {
   // Method to handle delete action
   const handleDelete = (id, type) => {
     console.log(`Delete ${type} with ID: ${id}`);
-    // Implement delete logic here
-  };
 
-  // Method to handle accept action
-  // const handleAccept = (id, type) => {
-  //   console.log(`Accept ${type} with ID: ${id}`);
-  //   axios.post(`http://localhost:8052/dashboard/user/accept-proxy/${id}`, null, {
-  //     headers: {
-  //       'x-auth-token': localStorage.getItem('token'),
-  //     },
-  //   })
-  //   .then((response) => {
-  //     console.log('Proxy accepted successfully');
-  //     // You can update your UI or perform any necessary actions upon success
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error accepting proxy:', error);
-  //     // Handle errors if needed
-  //   });
-  // };
+    // Send a DELETE request to your delete endpoint
+    axios.delete(`http://localhost:8052/dashboard/user/notifications/${id}`, {
+      headers: {
+        'x-auth-token': localStorage.getItem('token'),
+      },
+    })
+    .then((response) => {
+      console.log(`${type} deleted successfully`);
+      // You can update your UI or perform any necessary actions upon success
+      if (type === 'alert') {
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
+      } else if (type === 'proxy') {
+        setProxy(prevProxies => prevProxies.filter(proxy => proxy.id !== id));
+      }
+    })
+    .catch((error) => {
+      console.error(`Error deleting ${type}:`, error);
+      // Handle errors if needed
+    });
+  };
   
 
   const handleAccept = async (id, type) => {

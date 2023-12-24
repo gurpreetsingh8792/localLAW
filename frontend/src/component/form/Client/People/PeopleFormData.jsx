@@ -75,7 +75,7 @@ const ClientFormData = () => {
               <th>Email</th>
               <th>Mobile No</th>
               <th>Assign Alerts</th>
-              <th>Schedule Appointment</th>
+              {/* <th>Schedule Appointment</th> */}
               <th>Actions</th>
             </tr>
           </thead>
@@ -86,7 +86,7 @@ const ClientFormData = () => {
                 <td>{clientItem.email}</td>
                 <td>{clientItem.mobileNo}</td>
                 <td>{clientItem.assignAlerts}</td>
-                <td>{clientItem.scheduleAppointment}</td>
+                {/* <td>{clientItem.scheduleAppointment}</td> */}
                 <td>
                 <button
                     className={style.btn}
