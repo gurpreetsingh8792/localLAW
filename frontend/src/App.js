@@ -25,6 +25,8 @@ import AppointmentForm from "./component/form/Appointment/AppointmentForm";
 import GroupForm from "./component/form/Group/GroupForm";
 import DocumentGenrationForm from "./component/form/DocumentGenration/DocumentGenrationForm";
 import Proxy from "./component/form/Proxy/ProxyForm";
+
+
 import PartyNameForm from "./component/form/PartyName/PartyNameForm";
 import ImportCase from "./component/form/AddCase/importcase/ImportCase";
 import CnrForm from "./component/form/Crn/CrnForm";
@@ -38,6 +40,7 @@ import FinancesView from "./component/form/Bill/FinancesView/FinancesView";
 import ReviewDocForm from "./component/form/ReviewFormDoc/ReviewDocForm";
 import CasesFormData from "./component/form/AddCase/CaseFormData";
 import ClientFormData from "./component/form/Client/ClientFormData";
+// import ProxyData from "./component/form/Proxy/ProxyData";
 import InvoicesFormData from "./component/form/Invoices/InvoicesFormData";
 import BillFormData from "./component/form/Bill/BillFormData";
 import AlertsFormData from "./component/form/Alerts/AlertsFormData";
@@ -101,7 +104,8 @@ function App() {
             <Route path="dashboard/invoicesformdata" element={<InvoicesFormData />} />
             <Route path="dashboard/alertsformdata" element={<AlertsFormData />} />
             <Route path="dashboard/teammemberdata" element={<TeamMemberdata />} />
-            {/* <Route path="dashboard/alertsformdata" element={<Proxy />} /> */}
+            {/* <Route path="dashboard/proxydata" element={<ProxyData />} /> */}
+            
 
             {/* Form View routes */}
             <Route path="dashboard/financesview" element={<FinancesView />} />
