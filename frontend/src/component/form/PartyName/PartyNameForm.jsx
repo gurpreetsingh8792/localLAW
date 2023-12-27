@@ -2,8 +2,8 @@ import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './PartyName.module.css';
-import SideNav from '../../utilities/SideNavBar/SideNav';
 import axios from 'axios';
+import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 
 const validationSchema = Yup.object().shape({
   hearingCourt: Yup.string().required('Hearing Court is required'),
@@ -37,8 +37,8 @@ const PartyNameForm = () => {
     }
   };
   return (
-    <>
-    <SideNav />
+    <div className={styles.MainContainer}>
+    <DashboardNavbar />
     <div className={styles.container}>
       {/* <h2 className={styles.title}>Party Name</h2> */}
       <Formik
@@ -145,11 +145,14 @@ const PartyNameForm = () => {
             />
             <ErrorMessage name="caseYear" component="div" className={styles.error} />
           </div>
-          <button type="submit" className={styles.submitButton}>SUBMIT</button>
+          <div className={styles.BtnContainer}>
+          <button type="submit" className={styles.submitButton}>Submit</button>
+          <button type="submit" className={styles.submitButton}>Cancel</button>
+          </div>
         </Form>
       </Formik>
     </div>
-    </>
+    </div>
   );
 };
 

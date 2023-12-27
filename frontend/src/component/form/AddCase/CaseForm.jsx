@@ -383,10 +383,15 @@ const validationSchema = Yup.object().shape({
             </div>
 
             {/* Submit Button */}
-            <div className={styles.row}>
+            {/* <div className={styles.row}> */}
               <label className={styles.label}></label>
+
+              <div className={styles.BtnContainer}>
               <button type="submit" className={styles.submitButton}>Submit</button>
-            </div>
+              <button type="submit" className={styles.submitButton}>Cancel</button>
+              </div>
+            
+            {/* </div> */}
           </Form>
           )}
            </Formik>

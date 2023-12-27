@@ -56,7 +56,7 @@ const TeamMembers = () => {
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
   }, []);
   return (
-    <>
+    <div className={styles.MainContainer}>
     <DashboardNavbar />
     <div className={styles.formContainer}>
       <Formik
@@ -171,15 +171,16 @@ const TeamMembers = () => {
                 </NavLink>
               </div>
             </div>
+                      <div className={styles.BtnContainer}>
+            <button type="submit" className={styles.submitButton}>Submit</button>
+            <button type="submit" className={styles.submitButton}>Cancel</button>
 
-            <button type="submit" className={styles.submitButton}>
-              Submit
-            </button>
+                      </div>
           </Form>
         )}
       </Formik>
     </div>
-    </>
+    </div>
   );
 };
 

@@ -133,7 +133,7 @@ const InvoicesForm = () => {
         {({ isSubmitting }) => (
           <Form>
             <div className={styles.invoiceNo}><span style={{ color: 'var(--color-primary)'}}>INV</span>
-  -{generateInvoiceNo()}</div>
+  {generateInvoiceNo()}</div>
             <div className={styles.clientContainer}>
             <Field as="select" name="client" className={styles.selectFieldClient}>
                   <option value="">Select Client</option>
@@ -231,10 +231,11 @@ const InvoicesForm = () => {
 
             <Field type="file" name="addDoc" accept=".pdf" className={styles.fileField} />
             <ErrorMessage name="addDoc" component="div" className={styles.errorMessage} />
-
-            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-              Submit
-            </button>
+         
+          <div className={styles.BtnContainer}>
+            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Submit</button>
+            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Cancel</button>
+            </div>
           </Form>
         )}
       </Formik>

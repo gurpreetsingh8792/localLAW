@@ -432,13 +432,13 @@ const PeopleForm = () => {
                    {/* Your form here */}
              <TaskForm />
           </Modal>
+          
           </div>
 
 
-          <div className={styles.formSection}>
-            <button type="submit" className={styles.submitButton}>
-              Submit
-            </button>
+          <div className={styles.BtnContainer}>
+            <button type="submit" className={styles.submitButton}>Submit</button>
+            <button type="submit" className={styles.submitButton}>Cancel</button>
           </div>
         </form>
       </div>

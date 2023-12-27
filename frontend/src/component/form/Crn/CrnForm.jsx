@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './CrnForm.module.css';
-import SideNav from '../../utilities/SideNavBar/SideNav';
+import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
@@ -41,8 +41,8 @@ const CnrForm = () => {
     }
   };
   return (
-    <>
-    <SideNav />
+    <div className={styles.MainContainer}>
+    <DashboardNavbar />
     <div className={styles.container}>
       {/* <h2 className={styles.title}>Party Name</h2> */}
       <Formik
@@ -160,11 +160,16 @@ const CnrForm = () => {
             />
             <ErrorMessage name="caseYear" component="div" className={styles.error} />
           </div>
-          <button type="submit" className={styles.submitButton}>SUBMIT</button>
+          
+          <div className={styles.BtnContainer}>
+          <button type="submit" className={styles.submitButton}>Submit</button>
+          <button type="submit" className={styles.submitButton}>Cancel</button>
+          </div>
+
         </Form>
       </Formik>
     </div>
-    </>
+    </div>
   );
 };
 

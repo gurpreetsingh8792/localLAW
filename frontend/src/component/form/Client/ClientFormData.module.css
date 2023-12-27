@@ -41,9 +41,12 @@
   .tableBody tr:nth-child(odd) {
     /* background-color: #f2f2f2; */
   }
-  
+  .tableBody tr {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
   .tableBody tr:hover {
-    /* background-color: #ddd; */
+    transform: scale(1.03); 
   }
   
   .tableBody td {

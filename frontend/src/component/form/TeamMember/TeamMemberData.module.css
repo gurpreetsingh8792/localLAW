@@ -46,10 +46,20 @@
   }
 }
 
+.trs {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover effect for rows */
+.trs:hover {
+  transform: scale(1.03);
+}
+
 .td {
   padding: 10px; /* Adjusted padding */
   text-align: left;
-  border-bottom: 1px solid #ddd; 
+  /* border-bottom: 1px solid #ddd;  */
   color: white;
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './Advocate.module.css';
-import SideNav from '../../utilities/SideNavBar/SideNav';
+import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
@@ -37,8 +37,8 @@ const AdvocateForm = () => {
 
 
   return (
-    <>
-    <SideNav />
+    <div className={styles.MainContiner}>
+    <DashboardNavbar />
     <div className={styles.container}>
       {/* <h2 className={styles.title}>Party Name</h2> */}
       <Formik
@@ -132,12 +132,16 @@ const AdvocateForm = () => {
             />
             <ErrorMessage name="advocateName" component="div" className={styles.error} />
           </div>
+          <div className={styles.BtnContainer}>
+          <button type="submit" className={styles.submitButton}>Submit</button>
+          <button type="submit" className={styles.submitButton}>Cancel</button>
+          </div>
+
           
-          <button type="submit" className={styles.submitButton}>SUBMIT</button>
         </Form>
       </Formik>
     </div>
-    </>
+    </div>
   );
 };
 

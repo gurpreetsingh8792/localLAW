@@ -19,6 +19,25 @@ const Notifications = () => {
     })
     .then((response) => {
       setTasks(response.data);
+      console.log(tasks)
+    })
+    .catch((error) => {
+      console.error(error);
+      setError(error);
+    })
+    .finally(() => {
+      setTasksLoading(false);
+    });
+
+    axios.get('http://localhost:8052/dashboard/user/accepted-proxy-notifications', {
+      headers: {
+        'x-auth-token': localStorage.getItem('token'),
+      },
+    })
+    .then((response) => {
+      // Assuming the response contains accepted proxy notifications
+      setTasks(response.data);
+      console.log(response, tasks)
     })
     .catch((error) => {
       console.error(error);
@@ -29,6 +48,7 @@ const Notifications = () => {
     });
   }, []);
 
+
   useEffect(() => {
     axios.get('http://localhost:8052/dashboard/user/proxy-notifications', {
       headers: {
@@ -37,6 +57,7 @@ const Notifications = () => {
     })
     .then((response) => {
       setProxy(response.data);
+      console.log(response, "hello")
     })
     .catch((error) => {
       console.error(error);
@@ -74,7 +95,12 @@ const Notifications = () => {
   
 
   const handleAccept = async (id, type) => {
-    console.log(`Accept ${type} with ID: ${id}`);
+    console.log(`Accept ${type} with ID: ${id}`); // Make sure `id` is not undefined
+  
+  if (typeof id === 'undefined') {
+    console.error('ID is undefined. Cannot accept proxy.');
+    return;
+  }
   
     try {
       // Replace with your server URL and the appropriate endpoint
@@ -92,6 +118,7 @@ const Notifications = () => {
       // For example, removing the accepted proxy from the list
       if (type === 'proxy') {
         setProxy(prevProxies => prevProxies.filter(proxy => proxy.id !== id));
+        console.log(id)
       }
   
       // Or fetch the updated list of proxies again
@@ -114,6 +141,11 @@ const Notifications = () => {
   return (
     <>
     <DashboardNavbar/>
+    {/* <div className={style.MenuItem} onClick={() => { 
+  console.log('Accepting proxy with ID:', proxyItem.id); 
+  handleAccept(proxyItem.id, 'proxy'); 
+}}>Accept</div> */}
+
     <div className={style.notificationsContainer}>
       {/* ... (header and loading indicators remain the same) */}
 
@@ -141,15 +173,18 @@ const Notifications = () => {
       <div>
         <h2 className="header">Proxies</h2>
         {proxyLoading ? <p>Loading proxies...</p> : (
+          
           <ul>
             {proxy.map((proxyItem, index) => (
               <li key={index} className={style.notificationItem}>
-                <span className={style.notificationTextUnread}>{proxyItem}</span>
+                <span className={style.notificationTextUnread}>{proxyItem.message}</span>
                 <button onClick={() => toggleDropdown(index, 'proxy')} className={style.dropdownToggle}>⋮</button>
                 {showDropdown[`proxy-${index}`] && (
+                  
                   <div className={`${style.dropdownMenu} ${showDropdown[`proxy-${index}`] ? style.dropdownMenuVisible : ''}`}>                    <div className={style.MenuItem} onClick={() => handleDelete(proxyItem.id, 'proxy')}>Delete</div>
                     <div className={style.MenuItem} onClick={() => handleAccept(proxyItem.id, 'proxy')}>Accept</div>
                   </div>
+                  
                 )}
               </li>
             ))}
