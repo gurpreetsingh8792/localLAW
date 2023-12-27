@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import style from './Proxy.module.css';
@@ -7,6 +7,22 @@ import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
 
 const Proxy = () => {
   const [isSuccessPopupVisible, setIsSuccessPopupVisible] = useState(false);
+  const [cases, setCases] = useState([]);
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      try {
+        const response = await axios.get('http://localhost:8052/caseform', {
+          headers: { 'x-auth-token': localStorage.getItem('token') },
+        });
+        setCases(response.data);
+        console.log("Cases:", response.data); // Logging loaded cases
+      } catch (error) {
+        console.error('Error fetching cases:', error);
+      }
+    };
+    fetchCases();
+  }, []);
 
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -51,7 +67,7 @@ const Proxy = () => {
       // zipStateProvince: Yup.string().required('State/Province is required'),
       zipPostalCode: Yup.string().required('Zip/Postal Code is required'),
       // date: Yup.date().required('Date is required'),
-      // case: Yup.string().required('Case is required'),
+      case: Yup.string().required('Case is required'),
       // caseFile: Yup.mixed().test('fileType', 'Invalid file type. Only PDF files are allowed', (value) => {
       //   if (!value) return true;
       //   return value && value.type === 'application/pdf';
@@ -176,20 +192,27 @@ const Proxy = () => {
             ) : null}
           </div>
           <div className={style.field}>
-            <label className={style.label} htmlFor="case">Case</label>
-            <input
-            className={style.text}
-              type="text"
-              id="case"
-              name="case"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.case}
-            />
-            {formik.touched.case && formik.errors.case ? (
-              <div className={style.error}>{formik.errors.case}</div>
-            ) : null}
-          </div>
+  <label className={style.label} htmlFor="case">Case</label>
+  <select
+    className={style.select}
+    id="case"
+    name="case"
+    onChange={formik.handleChange}
+    onBlur={formik.handleBlur}
+    value={formik.values.case}
+  >
+    <option value="" label="Select Case" />
+    {cases.map((caseItem) => (
+      <option key={caseItem.id} value={caseItem.title}>
+      {caseItem.title}
+    </option>
+    ))}
+  </select>
+  {formik.touched.case && formik.errors.case ? (
+    <div className={style.error}>{formik.errors.case}</div>
+  ) : null}
+</div>
+
           
         </div>
         <div className={style.field}>
