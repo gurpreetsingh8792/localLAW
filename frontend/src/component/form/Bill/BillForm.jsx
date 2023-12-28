@@ -235,10 +235,9 @@ const onSubmit = (values, { resetForm }) => {
             <ErrorMessage name="description" component="div" className={styles['error-message']} />
           </div>
           </div>
-          <div>
-            <button type="submit" className={styles.submitButton}>
-              Submit
-            </button>
+          <div className={styles.BtnContainer}>
+            <button type="submit" className={styles.submitButton}>Submit</button>
+            <button type="submit" className={styles.submitButton}>Cancel</button>
           </div>
         </Form>
       </Formik>

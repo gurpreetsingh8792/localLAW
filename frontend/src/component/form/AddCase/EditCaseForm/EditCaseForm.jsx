@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { NavLink } from 'react-router-dom';
-import styles from './AddCase.module.css';
-import SideNav from '../../utilities/SideNavBar/SideNav';
+import styles from './EditCaseForm.module.css';
 import axios from 'axios';
-import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 
 
-const CaseForm = () => {
+const EditCaseForm = () => {
   const [clientNames, setClientNames] = useState([]); // State to store client first names
   const [teamMembers, setTeamMembers] = useState([]); // State to store team member full names
 
@@ -104,7 +102,6 @@ const validationSchema = Yup.object().shape({
 
   return (
     <>
-      <DashboardNavbar />
       <div className={styles.container}>
       <h2 style={{textAlign:'center'}}>Add Case</h2>
         <Formik
@@ -400,4 +397,4 @@ const validationSchema = Yup.object().shape({
   );
 };
 
-export default CaseForm;
+export default EditCaseForm;

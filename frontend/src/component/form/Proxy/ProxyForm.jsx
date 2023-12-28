@@ -359,11 +359,13 @@ const Proxy = () => {
             ) : null}
           </div>
         </div>
-        <div className={style.row}>
-          <div className={style.field}>
+        {/* <div className={style.row}> */}
+          <div className={style.BtnContainer}>
+          
             <button className={style.btn} type="submit">Submit</button>
+            <button className={style.btn} type="submit">Cancel</button>
           </div>
-        </div>
+        {/* </div> */}
       </form>
     
 </>

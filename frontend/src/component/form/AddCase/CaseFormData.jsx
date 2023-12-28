@@ -3,8 +3,14 @@ import style from "./CaseFormData.module.css";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
+import Modal from "../Client/People/ModelPop/Modal";
+import TaskForm from "../Client/People/ModelPop/TaskForm";
+import EditCaseForm from "./EditCaseForm/EditCaseForm";
 
 const CaseFormData = () => {
+  const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
   const [casesData, setCasesData] = useState([]);
   const [editingCase, setEditingCase] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -137,7 +143,10 @@ const CaseFormData = () => {
           <p><strong>Opponent:</strong> {caseItem.opponentPartyName}</p>
         </div>
         <div className={style.cardActions}>
-          <button className={style.btn} onClick={() => handleEditClick(caseItem)}>Edit</button>
+          <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+             <EditCaseForm />
+          </Modal>
           <button className={style.btn} onClick={() => handleDeleteClick(caseItem.id)}>Delete</button>
           <button className={style.btn} onClick={() => handleDownloadClick(caseItem.id)}>Download</button>
         </div>

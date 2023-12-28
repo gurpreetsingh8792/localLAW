@@ -2,7 +2,7 @@
 
 .formContainer {
   width: 600px; 
-          height: 800px;
+          height: 80%;
           margin: 0 auto;
           padding: 20px;
           border: 1px solid #ccc;
@@ -14,6 +14,11 @@
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.BtnContainer{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
 .Heading{
   text-align: center;
   color: var(--color-primary);
@@ -199,6 +204,7 @@
    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
    margin-right: 20px;
  }
+ 
 .inputField3 {
  width: 90%;
   padding: 5px;

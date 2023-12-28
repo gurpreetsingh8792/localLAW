@@ -1,14 +1,23 @@
-.container {
+ .MainContainer{
+  height: 100Vh;
+ }
+
+ .container {
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
-    
+    height: 47%;
     border-radius: 5px;
     border: 1px solid #ccc;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     background-color: #f7f7f7;
     margin-top: 50px;
+  }
+  .BtnContainer{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
   }
 
   .Heading{

@@ -1,6 +1,10 @@
+.MainContainer{
+  height: 100vh;
+}
 
 .formContainer {
     width: 400px;
+    height: 72%;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -8,6 +12,11 @@
     border-radius: 5px;
     margin-top: 50px;
     background-color: #f7f7f7;
+  }
+  .BtnContainer{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
   }
   .Heading{
     text-align: center;

@@ -80,7 +80,7 @@ const TeamMemberdata = () => {
           </thead>
           <tbody>
             {teamMembers.map((member, index) => (
-              <tr className={style.tr} key={index}>
+              <tr className={style.trs} key={index}>
                 <td className={style.td}>{member.fullName}</td>
                 <td className={style.td}>{member.email}</td>
                 <td className={style.td}>{member.designation}</td>

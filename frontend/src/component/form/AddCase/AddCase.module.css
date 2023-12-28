@@ -12,6 +12,13 @@
     background-color: #f7f7f7;
     margin-top: 40px;
   }
+
+  .BtnContainer{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
   .Heading{
     text-align: center;
     color: var(--color-primary);

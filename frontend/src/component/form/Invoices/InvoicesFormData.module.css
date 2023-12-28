@@ -41,7 +41,7 @@
   
   /* Body row styling */
   .tableBodyRow {
-    border-bottom: 1px solid #ddd;
+    /* border-bottom: 1px solid #ddd; */
   }
   
   /* Body cells styling */
@@ -55,12 +55,17 @@
   .tableBodyRow:nth-child(even) {
     background-color: #f2f2f2;
   }
+  .tableBodyRow {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
   
   /* Hover effect for rows */
   .tableBodyRow:hover {
-    /* background-color: #ddd; */
+    transform: scale(1.03);
   }
-  
+
+ 
   .btn {
     background-color: var(--primary-color); /* Replace with your primary color variable */
     color: white;
