@@ -1,0 +1,645 @@
+/* 
+
+.formContainer {
+    width: 600px; 
+            height: 80%;
+            margin: 0 auto;
+            padding: 0rem;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 0.1%;
+            background-color: #f7f7f7;
+            margin-top: 0.1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .BtnContainer{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .Heading{
+    text-align: center;
+    color: var(--color-primary);
+  }
+  
+  .invoiceNo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .clientContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .selectFieldClient {
+    width: 75%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 10px;
+  }
+  
+  .link{
+    color: var(--color-primary);
+    
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+  .selectFieldType {
+    flex: 1;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 10px;
+  }
+  .fieldContainer {
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+  
+  .inputField {
+    flex: 1;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 10px;
+  }
+  .label {
+    flex-basis: calc(33.33% - 10px); 
+    display: flex;
+    
+    color: var(--color-secondary);
+  }
+  
+  .formGroup3 {
+    flex-basis: calc(33.33% - 10px); 
+    
+    
+  }
+  .selectFieldTaxType{
+    flex: 1;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 10px;
+  }
+  
+  .textareaField {
+    width: 98%;
+    height: 4rem;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  }
+  .inputFieldHearingDate {
+    width: 47.5%;
+    padding: 5px;
+    
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 10px;
+  }
+  
+  .expensesTitle {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    margin-top: 20px;
+    color: var(--color-primary);
+  }
+  .inputFieldTitle {
+    width: 98%;
+    padding: 5px;
+    
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 10px;
+  }
+  
+  .fileField {
+    width: 98%;
+    padding: 5px;
+    margin-top: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    margin-right: 10px;
+  }
+  
+  .submitButton {
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: inset 0px 0px 6px 0px ;
+  }
+  .submitButton:hover {
+    background-color: var(--color-fourth); 
+    color: var(--color-primary);
+    transform: scale(1.05); 
+    box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+  }
+  .formSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  
+  .formGroup {
+    flex-basis: calc(33.33% - 10px); 
+    margin-right: 105px;
+    
+  }
+  .inputField1 {
+    width: 120%;
+     padding: 5px;
+     
+     border: 1px solid #ccc;
+     border-radius: 4px;
+     font-size: 14px;
+     box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+     margin-right: 20px;
+   }
+  .inputField2 {
+    width: 120%;
+     padding: 5px;
+     
+     border: 1px solid #ccc;
+     border-radius: 4px;
+     font-size: 14px;
+     box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+     margin-right: 20px;
+   }
+   
+  .inputField3 {
+   width: 90%;
+    padding: 5px;
+    
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    
+  }
+  .errorMessage {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+   
+   
+  }
+  @media (max-width: 768px) {
+    .formContainer {
+      width: 100%;
+      height: auto;
+      padding: 10px;
+    }
+  
+    .clientContainer {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+  
+    .selectFieldClient,
+    .selectFieldType,
+    .selectFieldTaxType {
+      width: 100%;
+      margin-top: 5px;
+    }
+  
+    .fieldContainer {
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+  
+    .inputField,
+    .fileField,
+    .selectFieldClient,
+    .selectFieldType,
+    .selectFieldTaxType {
+      width: 100%;
+      margin-top: 5px;
+    }
+  
+    .label {
+      flex-basis: 100%;
+      margin-bottom: 5px;
+    }
+  
+    .formGroup {
+      flex-basis: 100%;
+      margin-right: 0;
+    }
+  
+    .formSection {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .inputField1 {
+        width: 235%;
+         padding: 5px;
+         
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         font-size: 14px;
+         box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+         margin-right: 20px;
+       }
+      .inputField2 {
+        width: 235%;
+         padding: 5px;
+         
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         font-size: 14px;
+         box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+         margin-right: 20px;
+       }
+      .inputField3 {
+       width: 185%;
+        padding: 5px;
+        
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+        
+      }
+      .fieldContainer {
+    
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        
+      }
+      .inputFieldHearingDate {
+        width: 98%;
+        padding: 5px;
+        
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+        margin-right: 10px;
+      }
+  } */
+
+
+  
+
+  .formContainer {
+    width: 600px;
+    height: 80vh; /* Changed from 80% to 80vh for consistent height relative to the viewport */
+    margin: 2rem auto; /* Combined margin-top and margin-bottom */
+    padding: 1rem;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background-color: #f7f7f7;
+    overflow-y: auto; /* Ensures vertical scrolling */
+  }
+  
+
+.BtnContainer{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+.Heading{
+  text-align: center;
+  color: var(--color-primary);
+}
+
+.invoiceNo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.clientContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.selectFieldClient {
+  width: 75%;
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-right: 10px;
+}
+
+.link{
+  color: var(--color-primary);
+  
+}
+.link:hover {
+  text-decoration: underline;
+}
+.selectFieldType {
+  flex: 1;
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-right: 10px;
+}
+.fieldContainer {
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.inputField {
+  flex: 1;
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-right: 10px;
+}
+.label {
+  flex-basis: calc(33.33% - 10px); 
+  display: flex;
+  
+  color: var(--color-secondary);
+}
+
+.formGroup3 {
+  flex-basis: calc(33.33% - 10px); 
+  
+  
+}
+.selectFieldTaxType{
+  flex: 1;
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-right: 10px;
+}
+
+.textareaField {
+  width: 98%;
+  height: 100px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+}
+.inputFieldHearingDate {
+  width: 47.5%;
+  padding: 5px;
+  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-right: 10px;
+}
+
+.expensesTitle {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  margin-top: 20px;
+  color: var(--color-primary);
+}
+.inputFieldTitle {
+  width: 98%;
+  padding: 5px;
+  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-right: 10px;
+}
+
+.fileField {
+  width: 98%;
+  padding: 5px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-right: 10px;
+}
+
+.submitButton {
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: inset 0px 0px 6px 0px ;
+}
+.submitButton:hover {
+  background-color: var(--color-fourth); 
+  color: var(--color-primary);
+  transform: scale(1.05); 
+  box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+}
+.formSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+
+.formGroup {
+  flex-basis: calc(33.33% - 10px); 
+  margin-right: 105px;
+  
+}
+.inputField1 {
+  width: 120%;
+   padding: 5px;
+   
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   font-size: 14px;
+   box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+   margin-right: 20px;
+ }
+.inputField2 {
+  width: 120%;
+   padding: 5px;
+   
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   font-size: 14px;
+   box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+   margin-right: 20px;
+ }
+ 
+.inputField3 {
+ width: 90%;
+  padding: 5px;
+  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  
+}
+.errorMessage {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+ 
+ 
+}
+@media (max-width: 768px) {
+  .formContainer {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+  }
+
+  .clientContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .selectFieldClient,
+  .selectFieldType,
+  .selectFieldTaxType {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .fieldContainer {
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+
+  .inputField,
+  .fileField,
+  .selectFieldClient,
+  .selectFieldType,
+  .selectFieldTaxType {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .label {
+    flex-basis: 100%;
+    margin-bottom: 5px;
+  }
+
+  .formGroup {
+    flex-basis: 100%;
+    margin-right: 0;
+  }
+
+  .formSection {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .inputField1 {
+      width: 235%;
+       padding: 5px;
+       
+       border: 1px solid #ccc;
+       border-radius: 4px;
+       font-size: 14px;
+       box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+       margin-right: 20px;
+     }
+    .inputField2 {
+      width: 235%;
+       padding: 5px;
+       
+       border: 1px solid #ccc;
+       border-radius: 4px;
+       font-size: 14px;
+       box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+       margin-right: 20px;
+     }
+    .inputField3 {
+     width: 185%;
+      padding: 5px;
+      
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+      
+    }
+    .fieldContainer {
+  
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      
+    }
+    .inputFieldHearingDate {
+      width: 98%;
+      padding: 5px;
+      
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+      margin-right: 10px;
+    }
+}

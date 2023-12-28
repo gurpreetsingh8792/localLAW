@@ -2,8 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import style from './AlertsFormData.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import { NavLink } from 'react-router-dom';
+import Modal from '../Client/People/ModelPop/Modal';
+import EditTasksForm from './EditTasksForm/EditTasksForm';
 
 const AlertsFormData = () => {
+  const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
   const [alertsData, setAlertsData] = useState([]);
 
   const fetchAlertsData = async () => {
@@ -86,13 +92,8 @@ const AlertsFormData = () => {
                 <td className={style.td}>{alert.completionDate}</td>
                 <td className={style.td}>{alert.assignTo}</td>
                 <td>
-                  <button
-                  className={style.btn}
-                    type="button"
-                    onClick={() => handleDeleteClick(alert.id)}
-                  >
-                    Edit
-                  </button>
+                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+
                   <button
                   className={style.btn}
                     type="button"
@@ -111,6 +112,9 @@ const AlertsFormData = () => {
               </tr>
             ))}
           </tbody>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    <EditTasksForm />
+                  </Modal>
         </table>
       </div>
     </>
