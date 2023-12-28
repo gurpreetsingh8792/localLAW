@@ -2,8 +2,14 @@ import React, { useEffect, useState } from 'react';
 import style from './ClientFormData.module.css';
 import axios from 'axios';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import { NavLink } from 'react-router-dom';
+import EditPeopleForm from './EditPeopleForm/EditPeopleForm';
+import Modal from './People/ModelPop/Modal';
 
 const ClientFormData = () => {
+  const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
   const [clientData, setClientData] = useState([]);
 
   const fetchClientData = async () => {
@@ -88,13 +94,10 @@ const ClientFormData = () => {
                 <td>{clientItem.assignAlerts}</td>
                 {/* <td>{clientItem.scheduleAppointment}</td> */}
                 <td>
-                <button
-                    className={style.btn}
-                    type="button"
-                    onClick={() => handleDeleteClick(clientItem.id)}
-                  >
-                    Edit
-                  </button>
+                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+                  <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    <EditPeopleForm />
+                  </Modal>
                   <button
                     className={style.btn}
                     type="button"

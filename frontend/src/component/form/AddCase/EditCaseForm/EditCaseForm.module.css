@@ -1,0 +1,153 @@
+/* General container styling */
+.container {
+    width: 100%;
+    height: 80vh;
+    margin: 0 auto;
+    padding: 1.25rem;
+    /* border: 0.0625rem solid #ccc; */
+    box-shadow: 0 0.125rem 0.0625rem rgba(0, 0, 0, 0.1), inset 0 0 0.25rem 0rem var(--color-Third);
+    border-radius: 0.625rem;
+    background-color: #f7f7f7;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    overflow-y: auto; /* Added for vertical scrolling */
+}
+
+
+/* Button container styling */
+.BtnContainer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem; /* Kept as 1rem */
+}
+
+/* Heading styling */
+.Heading {
+    text-align: center;
+    color: var(--color-primary);
+}
+
+/* Form styling */
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Row styling */
+.row, .row1 {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem; /* Kept as 1rem */
+}
+
+/* Column styling */
+.column, .columnAp, .columnAlert, .columnDoc, .columnTeam {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Label styling */
+.label, .labelCaveat2, .labelManage, .labelNotes, .labelTeam, .labelln, .labelei {
+    text-align: left;
+    color: var(--color-secondary);
+}
+
+/* Input styling */
+.input, .inputDate, .inputTitle, .inputCaveat1, .inputCaveat2, .inputopn, .inputln, .inputmn, .inputei {
+    padding: 0.3125rem; /* Adjusted from 5rem */
+    border: 0.0625rem solid #ccc; /* Adjusted from 1rem */
+    border-radius: 0.25rem; /* Adjusted from 4rem */
+    font-size: 1rem; /* Adjusted from 16rem */
+    margin-right: 0.625rem; /* Adjusted from 1rem */
+    box-shadow: inset 0 0 0.25rem 0rem var(--color-Third);
+}
+
+/* Radio group styling */
+.radioGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Radio button styling */
+.radio {
+    margin-left: 0.625rem; /* Adjusted from 10rem */
+    appearance: none;
+    border: 0.0625rem solid #ccc; /* Adjusted from 1rem */
+    border-radius: 60%;
+    outline: none;
+    width: 0.9375rem; /* Adjusted from 15rem */
+    height: 0.9375rem; /* Adjusted from 15rem */
+    background-color: white;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.radio:checked {
+    background-color: var(--color-primary);
+    border: 0.0625rem solid var(--color-secondary);
+}
+
+/* Select dropdown styling */
+.select, .selectClient, .selectTeam, .selectPa, .selectManage, .selectCaseStatus, .selectCd {
+    padding: 0.3125rem; /* Adjusted from 5rem */
+    border: 0.0625rem solid #ccc;
+    box-shadow: inset 0 0 0.25rem 0rem var(--color-Third);
+    border-radius: 0.25rem; /* Adjusted from 4rem */
+    font-size: 1rem; /* Adjusted from 16rem */
+}
+
+/* Textarea styling */
+.textarea, .textareaNotes {
+    padding: 0.3125rem; /* Adjusted from 5rem */
+    border: 0.0625rem solid #ccc;
+    box-shadow: inset 0 0 0.25rem 0rem var(--color-Third);
+    border-radius: 0.125rem; /* Adjusted from 2rem */
+    font-size: 1rem; /* Kept as 1rem */
+    height: 6.25rem; /* Adjusted from 10rem */
+}
+
+/* Error message styling */
+.error {
+    color: red;
+    font-size: 1rem; /* Kept as 1rem */
+    margin-top: 0.625rem; /* Adjusted from 1rem */
+}
+
+/* Submit button styling */
+.submitButton {
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 0.625rem 0.625rem; /* Adjusted from 1rem */
+    border: none;
+    border-radius: 0.25rem; /* Adjusted from 0.4rem */
+    cursor: pointer;
+    margin-top: 0.625rem; /* Adjusted from 1rem */
+    box-shadow: inset 0 0 0.0625rem 0rem;
+}
+
+.submitButton:hover {
+    background-color: var(--color-fourth);
+    color: var(--color-primary);
+    transform: scale(1.05);
+    box-shadow: inset 0 0 0.0625rem 0rem var(--color-primary);
+}
+
+/* Additional heading styling */
+.heading {
+    text-align: center;
+    font-size: 1.25rem; /* Adjusted from 2rem */
+    font-weight: bold;
+    margin-top: 1.25rem; /* Adjusted from 2rem */
+    margin-bottom: 1.25rem; /* Adjusted from 2rem */
+    color: var(--color-primary);
+}
+
+/* Link styling */
+.link, .linkTeam, .linkClient {
+    color: var(--color-primary);
+}
+
+.link:hover, .linkTeam:hover, .linkClient:hover {
+    text-decoration: underline;
+}

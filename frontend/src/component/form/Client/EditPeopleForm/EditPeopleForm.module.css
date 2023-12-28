@@ -1,0 +1,99 @@
+/* EditPeopleForm.module.css */
+
+/* .MainContainer {
+    background-color: transparent;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px; 
+    margin: auto;
+    width: 100vw;
+    height: 80vh;
+    overflow-y: auto; 
+    justify-content: center;
+  } */
+  
+  .clientForm {
+    width: 100%;
+    height: 80vh;
+    margin: 0 auto;
+    padding: 1.25rem;
+    /* border: 0.0625rem solid #ccc; */
+    box-shadow: 0 0.125rem 0.0625rem rgba(0, 0, 0, 0.1), inset 0 0 0.25rem 0rem var(--color-Third);
+    border-radius: 0.625rem;
+    background-color: #f7f7f7;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    overflow-y: auto; /* Added for vertical scrolling */
+  }
+  
+  .formSection {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  
+  .formGroup, .formGroup3 {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  .label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .inputField, .inputFieldEmail, .input3, .inputFieldTextarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .inputFieldTextarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
+  
+  .submitButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submitButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .link {
+    color: #007bff;
+    text-decoration: none;
+    margin-top: 10px;
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+  }
+  
+  /* Adjustments for small screens */
+  @media (max-width: 600px) {
+    .MainContainer {
+      width: 90%;
+      margin: 10px auto;
+    }
+  
+    .clientForm {
+      width: 100%;
+    }
+  }
+  

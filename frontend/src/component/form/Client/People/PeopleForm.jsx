@@ -425,11 +425,10 @@ const PeopleForm = () => {
 
 
           
-          <NavLink to="#" onClick={openModal}>Appointment</NavLink>
           <div className={styles.formSection}>
 
+          <NavLink to="#" onClick={openModal}>Appointment</NavLink>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-                   {/* Your form here */}
              <TaskForm />
           </Modal>
           
