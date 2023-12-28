@@ -128,7 +128,7 @@ export const links = [
       },
       {
           name:'Show Proxy',
-          path:'/alertsformdata'
+          path:'/dashboard/proxydata'
       }
     ]
   },

@@ -266,6 +266,43 @@ app.post('/afterproxy', authenticateJWT, async (req, res) => {
   }
 });
 
+//get endpoint to render data on edit form
+app.get('/alerts/edit', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+
+  db.all(
+    'SELECT id, title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo FROM AlertsForm WHERE user_id = ?',
+    [userId],
+    (err, alertForms) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(alertForms);
+    }
+  );
+});
+
+//update endpoint to update the render data on edit form
+app.put('/alerts/edit/update/:alertId', authenticateJWT, (req, res) => {
+  const alertId = req.params.alertId;
+  const userId = req.user.id;
+  const {
+    title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo
+  } = req.body;
+
+  db.run(
+    'UPDATE AlertsForm SET title = ?, startDate = ?, completionDate = ?, caseTitle = ?, caseType = ?, assignFrom = ?, assignTo = ? WHERE id = ? AND user_id = ?',
+    [title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo, alertId, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Alert form updated successfully' });
+    }
+  );
+});
+
 
 // alerts forms
 app.post('/alerts', authenticateJWT, async (req, res) => {
@@ -686,7 +723,42 @@ app.get('/dashboard/alert/teammembers', authenticateJWT, (req, res) => {
 });
 
 
+//get endpoint to render teammember form data on edit form
+app.get('/dashboard/teammemberform/edit', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
 
+  db.all(
+    'SELECT id, image, fullName, email, designation, address, state, city, zipCode, selectedGroup FROM TeamMembers WHERE user_id = ?',
+    [userId],
+    (err, teamMembers) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(teamMembers);
+    }
+  );
+});
+
+//update endpoint to update the render data on edit form
+app.put('/dashboard/teammemberform/edit/update/:memberId', authenticateJWT, (req, res) => {
+  const memberId = req.params.memberId;
+  const userId = req.user.id;
+  const {
+    image, fullName, email, designation, address, state, city, zipCode, selectedGroup
+  } = req.body;
+
+  db.run(
+    'UPDATE TeamMembers SET image = ?, fullName = ?, email = ?, designation = ?, address = ?, state = ?, city = ?, zipCode = ?, selectedGroup = ? WHERE id = ? AND user_id = ?',
+    [image, fullName, email, designation, address, state, city, zipCode, selectedGroup, memberId, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Team member updated successfully' });
+    }
+  );
+});
 
 //Team Members form endpoints
 app.post('/dashboard/teammemberform', authenticateJWT, async (req, res) => {
@@ -874,6 +946,42 @@ app.get('/dashboard/clientform', authenticateJWT, (req, res) => {
 });
 
 
+//get endpoint to render bill data when edit button is clicked on show bill
+app.get('/bill/edit', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+
+  db.all(
+    'SELECT id, billNumber, title, currentDate, dateFrom, dateTo, fullAddress, billingType, totalHours, noOfHearings, totalAmount, amount, taxType, taxPercentage, totalAmountWithTax, description, addDoc FROM BillForm WHERE user_id = ?',
+    [userId],
+    (err, billForms) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(billForms);
+    }
+  );
+});
+
+//update endpoint to update the render data when edit button is clicked on show bill
+app.put('/bill/edit/update/:billId', authenticateJWT, (req, res) => {
+  const billId = req.params.billId;
+  const userId = req.user.id;
+  const {
+    billNumber, title, currentDate, dateFrom, dateTo, fullAddress, billingType, totalHours, noOfHearings, totalAmount, amount, taxType, taxPercentage, totalAmountWithTax, description, addDoc
+  } = req.body;
+
+  db.run(
+    'UPDATE BillForm SET billNumber = ?, title = ?, currentDate = ?, dateFrom = ?, dateTo = ?, fullAddress = ?, billingType = ?, totalHours = ?, noOfHearings = ?, totalAmount = ?, amount = ?, taxType = ?, taxPercentage = ?, totalAmountWithTax = ?, description = ?, addDoc = ? WHERE id = ? AND user_id = ?',
+    [billNumber, title, currentDate, dateFrom, dateTo, fullAddress, billingType, totalHours, noOfHearings, totalAmount, amount, taxType, taxPercentage, totalAmountWithTax, description, addDoc, billId, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Bill form updated successfully' });
+    }
+  );
+});
 
 
 // POST Endpoint for Submitting Bill Form
@@ -1012,6 +1120,46 @@ app.get('/billdata/download-pdf/:billId', authenticateJWT, async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+// get endpoint to show a case so the user can edit it 
+app.get("/edit/caseform", authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+
+  db.all(
+    "SELECT id, title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId FROM CasesForm WHERE user_id = ?",
+    [userId],
+    (err, forms) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(forms);
+    }
+  );
+});
+// get endpoint to update the case so the user can edit it 
+app.put('edit/caseform/update:caseId', authenticateJWT, (req, res) => {
+  const caseId = req.params.caseId;
+  const userId = req.user.id;
+  const {
+    title, caseType, courtType, courtName, caveatNo, caseCode, caseURL,
+    caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling,
+    practiceArea, manage, client, team, clientDesignation, opponentPartyName,
+    lawyerName, mobileNo, emailId
+  } = req.body;
+
+  db.run(
+    'UPDATE CasesForm SET title = ?, caseType = ?, courtType = ?, courtName = ?, caveatNo = ?, caseCode = ?, caseURL = ?, caseStatus = ?, honorableJudge = ?, courtHallNo = ?, cnrNo = ?, batchNo = ?, dateOfFiling = ?, practiceArea = ?, manage = ?, client = ?, team = ?, clientDesignation = ?, opponentPartyName = ?, lawyerName = ?, mobileNo = ?, emailId = ? WHERE id = ? AND user_id = ?',
+    [title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, caseId, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Case updated successfully' });
+    }
+  );
+});
+
 
 
 
@@ -1210,6 +1358,43 @@ app.get('/dashboard/caseformdata/download-pdf/:caseId', authenticateJWT, async (
 });
 
 
+
+// GET endpoint to show a client in edit client form
+app.get('/dashboard/clientform/edit', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+
+  db.all(
+    'SELECT id, firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts FROM ClientForm WHERE user_id = ?',
+    [userId],
+    (err, clientForms) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(clientForms);
+    }
+  );
+});
+// Update endpoint to update a client in edit client form
+app.put('/clients/forms/:clientId', authenticateJWT, (req, res) => {
+  const clientId = req.params.clientId;
+  const userId = req.user.id;
+  const {
+    firstName, lastName, email, mobileNo, alternateMobileNo, organizationName,
+    organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts
+  } = req.body;
+
+  db.run(
+    'UPDATE ClientForm SET firstName = ?, lastName = ?, email = ?, mobileNo = ?, alternateMobileNo = ?, organizationName = ?, organizationType = ?, organizationWebsite = ?, caseTitle = ?, type = ?, homeAddress = ?, officeAddress = ?, assignAlerts = ? WHERE id = ? AND user_id = ?',
+    [firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, clientId, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Client form updated successfully' });
+    }
+  );
+});
 
 
 // POST endpoint to add a new client form
@@ -1434,6 +1619,43 @@ app.post('/dashboard/groupform', authenticateJWT, async (req, res) => {
   }
 });
 
+//endpoint for render invoice data on edit form of invoice
+app.get('/invoiceform/edit', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+
+  db.all(
+    'SELECT id, invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount FROM InvoicesForm WHERE user_id = ?',
+    [userId],
+    (err, invoicesForms) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json(invoicesForms);
+    }
+  );
+});
+
+//endpoint for updating the renderinformation on edit form of invoice
+app.put('/invoiceform/edit/update/:invoiceId', authenticateJWT, (req, res) => {
+  const invoiceId = req.params.invoiceId;
+  const userId = req.user.id;
+  const {
+    invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress,
+    hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount, addDoc
+  } = req.body;
+
+  db.run(
+    'UPDATE InvoicesForm SET invoiceNumber = ?, client = ?, caseType = ?, date = ?, amount = ?, taxType = ?, taxPercentage = ?, fullAddress = ?, hearingDate = ?, title = ?, dateFrom = ?, dateTo = ?, expensesAmount = ?, expensesTaxType = ?, expensesTaxPercentage = ?, expensesCumulativeAmount = ?, addDoc = ? WHERE id = ? AND user_id = ?',
+    [invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount, addDoc, invoiceId, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ message: 'Invoice form updated successfully' });
+    }
+  );
+});
 
 //Invoice Form endpoints
 app.post('/invoiceform', authenticateJWT, async (req, res) => {
@@ -2063,6 +2285,40 @@ app.get('/dashboard/user/proxy-activity', authenticateJWT, (req, res) => {
     }
   );
 });
+
+// Endpoint for deleting proxy activity for the logged-in user
+app.delete('/dashboard/user/proxy-activity/:activityId', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+  const activityId = req.params.activityId;
+
+  // Check if the activity with the given ID exists and belongs to the authenticated user
+  db.get(
+    'SELECT id FROM ProxyActivity WHERE id = ? AND creator_user_id = ?',
+    [activityId, userId],
+    (err, row) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      if (!row) {
+        return res.status(404).json({ error: 'Proxy Activity not found' });
+      }
+
+      // Delete the proxy activity with the specified ID
+      db.run('DELETE FROM ProxyActivity WHERE id = ?', [activityId], (deleteErr) => {
+        if (deleteErr) {
+          console.error('Database error:', deleteErr);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        return res.json({ message: 'Proxy Activity deleted successfully' });
+      });
+    }
+  );
+});
+
+
 
 
 // Error handler middleware

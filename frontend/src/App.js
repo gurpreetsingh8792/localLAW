@@ -40,7 +40,7 @@ import FinancesView from "./component/form/Bill/FinancesView/FinancesView";
 import ReviewDocForm from "./component/form/ReviewFormDoc/ReviewDocForm";
 import CasesFormData from "./component/form/AddCase/CaseFormData";
 import ClientFormData from "./component/form/Client/ClientFormData";
-// import ProxyData from "./component/form/Proxy/ProxyData";
+import ProxyData from "./component/form/Proxy/ProxyData";
 import InvoicesFormData from "./component/form/Invoices/InvoicesFormData";
 import BillFormData from "./component/form/Bill/BillFormData";
 import AlertsFormData from "./component/form/Alerts/AlertsFormData";
@@ -104,7 +104,7 @@ function App() {
             <Route path="dashboard/invoicesformdata" element={<InvoicesFormData />} />
             <Route path="dashboard/alertsformdata" element={<AlertsFormData />} />
             <Route path="dashboard/teammemberdata" element={<TeamMemberdata />} />
-            {/* <Route path="dashboard/proxydata" element={<ProxyData />} /> */}
+            <Route path="dashboard/proxydata" element={<ProxyData />} />
             
 
             {/* Form View routes */}

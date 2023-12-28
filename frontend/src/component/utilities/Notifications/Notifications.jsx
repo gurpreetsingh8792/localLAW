@@ -3,6 +3,7 @@ import axios from "axios";
 import DashboardNavbar from "../DashboardNavbar/DashboardNavbar";
 import style from './Notifications.module.css'
 
+
 const Notifications = () => {
   const [tasks, setTasks] = useState([]);
   const [proxy, setProxy] = useState([]);
@@ -10,6 +11,7 @@ const Notifications = () => {
   const [proxyLoading, setProxyLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState({});
+  
 
   useEffect(() => {
     axios.get('http://localhost:8052/dashboard/user/notifications', {
