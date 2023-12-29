@@ -2,8 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import style from './BillFormData.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import EditBillForm from './EditBillForm/EditBillForm';
+import { NavLink } from 'react-router-dom';
+import Modal from '../Client/People/ModelPop/Modal';
 
 const BillFormData = () => {
+  const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
   const [billData, setBillData] = useState([]);
 
   const fetchBillData = async () => {
@@ -86,13 +92,8 @@ const BillFormData = () => {
                 <td className={style.tableBodyCell}>{bill.amount}</td>
                 <td className={style.tableBodyCell}>{bill.totalAmountWithTax}</td>
                 <td className={style.tableBodyCell}>
-                  <button
-                  className={style.btn}
-                    type="button"
-                    onClick={() => handleDeleteClick(bill.id)}
-                  >
-                    Edit
-                  </button>
+                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+
                   <button
                   className={style.btn}
                     type="button"
@@ -111,6 +112,9 @@ const BillFormData = () => {
               </tr>
             ))}
           </tbody>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+             <EditBillForm />
+          </Modal>
         </table>
       </div>
     </>

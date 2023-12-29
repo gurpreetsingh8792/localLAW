@@ -93,11 +93,8 @@ const ClientFormData = () => {
                 <td>{clientItem.mobileNo}</td>
                 <td>{clientItem.assignAlerts}</td>
                 {/* <td>{clientItem.scheduleAppointment}</td> */}
-                <td>
+                
                 <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
-                  <Modal isOpen={isModalOpen} onClose={closeModal}>
-                    <EditPeopleForm />
-                  </Modal>
                   <button
                     className={style.btn}
                     type="button"
@@ -112,10 +109,13 @@ const ClientFormData = () => {
                   >
                     Download PDF
                   </button>
-                </td>
               </tr>
+                
             ))}
           </tbody>
+                  <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    <EditPeopleForm />
+                  </Modal>
         </table>
       </div>
     </>

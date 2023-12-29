@@ -90,7 +90,7 @@ const EditPeopleForm = () => {
   
 
   return (
-    <div className={styles.MainContainer}>
+    <>
     <div className={styles.clientForm}>
       
 
@@ -330,7 +330,7 @@ const EditPeopleForm = () => {
         </div>
       </form>
     </div>
-</div>
+</>
   );
 };
 export default EditPeopleForm;

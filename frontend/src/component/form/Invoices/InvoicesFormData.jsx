@@ -2,9 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import style from './InvoicesFormData.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import Modal from '../Client/People/ModelPop/Modal';
+import EditInvoicesForm from './EditInvoiceForm/EditInvoice';
+import { NavLink } from 'react-router-dom';
 
 const InvoicesFormData = () => {
   const [invoicesData, setInvoicesData] = useState([]);
+  const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
 
   const fetchInvoicesData = async () => {
     try {
@@ -86,13 +92,9 @@ const InvoicesFormData = () => {
                 <td className={style.tableBodyCell}>{invoice.client}</td>
                 <td className={style.tableBodyCell}>{invoice.expensesCumulativeAmount}</td>
                 <td className={style.tableBodyCell}>
-                  <button
-                  className={style.btn}
-                    type="button"
-                    onClick={() => handleDeleteClick(invoice.id)}
-                  >
-                    Edit
-                  </button>
+                
+                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+
                   <button
                   className={style.btn}
                     type="button"
@@ -110,6 +112,9 @@ const InvoicesFormData = () => {
                 </td>
               </tr>
             ))}
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    <EditInvoicesForm />
+                  </Modal>
           </tbody>
         </table>
       </div>

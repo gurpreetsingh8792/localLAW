@@ -2,8 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import style from './TeamMemberData.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import { NavLink } from 'react-router-dom';
+import EditTeamMembersForm from './EditTeamMemberForm/EditTeamMemberForm';
+import Modal from '../Client/People/ModelPop/Modal';
 
 const TeamMemberdata = () => {
+  const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
   const [teamMembers, setTeamMembers] = useState([]);
 
   const fetchTeamMembers = async () => {
@@ -87,13 +93,8 @@ const TeamMemberdata = () => {
                 <td className={style.td}>{member.selectedGroup}</td>
                 <td className={style.td}>{member.selectedGroup}</td>
                 <td className={style.td}>
-                  <button
-                  className={style.btn}
-                    type="button"
-                    onClick={() => handleDeleteClick(member.id)}
-                  >
-                    Edit
-                  </button>
+                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+
                   <button
                   className={style.btn}
                     type="button"
@@ -112,6 +113,9 @@ const TeamMemberdata = () => {
               </tr>
             ))}
           </tbody>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    <EditTeamMembersForm />
+                  </Modal>
         </table>
       </div>
     </>
