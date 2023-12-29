@@ -33,7 +33,7 @@ const CaseForm = () => {
     // Fetch team member full names and populate the select options
     const fetchTeamMembers = async () => {
       try {
-        const response = await axios.get('http://localhost:8052/teammembers', {
+        const response = await axios.get('http://localhost:8052/teammemberform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },

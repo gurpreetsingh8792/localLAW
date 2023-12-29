@@ -24,18 +24,15 @@ const CaseFormData = () => {
   useEffect(() => {
     fetchCasesData();
   }, []);
-  
 
   const fetchCasesData = async () => {
     try {
-      const response = await axios.get("http://localhost:8052/caseformdata", {
+      const response = await axios.get("http://localhost:8052/edit/caseform", {
         headers: {
           "x-auth-token": localStorage.getItem("token"),
         },
       });
       const data = response.data;
-      setCasesData(response.data);
-      console.log("Fetched data:", data); // Log the fetched data
       setCasesData(data);
     } catch (error) {
       console.error(error);
@@ -44,11 +41,12 @@ const CaseFormData = () => {
 
   const handleEditClick = (caseItem) => {
     setEditingCase(caseItem.id);
-    setEditFormData(caseItem);
+    openModal();
   };
 
   const handleCancelClick = () => {
     setEditingCase(null);
+    closeModal();
   };
 
   const handleDeleteClick = async (caseId) => {
@@ -60,31 +58,28 @@ const CaseFormData = () => {
             headers: { "x-auth-token": localStorage.getItem("token") },
           }
         );
-        fetchCasesData(); // Refetch the cases to update the UI
+        fetchCasesData();
       } catch (error) {
         console.error(error);
       }
     }
-    console.log("Delete button clicked with caseId:", caseId); // Add this line for debugging
   };
+
   const handleDownloadClick = async (caseId) => {
     try {
-      // Make an HTTP GET request to download the PDF for the specified case ID
       const response = await axios.get(
         `http://localhost:8052/dashboard/caseformdata/download-pdf/${caseId}`,
         {
-          responseType: "blob", // Set responseType to 'blob' to receive binary data
+          responseType: "blob",
           headers: {
             "x-auth-token": localStorage.getItem("token"),
           },
         }
       );
 
-      // Create a URL for the blob data
       const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
 
-      // Create an anchor element and trigger the download
       const a = document.createElement("a");
       a.href = url;
       a.download = `Case_${caseId}.pdf`;
@@ -94,68 +89,48 @@ const CaseFormData = () => {
     }
   };
 
-  const handleEditFormChange = (event) => {
-    const { name, value } = event.target;
-    setEditFormData({ ...editFormData, [name]: value });
-  };
-
-  const handleEditFormSubmit = async (event) => {
-    event.preventDefault();
-    const editedCase = {
-      id: editingCase,
-      ...editFormData,
-    };
-
-    try {
-      await axios.put(
-        `http://localhost:8052/caseformdata/${editingCase}`,
-        editedCase,
-        {
-          headers: { "x-auth-token": localStorage.getItem("token") },
-        }
-      );
-      setEditingCase(null);
-      fetchCasesData();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <>
-    <DashboardNavbar/>
+    <DashboardNavbar />
     <div className={style.Container}>
-  <div className={style.casesContainer}>
-    <h2 className={style.header}>Cases Form Data</h2>
-    {casesData.map((caseItem) => (
-      <div className={style.card} key={caseItem.id}>
-        {/* Card Content */}
-        <div className={style.cardHeader}>
-          <h3>{caseItem.title}</h3>
-        </div>
-        <div className={style.cardBody}>
-          <p><strong>Case Code:</strong> {caseItem.caseCode}</p>
-          <p><strong>Client:</strong> {caseItem.client}</p>
-          <p><strong>Lawyer:</strong> {caseItem.client}</p>
-          <p><strong>Judge:</strong> {caseItem.honorableJudge}</p>
-          <p><strong>Hearing Date:</strong> {caseItem.honorableJudge}</p>
-          <p><strong>Description:</strong> {caseItem.honorableJudge}</p>
-          <p><strong>Opponent:</strong> {caseItem.opponentPartyName}</p>
-        </div>
-        <div className={style.cardActions}>
-          <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
-          <Modal isOpen={isModalOpen} onClose={closeModal}>
-             <EditCaseForm />
-          </Modal>
-          <button className={style.btn} onClick={() => handleDeleteClick(caseItem.id)}>Delete</button>
-          <button className={style.btn} onClick={() => handleDownloadClick(caseItem.id)}>Download</button>
-        </div>
+      <div className={style.casesContainer}>
+        <h2 className={style.header}>Cases Form Data</h2>
+        {casesData.map((caseItem) => (
+          <div className={style.card} key={caseItem.id}>
+            <div className={style.cardHeader}>
+              <h3>{caseItem.title}</h3>
+            </div>
+            <div className={style.cardBody}>
+              <p><strong>Case Code:</strong> {caseItem.caseCode}</p>
+              <p><strong>Client:</strong> {caseItem.client}</p>
+              <p><strong>Judge:</strong> {caseItem.honorableJudge}</p>
+              <p><strong>Lawyer:</strong> {caseItem.honorableJudge}</p>
+              <p><strong>Hearing Date:</strong> {caseItem.honorableJudge}</p>
+              <p><strong>Description:</strong> {caseItem.honorableJudge}</p>
+              <p><strong>Opponent:</strong> {caseItem.opponentPartyName}</p>
+            </div>
+            <div className={style.cardActions}>
+              <button className={style.btn} onClick={() => handleEditClick(caseItem)}>
+                Edit
+              </button>
+              <button className={style.btn} onClick={() => handleDeleteClick(caseItem.id)}>
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+        <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
+          {/* Pass the selected case data to EditCaseForm */}
+          {editingCase && (
+            <EditCaseForm
+              caseData={casesData.find((caseItem) => caseItem.id === editingCase)}
+              onCancel={handleCancelClick}
+            />
+          )}
+        </Modal>
       </div>
-    ))}
-  </div>
-</div>
-
-    </>
+    </div>
+  </>
   );
 };
 
