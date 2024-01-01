@@ -5,6 +5,7 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { IoMdDocument, IoIosPeople } from "react-icons/io";
 
 export const data = [
+  
   {
     id: 1,
     caseNo:"16",

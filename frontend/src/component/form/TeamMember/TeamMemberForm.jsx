@@ -5,6 +5,9 @@ import styles from './TeamMemberForm.module.css';
 import { NavLink } from 'react-router-dom';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import Axios from 'axios';
+import Companyform from '../Company/Companyform';
+import Modal from '../Client/People/ModelPop/Modal';
+import GroupForm from '../Group/GroupForm'
 
 const initialValues = {
   image: '',
@@ -34,6 +37,12 @@ const validationSchema = Yup.object().shape({
 
 const TeamMembers = () => {
   const [groupNames, setGroupNames] = useState([]); // State to store group names
+  const openModalOne = () => setIsModalOpenOne(true);
+  const [isModalOpenOne, setIsModalOpenOne] = useState(false);
+  const openModalTwo = () => setIsModalOpenTwo(true);
+  const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
+  const closeModalOne = () => setIsModalOpenOne(false);
+  const closeModalTwo = () => setIsModalOpenTwo(false);
 
   useEffect(() => {
     // Fetch group names and populate the select options
@@ -44,7 +53,7 @@ const TeamMembers = () => {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
         });
-
+        
         // Extract the group names from the response data
         const groupNamesArray = response.data.map((group) => group.groupName);
         setGroupNames(groupNamesArray);
@@ -52,7 +61,7 @@ const TeamMembers = () => {
         console.error(error);
       }
     };
-
+    
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
   }, []);
   return (
@@ -166,8 +175,28 @@ const TeamMembers = () => {
                 </div>
 
               <div className={styles.fieldGroup}>
-                <NavLink to={"/dashboard/groupform"} className={styles.link}>
-                  Add New Group
+                <NavLink to={"#"} className={styles.link} onClick={openModalOne}>
+                  Add Group
+                </NavLink>
+              </div>
+
+            </div>
+            <div className={styles.horizontalFields}>
+                <div className={styles.fieldGroup}>
+                  <Field as="select" name="selectedGroup" className={styles.selectField}>
+                    <option value="">Select a Group</option>
+                    {groupNames.map((groupName) => (
+                      <option key={groupName} value={groupName}>
+                        {groupName}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage name="selectedGroup" component="div" className={styles.error} />
+                </div>
+
+              <div className={styles.fieldGroup}>
+                <NavLink to={"#"} className={styles.link} onClick={openModalTwo}>
+                  Add Company
                 </NavLink>
               </div>
             </div>
@@ -180,6 +209,16 @@ const TeamMembers = () => {
         )}
       </Formik>
     </div>
+    <Modal isOpen={isModalOpenOne} onClose={() => setIsModalOpenOne(false)}>
+    <GroupForm />
+    </Modal>
+
+    <Modal isOpen={isModalOpenTwo} onClose={() => setIsModalOpenTwo(false)}>
+    <Companyform />
+    </Modal>
+
+    
+
     </div>
   );
 };

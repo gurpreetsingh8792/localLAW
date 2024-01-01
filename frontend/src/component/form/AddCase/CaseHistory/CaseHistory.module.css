@@ -1,0 +1,52 @@
+.TimelineTableContainer {
+    font-family: Arial, sans-serif;
+    max-width: 800px; /* Adjust to match the width in the picture */
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds a slight shadow around the container */
+  }
+  
+  .Heading {
+    font-size: 10px;
+    text-align: left;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+  
+  .TimelineTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  .TimelineTable .Thead .Th {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: normal;
+    text-align: left;
+    padding: 8px;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .TimelineTable .Tbody .Td {
+    padding-left: 58px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .Tr{
+    width: 100vw;
+  }
+  
+  .TimelineTable .Tbody .Tr:nth-child(odd) {
+    background-color: #f9f9f9;
+  }
+  
+  /* If you want the table to be more compact, reduce padding and font size */
+  .TimelineTable .Th,
+  .TimelineTable .Td {
+    padding: 6px;
+    font-size: 14px;
+  }

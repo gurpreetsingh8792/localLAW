@@ -1,0 +1,144 @@
+.MainContainer{
+    height: 45vh;
+  }
+  
+  .formContainer {
+      width: 400px;
+      height: 100%;
+      margin: 0 auto;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      background-color: #f7f7f7;
+    }
+    .BtnContainer{
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .Heading{
+      text-align: center;
+      color: var(--color-primary);
+    }
+    
+    .imageUpload {
+      text-align: center;
+      margin-left: 100px;
+    }
+    
+    .imageLabel {
+      display: block;
+      width: 150px;
+      height: 150px;
+      border: 2px dashed #ccc;
+      border-radius: 50%;
+      line-height: 150px;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .uploadedImage {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    }
+    
+    .emptyImage {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color:#fff;
+      color: var(--color-primary);
+      padding: 20px; 
+      font-size: 10.5px; 
+      font-weight: 1000;
+    }
+    
+    
+    .imageInput {
+      display: none;
+    }
+    
+    .fieldGroup {
+      margin-bottom: 5px;
+    }
+    
+    .inputField {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      height: 30px;
+      box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    }
+    
+    .selectField {
+      width: 160%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      height: 30px;
+      box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+    }
+    
+    .error {
+      color: red;
+      font-size: 10px;
+      
+    }
+    
+    .horizontalFields {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .link{
+      color: var(--color-primary);
+      
+    }
+    .link:hover {
+      text-decoration: underline;
+    }
+    
+    .submitButton {
+      background-color: var(--color-primary);
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 0.4rem;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: inset 0px 0px 6px 0px;
+    }
+    
+    .submitButton:hover {
+      background-color: var(--color-fourth);
+      color: var(--color-primary);
+      transform: scale(1.05);
+      box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+    }
+    @media screen and (max-width: 768px) {
+      .formContainer {
+        width: 100%;
+        max-width: 100%; 
+        margin: 0 auto;
+      }
+      .selectField {
+          width: 140%;
+          padding: 5px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 16px;
+          height: 30px;
+          box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+        }
+    }

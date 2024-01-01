@@ -6,6 +6,7 @@ import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
 import Modal from "../Client/People/ModelPop/Modal";
 import TaskForm from "../Client/People/ModelPop/TaskForm";
 import EditCaseForm from "./EditCaseForm/EditCaseForm";
+import CaseHistory from "./CaseHistory/CaseHistory";
 
 const CaseFormData = () => {
   const openModal = () => setIsModalOpen(true);
@@ -26,6 +27,11 @@ const CaseFormData = () => {
   }, []);
   
 
+
+
+
+
+  
   const fetchCasesData = async () => {
     try {
       const response = await axios.get("http://localhost:8052/caseformdata", {
@@ -51,22 +57,29 @@ const CaseFormData = () => {
     setEditingCase(null);
   };
 
-  const handleDeleteClick = async (caseId) => {
-    if (window.confirm("Are you sure you want to delete this case?")) {
+
+
+  const handleDeleteClick = async (clientId) => {
+    if (window.confirm('Are you sure you want to delete this client?')) {
       try {
-        await axios.delete(
-          `http://localhost:8052/dashboard/caseformdata/${caseId}`,
-          {
-            headers: { "x-auth-token": localStorage.getItem("token") },
-          }
-        );
-        fetchCasesData(); // Refetch the cases to update the UI
+        await axios.delete(`http://localhost:8052/clientformdata/${clientId}`, {
+          headers: { 'x-auth-token': localStorage.getItem('token') },
+        });
+        fetchCasesData(); // Refetch the clients to update the UI
       } catch (error) {
         console.error(error);
       }
     }
-    console.log("Delete button clicked with caseId:", caseId); // Add this line for debugging
+    console.log('Delete button clicked with clientId:', clientId); // Add this line for debugging
   };
+
+  useEffect(() => {
+    // Fetch client data from the backend when the component mounts
+    fetchCasesData();
+  }, []);
+
+
+ 
   const handleDownloadClick = async (caseId) => {
     try {
       // Make an HTTP GET request to download the PDF for the specified case ID
@@ -123,39 +136,45 @@ const CaseFormData = () => {
 
   return (
     <>
-    <DashboardNavbar/>
-    <div className={style.Container}>
-  <div className={style.casesContainer}>
-    <h2 className={style.header}>Cases Form Data</h2>
-    {casesData.map((caseItem) => (
-      <div className={style.card} key={caseItem.id}>
-        {/* Card Content */}
-        <div className={style.cardHeader}>
-          <h3>{caseItem.title}</h3>
-        </div>
-        <div className={style.cardBody}>
-          <p><strong>Case Code:</strong> {caseItem.caseCode}</p>
-          <p><strong>Client:</strong> {caseItem.client}</p>
-          <p><strong>Lawyer:</strong> {caseItem.client}</p>
-          <p><strong>Judge:</strong> {caseItem.honorableJudge}</p>
-          <p><strong>Hearing Date:</strong> {caseItem.honorableJudge}</p>
-          <p><strong>Description:</strong> {caseItem.honorableJudge}</p>
-          <p><strong>Opponent:</strong> {caseItem.opponentPartyName}</p>
-        </div>
-        <div className={style.cardActions}>
-          <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
-          <Modal isOpen={isModalOpen} onClose={closeModal}>
-             <EditCaseForm />
-          </Modal>
-          <button className={style.btn} onClick={() => handleDeleteClick(caseItem.id)}>Delete</button>
-          <button className={style.btn} onClick={() => handleDownloadClick(caseItem.id)}>Download</button>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
+    <DashboardNavbar />
+    <div className={style.container}>
+      <h2 className={style.heading}>Cases Form Data</h2>
+      <table className={style.table}>
+      <thead className={style.tableHead}>
+          <tr>
+            <th>Title</th>
+            <th>Case Code</th>
+            <th>Client</th>
+            <th>Judge</th>
+            <th>Opponent Party Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody className={style.tableBody}>
 
-    </>
+          {casesData.map((caseItem) => (
+            <tr className={style.CaseInfo} key={caseItem.id}>
+            
+              <td><NavLink style={{color:'white'}} to={"/case/cases"}>{caseItem.title}</NavLink></td>
+              <td>{caseItem.caseCode}</td>
+              <td>{caseItem.client}</td>
+              <td>{caseItem.honorableJudge}</td>
+              <td>{caseItem.opponentPartyName}</td>
+              
+              <td>
+                <button className={style.btn} onClick={() => setIsModalOpen(true)}>Edit</button>
+                <button className={style.btn}  onClick={() => handleDeleteClick(caseItem.id)}>Delete</button>
+                <button className={style.btn} onClick={() => handleDownloadClick(caseItem.id)}>Download</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <EditCaseForm />
+      </Modal>
+    </div>
+  </>
   );
 };
 
