@@ -28,7 +28,6 @@ const GroupForm = () => {
 
   return (
     <>
-    <SideNav />
     <div className={styles.formContainer}>
       
       <Formik

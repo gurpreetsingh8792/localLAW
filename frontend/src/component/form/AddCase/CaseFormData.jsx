@@ -6,6 +6,7 @@ import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
 import Modal from "../Client/People/ModelPop/Modal";
 import TaskForm from "../Client/People/ModelPop/TaskForm";
 import EditCaseForm from "./EditCaseForm/EditCaseForm";
+import CaseHistory from "./CaseHistory/CaseHistory";
 
 const CaseFormData = () => {
   const openModal = () => setIsModalOpen(true);
@@ -25,6 +26,11 @@ const CaseFormData = () => {
     fetchCasesData();
   }, []);
 
+
+
+
+
+  
   const fetchCasesData = async () => {
     try {
       const response = await axios.get("http://localhost:8052/edit/caseform", {
@@ -49,8 +55,10 @@ const CaseFormData = () => {
     closeModal();
   };
 
-  const handleDeleteClick = async (caseId) => {
-    if (window.confirm("Are you sure you want to delete this case?")) {
+
+
+  const handleDeleteClick = async (clientId) => {
+    if (window.confirm('Are you sure you want to delete this client?')) {
       try {
         await axios.delete(
           `http://localhost:8052/dashboard/caseformdata/${caseId}`,

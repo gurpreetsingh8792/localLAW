@@ -51,6 +51,7 @@ import GenrationDocs from "./component/form/DocumentGenration/GenrateDocs.jsx";
 import Notification from "./component/utilities/Notifications/Notifications.jsx";
 import DashboardNavbar from "./component/utilities/DashboardNavbar/DashboardNavbar.jsx";
 import ConvertDocument from "./component/form/ConvertDocument/ConvertDocument.jsx";
+import CaseHistory from "./component/form/AddCase/CaseHistory/CaseHistory.jsx";
 
 function App() {
   return (
@@ -118,6 +119,7 @@ function App() {
             
             {/* Dynamkc routes */}
             <Route path="case/:case_no" element={<CaseDetail />} />
+            <Route path="case/cases" element={<CaseHistory />} />
           </Routes>
         </div>
           </NotificationProvider>

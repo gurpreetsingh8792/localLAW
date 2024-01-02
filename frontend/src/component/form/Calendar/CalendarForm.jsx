@@ -23,7 +23,7 @@ const Calendar = () => {
   const [visibleForm, setVisibleForm] = useState("Tasks");
   const showForm1 = () => setVisibleForm("Tasks");
   const showForm2 = () => setVisibleForm("Hearing Date");
-  const showForm3 = () => setVisibleForm("Appointment");
+  const showForm3 = () => setVisibleForm("appointment");
 
   const [events, setEvents] = useState([]);
   const [title, setTitle] = useState('');
@@ -81,6 +81,7 @@ const Calendar = () => {
         console.error('Error fetching tasks:', error);
       }
     };
+
     const fetchAppointments = async () => {
       try {
         const response = await axios.get('http://localhost:8052/calendar/appointments', {
@@ -240,7 +241,7 @@ const Calendar = () => {
         .catch((error) => {
           console.error("Error fetching hearing details:", error);
         });
-      } else if (event.type === "Appointment") {
+      } else if (event.type === "appointment") {
         axios
           .get(`http://localhost:8052/calendar/appointments/${event.id}`, {
             headers: {
@@ -293,7 +294,6 @@ const Calendar = () => {
         assignFrom: assignmentfrom,
         assignTo: assignmentto,
       };
-
       axios.post('http://localhost:8052/alerts', newTaskData, {
         headers: {
           'x-auth-token': localStorage.getItem('token'),
@@ -319,8 +319,7 @@ const Calendar = () => {
       console.error('Validation failed:', errors);
     }
   };
-  
-  
+
   const setNewAppointment = () => {
     if (handleValidation()) {
       let newEvent = {
@@ -336,9 +335,7 @@ const Calendar = () => {
         type: "appointment",
         style: { backgroundColor: "green" },
       };
-  
       console.log("Creating new event", newEvent);
-  
       // Send the new appointment data to the backend
       axios
         .post('http://localhost:8052/appointments', newEvent, {
@@ -878,7 +875,7 @@ const deleteHearingEvent = () => {
                   </>
                 )}
 
-                {visibleForm === "Appointment" && (
+                {visibleForm === "appointment" && (
                   <>
                     <div className={style.AppointmentVisibleForm}>
                     <div className={style.formRow}>
@@ -1148,6 +1145,8 @@ const deleteHearingEvent = () => {
 
 {clickedEvent.type === "hearing" && (
   <>
+  <h2>Update Hearing</h2>
+
     <div className={style.HearingVisibleForm}>
       <div className={style.formRow}>
         <label className={style.TasksVisibleTitle}>Title</label>
@@ -1255,148 +1254,119 @@ const deleteHearingEvent = () => {
 )}
 
 
-{ clickedEvent.type === "Appointment" && (
-                <>
-                 {console.log(clickedEvent)}
-                  <div className={style.AppointmentVisibleForm}>
-                    <div className={style.formRow}>
-        <label className={style.AppointmentFormTitle}>Title</label>
+{clickedEvent.type === "appointment" && (
+  <>
+    <h2>Appointment</h2>
+    <div className={style.HearingVisibleForm}>
+
+      <div className={style.formRow}>
+        <label className={style.TasksVisibleTitle}>Title</label>
         <input
           className={style.TasksVisibleInput}
           type="text"
           value={title}
+          placeholder="Enter Title"
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-                      <div className={style.formRow}>
-                      <label className={style.TasksVisibleTitle}>
-                          Case Title
-                        </label>
-                        <select
-      className={style.TasksVisibleInput}
-      value={casetitle}
-      onChange={(e) => setCaseTitle(e.target.value)}
-    >
-      <option value="" disabled>
-        Select Case Title
-      </option>
-      {caseTitles.map((title) => (
-        <option key={title} value={title}>
-          {title}
-        </option>
-      ))}
-    </select>
-                      </div>
-                      <div className={style.formRow}>
-                      <label className={style.AppointmentFormTitle}>
-                          Case Type
-                        </label>
-                        <input
+      <div className={style.formRow}>
+        <label className={style.TasksVisibleTitle}>Case Title</label>
+        <select
           className={style.TasksVisibleInput}
+          value={casetitle}
+          onChange={(e) => setCaseTitle(e.target.value)}
+        >
+          <option value="" disabled>
+            Select Case Title
+          </option>
+          {caseTitles.map((title) => (
+            <option key={title} value={title}>
+              {title}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className={style.formRow}>
+        <label className={style.HearingVisibleFormTitle}>
+          Assigned Lawyer
+        </label>
+        <input
+          className={style.HearingVisibleFormInput}
           type="text"
-          value={caseTypeMap[casetitle] || ''}
-          readOnly
-          placeholder="Case Type"
+          value={casetype}
+          placeholder="Case type"
+          onChange={(e) => setCaseType(e.target.value)}
         />
-                      </div>
-                      <div className={style.formRow}>
+      </div>
+      <div className={style.formRow}>
+        <label className={style.HearingVisibleFormTitle}>Status</label>
+        <input
+          className={style.HearingVisibleFormInput}
+          type="text"
+          value={client}
+          placeholder="Assign Team Member"
+          onChange={(e) => setClient(e.target.value)}
+        />
+      </div>
+      <div className={style.formRow}>
+        <label className={style.HearingVisibleFormTitle}>Hearing Date</label>
+        <input
+          className={style.HearingVisibleFormDate}
+          type="date"
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+        />
+      </div>
+      <div className={style.formRow}>
+        <label className={style.HearingVisibleFormTitle}>Start Time</label>
+        <input
+          className={style.HearingVisibleFormTime}
+          type="time"
+          value={start ? start.toISOString().substring(11, 16) : ""}
+          onChange={(e) => {
+            if (start) {
+              const [hours, minutes] = e.target.value.split(":");
+              const newStartTime = new Date(
+                start.setHours(hours, minutes)
+              );
+              handleStartTime(newStartTime);
+            }
+          }}
+        />
+      </div>
+      <div className={style.formRow}>
+        <label className={style.HearingVisibleFormTitle}>End Time</label>
+        <input
+          className={style.HearingVisibleFormTime}
+          type="time"
+          value={end ? end.toISOString().substring(11, 16) : ""}
+          onChange={(e) =>
+            handleEndTime(
+              new Date(
+                end.setHours(...e.target.value.split(":"))
+              )
+            )
+          }
+        />
+      </div>
+    </div>
+    <div className={style.btnContainer}>
+      <button className={style.btn} onClick={handleClose}>
+        Cancel
+      </button>
+      <button className={style.btn} onClick={updateHearingEvent}>
+        Update
+      </button>
+      <button className={style.btn} onClick={deleteHearingEvent}>
+        Delete
+      </button>
+    </div>
+  </>
+)}
 
-                      <label className={style.AppointmentFormTitle}>
-                        Contact Person
-                        </label>
-                        <select
-                          className={style.TasksVisibleInput}
-                          value={contactperson}
-                          onChange={(e) => setContactPerson(e.target.value)}
-                        >
-                          <option value="" disabled selected>
-                          Contact Person
-                          </option>
-                          <option value="Person 1">Person 1</option>
-                          <option value="Person 2">Person 2</option>
-                          {/* Add more options as needed */}
-                        </select>
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          Location
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormInput}
-                          type="text"
-                          value={location}
-                          placeholder="Location"
-                          onChange={(e) => setLocation(e.target.value)}
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          Start Time
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormTime}
-                          type="time"
-                          value={
-                            start ? start.toISOString().substring(11, 16) : ""
-                          }
-                          onChange={(e) => {
-                            if (start) {
-                              const [hours, minutes] =
-                                e.target.value.split(":");
-                              const newStartTime = new Date(
-                                start.setHours(hours, minutes)
-                              );
-                              handleStartTime(newStartTime);
-                            }
-                          }}
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          End Time
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormTime}
-                          type="time"
-                          value={end ? end.toISOString().substring(11, 16) : ""}
-                          onChange={(e) =>
-                            handleEndTime(
-                              new Date(
-                                end.setHours(...e.target.value.split(":"))
-                              )
-                            )
-                          }
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.HearingVisibleFormTitle}>
-                          Email
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormInput}
-                          type="email"
-                          value={email}
-                          placeholder="Email"
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  <div className={style.btnContainer}>
-                  <button className={style.btn} onClick={handleClose}>
-                    Cancel
-                  </button>
-                  <button className={style.btn} /*onClick={updateAppointmentEvent}*/>
-                    Update
-                  </button>
-                  <button className={style.btn} /*onClick={deleteEvent}*/>
-                    delete
-                  </button>
-                  </div>
-                </>
-                
-              )}
 
-              {/* Common buttons like Cancel, Confirm Edit, Delete */}
+               
+
             </div>
           </div>
         )}

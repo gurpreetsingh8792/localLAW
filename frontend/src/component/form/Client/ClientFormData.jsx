@@ -136,7 +136,9 @@ const ClientFormData = () => {
                  
         </table>
       </div>
+      
     </>
+    
   );
 };
 

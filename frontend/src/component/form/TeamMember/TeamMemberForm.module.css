@@ -4,13 +4,13 @@
 
 .formContainer {
     width: 400px;
-    height: 72%;
+    height: 76%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 1rem;
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    margin-top: 50px;
+    margin-top: 4rem;
     background-color: #f7f7f7;
   }
   .BtnContainer{

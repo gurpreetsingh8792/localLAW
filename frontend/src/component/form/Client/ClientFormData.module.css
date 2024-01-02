@@ -47,6 +47,7 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
   }
+  
   .tableBody tr:hover {
     transform: scale(1.03); 
   }
