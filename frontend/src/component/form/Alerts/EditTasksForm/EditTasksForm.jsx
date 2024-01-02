@@ -4,10 +4,11 @@ import * as Yup from 'yup';
 import styles from './EditTasksForm.module.css';
 import axios from 'axios';
 
-const EditTasksForm = () => {
+const EditTasksForm = ({ alertData }) => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [cases, setCases] = useState([]);
   const [selectedCaseTitle, setSelectedCaseTitle] = useState('');
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
@@ -32,19 +33,30 @@ const EditTasksForm = () => {
         console.error('Error fetching cases:', error);
       }
     };
-
+    axios.get('http://localhost:8052/alerts/edit', {
+      headers: {
+        'x-auth-token': localStorage.getItem('token'),
+      },
+    })
+    .then((response) => {
+      const responseData = response.data[0];
+      setFormData(responseData);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
     fetchTeamMembers();
     fetchCases();
   }, []);
 
   const initialValues = {
-    title: '',
-    caseTitle: '',
-    caseType: '', // Remove the initial value here
-    startDate: '',
-    completionDate: '',
-    assignFrom: '',
-    assignTo: '',
+    title: alertData.title || '',
+    caseTitle: alertData.caseTitle || '',
+    caseType: alertData.caseType || '', // Remove the initial value here
+    startDate: alertData.startDate || '',
+    completionDate: alertData.completionDate || '',
+    assignFrom: alertData.assignFrom || '',
+    assignTo: alertData.assignTo || '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -59,14 +71,22 @@ const EditTasksForm = () => {
 
   const onSubmit = async (values, { resetForm }) => {
     try {
-      const response = await axios.post('http://localhost:8052/alerts', values, {
-        headers: { 'x-auth-token': localStorage.getItem('token') },
-      });
-      console.log('Form submission response:', response.data);
-      alert('Alerts Form submitted successfully!');
+      // Make an HTTP POST request to update the case
+      const response = await axios.put(
+        `http://localhost:8052/alerts/edit/update/${alertData.id}`,
+        values,
+        {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'),
+          },
+        }
+      );
+  
+      console.log(response.data);
+      alert('Tasks Updated successfully!');
       resetForm();
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error(error);
     }
   };
 
@@ -230,7 +250,7 @@ const EditTasksForm = () => {
             </div>
           </div>
           <button type="submit" className={styles.submitButton}>
-            Submit
+            UPDATE
           </button>
         </form>
       </div>

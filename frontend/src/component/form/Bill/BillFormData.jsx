@@ -11,10 +11,11 @@ const BillFormData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
   const [billData, setBillData] = useState([]);
+  const [editingBill, setEditingBill] = useState(null);
 
   const fetchBillData = async () => {
     try {
-      const response = await axios.get('http://localhost:8052/billdata', {
+      const response = await axios.get('http://localhost:8052/bill/edit', {
         headers: {
           'x-auth-token': localStorage.getItem('token'),
         },
@@ -42,6 +43,16 @@ const BillFormData = () => {
         console.error(error);
       }
     }
+  };
+
+  const handleEditClick = (bill) => {
+    setEditingBill(bill.id);
+    openModal();
+  };
+
+  const handleCancelClick = () => {
+    setEditingBill(null);
+    closeModal();
   };
 
   const handleDownloadClick = async (billId) => {
@@ -83,8 +94,8 @@ const BillFormData = () => {
             </tr>
           </thead>
           <tbody>
-            {billData.map((bill, index) => (
-              <tr key={index} className={style.tableBodyRow}>
+            {billData.map((bill) => (
+              <tr key={bill.id} className={style.tableBodyRow}>
                 <td className={style.tableBodyCell}>{bill.billNumber}</td>
                 <td className={style.tableBodyCell}>{bill.title}</td>
                 <td className={style.tableBodyCell}>{bill.dateFrom}</td>
@@ -92,7 +103,9 @@ const BillFormData = () => {
                 <td className={style.tableBodyCell}>{bill.amount}</td>
                 <td className={style.tableBodyCell}>{bill.totalAmountWithTax}</td>
                 <td className={style.tableBodyCell}>
-                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+                <button className={style.btn} onClick={() => handleEditClick(bill)}>
+                Edit
+              </button>
 
                   <button
                   className={style.btn}
@@ -112,9 +125,18 @@ const BillFormData = () => {
               </tr>
             ))}
           </tbody>
-          <Modal isOpen={isModalOpen} onClose={closeModal}>
-             <EditBillForm />
-          </Modal>
+          <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
+          {/* Pass the selected case data to EditCaseForm */}
+          {editingBill && (
+            <EditBillForm
+              billData={billData.find((bill) => bill.id === editingBill)}
+              onCancel={handleCancelClick}
+            />
+          )}
+        </Modal>
+
+
+          
         </table>
       </div>
     </>

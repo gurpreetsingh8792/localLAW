@@ -5,34 +5,37 @@ import styles from './EditTeamMemberForm.module.css';
 import { NavLink } from 'react-router-dom';
 import Axios from 'axios';
 
-const initialValues = {
-  image: '',
-  fullName: '',
-  email: '',
-  designation: '',
-  address: '',
-  state: '',
-  city: '',
-  zipCode: '',
-  selectedGroup: '',
-};
-
-const validationSchema = Yup.object().shape({
-  fullName: Yup.string().required('Full Name is required'),
-  email: Yup.string().email('Invalid email format').required('Email is required'),
-  designation: Yup.string(),
-  address: Yup.string(),
-  state: Yup.string(),
-  city: Yup.string(),
-  zipCode: Yup.string(),
-  selectedGroup: Yup.string(),
-});
 
 
 
 
-const EditTeamMembersForm = () => {
+const EditTeamMembersForm = ({teamData}) => {
   const [groupNames, setGroupNames] = useState([]); // State to store group names
+  const [formData, setFormData] = useState({});
+
+  const initialValues = {
+    // image: '',
+    fullName: teamData.fullName || '',
+    email: teamData.email || '',
+    designation: teamData.designation || '',
+    address: teamData.address || '',
+    state: teamData.state || '',
+    city: teamData.city || '',
+    zipCode: teamData.zipCode || '',
+    selectedGroup: teamData.selectedGroup || '',
+  };
+  
+  const validationSchema = Yup.object().shape({
+    fullName: Yup.string().required('Full Name is required'),
+    email: Yup.string().email('Invalid email format').required('Email is required'),
+    designation: Yup.string(),
+    address: Yup.string(),
+    state: Yup.string(),
+    city: Yup.string(),
+    zipCode: Yup.string(),
+    selectedGroup: Yup.string(),
+  });
+  
 
   useEffect(() => {
     // Fetch group names and populate the select options
@@ -51,6 +54,18 @@ const EditTeamMembersForm = () => {
         console.error(error);
       }
     };
+    Axios.get('http://localhost:8052/dashboard/teammemberform/edit', {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      })
+      .then((response) => {
+        const responseData = response.data[0];
+        setFormData(responseData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
   }, []);
@@ -62,15 +77,18 @@ const EditTeamMembersForm = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
           try {
-            // Make an HTTP POST request to the backend with the full server URL
-            const response = await Axios.post('http://localhost:8052/dashboard/teammemberform', values, {
-              headers: {
-                'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
-              },
-            });
-      
-            console.log(response.data); // Log the response from the backend
-            alert('Team Member Added successfully!');
+            const response = await Axios.put(
+              `http://localhost:8052/dashboard/teammemberform/edit/update/${teamData.id}`,
+              values,
+              {
+                headers: {
+                  'x-auth-token': localStorage.getItem('token'),
+                },
+              }
+            );
+        
+            console.log(response.data);
+            alert('Team Updated successfully!');
             resetForm();
           } catch (error) {
             console.error(error);
@@ -79,7 +97,7 @@ const EditTeamMembersForm = () => {
       >
         {({ values, setFieldValue }) => (
           <Form>
-            <div className={styles.imageUpload}>
+            {/* <div className={styles.imageUpload}>
               <label className={styles.imageLabel} htmlFor="image">
                 {values.image ? (
                   <img
@@ -103,7 +121,7 @@ const EditTeamMembersForm = () => {
                 className={styles.imageInput}
               />
               <ErrorMessage name="image" component="div" className={styles.error} />
-            </div>
+            </div> */}
 
             <div className={styles.fieldGroup}>
               <Field
@@ -170,7 +188,7 @@ const EditTeamMembersForm = () => {
               </div>
             </div>
                       <div className={styles.BtnContainer}>
-            <button type="submit" className={styles.submitButton}>Submit</button>
+            <button type="submit" className={styles.submitButton}>UPDATE</button>
             <button type="submit" className={styles.submitButton}>Cancel</button>
 
                       </div>

@@ -8,8 +8,16 @@ const secretKey = 'your_secret_key';
 const ejs = require('ejs');
 const pdf = require('html-pdf');
 const fs = require('fs');
+
+
+
+
 // const { Storage } = require('@google-cloud/storage');
 const port = 8052;
+
+
+
+
 
 
 // async function uploadFile() {
@@ -265,7 +273,15 @@ app.post('/afterproxy', authenticateJWT, async (req, res) => {
     console.log(error);
   }
 });
-
+app.get('/alerts', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+  db.all('SELECT id,title, startDate, completionDate, assignTo FROM AlertsForm WHERE user_id = ?', [userId], (err, forms) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    return res.json(forms);
+  });
+});
 //get endpoint to render data on edit form
 app.get('/alerts/edit', authenticateJWT, (req, res) => {
   const userId = req.user.id;
@@ -426,15 +442,7 @@ app.get("/calendar/appointments", authenticateJWT, (req, res) => {
   );
 });
 
-app.get('/alerts', authenticateJWT, (req, res) => {
-  const userId = req.user.id;
-  db.all('SELECT id,title, startDate, completionDate, assignTo FROM AlertsForm WHERE user_id = ?', [userId], (err, forms) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    return res.json(forms);
-  });
-});
+
 
 app.get('/calendar/alerts/:taskId', authenticateJWT, (req, res) => {
   const taskId = req.params.taskId;
@@ -728,7 +736,7 @@ app.get('/dashboard/teammemberform/edit', authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
   db.all(
-    'SELECT id, image, fullName, email, designation, address, state, city, zipCode, selectedGroup FROM TeamMembers WHERE user_id = ?',
+    'SELECT id, fullName, email, designation, address, state, city, zipCode, selectedGroup FROM TeamMembers WHERE user_id = ?',
     [userId],
     (err, teamMembers) => {
       if (err) {
@@ -744,12 +752,12 @@ app.put('/dashboard/teammemberform/edit/update/:memberId', authenticateJWT, (req
   const memberId = req.params.memberId;
   const userId = req.user.id;
   const {
-    image, fullName, email, designation, address, state, city, zipCode, selectedGroup
+     fullName, email, designation, address, state, city, zipCode, selectedGroup
   } = req.body;
 
   db.run(
-    'UPDATE TeamMembers SET image = ?, fullName = ?, email = ?, designation = ?, address = ?, state = ?, city = ?, zipCode = ?, selectedGroup = ? WHERE id = ? AND user_id = ?',
-    [image, fullName, email, designation, address, state, city, zipCode, selectedGroup, memberId, userId],
+    'UPDATE TeamMembers SET  fullName = ?, email = ?, designation = ?, address = ?, state = ?, city = ?, zipCode = ?, selectedGroup = ? WHERE id = ? AND user_id = ?',
+    [ fullName, email, designation, address, state, city, zipCode, selectedGroup, memberId, userId],
     (err) => {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -761,20 +769,45 @@ app.put('/dashboard/teammemberform/edit/update/:memberId', authenticateJWT, (req
 });
 
 //Team Members form endpoints
-app.post('/dashboard/teammemberform', authenticateJWT, async (req, res) => {
+app.post("/dashboard/teammemberform", authenticateJWT, async (req, res) => {
   try {
-    const { image, fullName, email, designation, address, state, city, zipCode, selectedGroup } = req.body;
+    const {
+      image,
+      fullName,
+      email,
+      designation,
+      address,
+      state,
+      city,
+      zipCode,
+      selectedGroup,
+    } = req.body;
     const userId = req.user.id;
 
-    db.run('INSERT INTO TeamMembers (image, fullName, email, designation, address, state, city, zipCode, selectedGroup, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [image, fullName, email, designation, address, state, city, zipCode, selectedGroup, userId], function (err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
+    db.run(
+      "INSERT INTO TeamMembers (image, fullName, email, designation, address, state, city, zipCode, selectedGroup, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        image,
+        fullName,
+        email,
+        designation,
+        address,
+        state,
+        city,
+        zipCode,
+        selectedGroup,
+        userId,
+      ],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        return res.json({ message: "Team member added successfully" });
       }
-      return res.json({ message: 'Team member added successfully' });
-    });
+    );
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -1624,7 +1657,7 @@ app.get('/invoiceform/edit', authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
   db.all(
-    'SELECT id, invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount FROM InvoicesForm WHERE user_id = ?',
+    'SELECT id, invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount, addDoc FROM InvoicesForm WHERE user_id = ?',
     [userId],
     (err, invoicesForms) => {
       if (err) {
@@ -2319,6 +2352,71 @@ app.delete('/dashboard/user/proxy-activity/:activityId', authenticateJWT, (req, 
 });
 
 
+// count apis shown on each card in dashboard
+app.get('/casecount', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+  
+  db.get('SELECT COUNT(*) as count FROM CasesForm WHERE user_id = ?', [userId], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    return res.json({ count: result.count });
+  });
+});
+
+
+app.get('/clientcount', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+  
+  db.get('SELECT COUNT(*) as count FROM ClientForm WHERE user_id = ?', [userId], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    return res.json({ count: result.count });
+  });
+});
+
+app.get('/teammembercount', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+  
+  db.get('SELECT COUNT(*) as count FROM TeamMembers WHERE user_id = ?', [userId], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    return res.json({ count: result.count });
+  });
+});
+
+app.get('/alertcount', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+  
+  db.get('SELECT COUNT(*) as count FROM AlertsForm WHERE user_id = ?', [userId], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    return res.json({ count: result.count });
+  });
+});
+
+app.get('/invoicebillcount', authenticateJWT, (req, res) => {
+  const userId = req.user.id;
+  
+  db.get('SELECT COUNT(*) as invoiceCount FROM InvoicesForm WHERE user_id = ?', [userId], (err, invoiceResult) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    
+    db.get('SELECT COUNT(*) as billCount FROM BillForm WHERE user_id = ?', [userId], (err, billResult) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      const totalCount = invoiceResult.invoiceCount + billResult.billCount;
+      
+      return res.json({ invoiceCount: invoiceResult.invoiceCount, billCount: billResult.billCount, totalCount });
+    });
+  });
+});
 
 
 // Error handler middleware

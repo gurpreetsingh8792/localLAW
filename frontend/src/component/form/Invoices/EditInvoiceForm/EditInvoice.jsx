@@ -6,39 +6,41 @@ import styles from './EditInvoiceForm.module.css';
 import axios from 'axios';
 
 
-const generateInvoiceNo = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const date = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  return `${year}${month}${date}-${hours}${minutes}${seconds}`;
-};
-
-const initialValues = {
-  client: '',
-  caseType: '',
-  date: '',
-  amount: '',
-  taxType: '',
-  taxPercentage: '',
-  fullAddress: '',
-  hearingDate: '',
-  title: '',
-  dateFrom: '',
-  dateTo: '',
-  expensesAmount: '',
-  expensesTaxType: '',
-  expensesTaxPercentage: '',
-  expensesCumulativeAmount: '',
-  addDoc: '',
-  invoiceNumber: generateInvoiceNo(),
-};
 
 
 
+const EditInvoicesForm = ({ invoiceData }) => {
+  const [clientNames, setClientNames] = useState([]); // State to store client names
+  const [caseTitles, setCaseTitles] = useState([]); // State to store case titles
+  const [formData, setFormData] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [filePath, setFilePath] = useState(null); // Add this line
+  const [filePathMessage, setFilePathMessage] = useState("");
+  const [initialAddDocFileName, setInitialAddDocFileName] = useState(""); // Store initial file name
+
+  const initialValues = {
+    client: invoiceData.client || '',
+    caseType: invoiceData.caseType || '',
+    date: invoiceData.date || '',
+    amount: invoiceData.amount || '',
+    taxType: invoiceData.taxType || '',
+    taxPercentage: invoiceData.taxPercentage || '',
+    fullAddress: invoiceData.fullAddress || '',
+    hearingDate: invoiceData.hearingDate || '',
+    title: invoiceData.title || '',
+    dateFrom: invoiceData.dateFrom || '',
+    dateTo: invoiceData.dateTo || '',
+    expensesAmount: invoiceData.expensesAmount || '',
+    expensesTaxType: invoiceData.expensesTaxType || '',
+    expensesTaxPercentage: invoiceData.expensesTaxPercentage || '',
+    expensesCumulativeAmount: invoiceData.expensesCumulativeAmount || '',
+    addDoc: invoiceData.addDoc || '',
+    invoiceNumber: invoiceData.invoiceNumber || '',
+    setInitialAddDocFileName: invoiceData.addDoc || "",
+    
+  };
+
+  
 const validationSchema = Yup.object().shape({
   client: Yup.string(),
   caseType: Yup.string(),
@@ -57,11 +59,7 @@ const validationSchema = Yup.object().shape({
   expensesCumulativeAmount: Yup.number().min(0, 'Cumulative Amount must be greater than or equal to 0'),
   addDoc: Yup.mixed(),
 });
-
-
-const EditInvoicesForm = () => {
-  const [clientNames, setClientNames] = useState([]); // State to store client names
-  const [caseTitles, setCaseTitles] = useState([]); // State to store case titles
+  
 
   useEffect(() => {
     // Fetch client names and populate the select options
@@ -98,21 +96,50 @@ const EditInvoicesForm = () => {
       }
     };
 
-    fetchClientNames(); // Call the fetchClientNames function when the component mounts
-    fetchCaseTitles(); // Call the fetchCaseTitles function when the component mounts
-  }, []);
-
-  const handleSubmit = async (values, { resetForm }) => {
-    try {
-      // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://localhost:8052/invoiceform', values, {
+    axios
+      .get('http://localhost:8052/invoiceform/edit', {
         headers: {
-          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          'x-auth-token': localStorage.getItem('token'),
         },
+      })
+      .then((response) => {
+        const responseData = response.data[0];
+        setFormData(responseData);
+        if (responseData.addDoc) {
+          // Extract the file name from the path
+          const fileName = responseData.addDoc.split('\\').pop();
+          setInitialAddDocFileName(fileName); // Set the initial file name
+        }
+      })
+    
+      .catch((error) => {
+        console.error(error);
       });
 
-      console.log(response.data); // Log the response from the backend
-      alert('Invoice Added successfully!');
+
+    fetchClientNames(); // Call the fetchClientNames function when the component mounts
+    fetchCaseTitles(); // Call the fetchCaseTitles function when the component mounts
+  }, [invoiceData.id]);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.currentTarget.files[0]);
+    setFilePathMessage(`You have chosen this file: ${event.currentTarget.files[0].name}. If you want to change, then choose another file.`);
+  };
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      // Make an HTTP POST request to update the case
+      const response = await axios.put(
+        `http://localhost:8052/invoiceform/edit/update/${invoiceData.id}`,
+        values,
+        {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'),
+          },
+        }
+      );
+  
+      console.log(response.data);
+      alert('Invoice Updated successfully!');
       resetForm();
     } catch (error) {
       console.error(error);
@@ -130,8 +157,7 @@ const EditInvoicesForm = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <div className={styles.invoiceNo}><span style={{ color: 'var(--color-primary)'}}>INV</span>
-  {generateInvoiceNo()}</div>
+            <div className={styles.invoiceNo}><span style={{ color: 'var(--color-primary)'}}>INV-</span>{initialValues.invoiceNumber}</div>
             <div className={styles.clientContainer}>
             <Field as="select" name="client" className={styles.selectFieldClient}>
                   <option value="">Select Client</option>
@@ -226,9 +252,18 @@ const EditInvoicesForm = () => {
             <ErrorMessage name="expensesTaxType" component="div" className={styles.errorMessage} />
             <ErrorMessage name="expensesTaxPercentage" component="div" className={styles.errorMessage} />
             <ErrorMessage name="expensesCumulativeAmount" component="div" className={styles.errorMessage} />
+            
+            <span className={styles.fileNameSpan}>
+  {initialAddDocFileName || "No file chosen"}
+</span>
+<input
+  type="file"
+  name="addDoc"
+  accept=".pdf"
+  className={styles.fileField}
+  onChange={handleFileChange}
+/>
 
-            <Field type="file" name="addDoc" accept=".pdf" className={styles.fileField} />
-            <ErrorMessage name="addDoc" component="div" className={styles.errorMessage} />
          
           <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Submit</button>

@@ -11,10 +11,11 @@ const AlertsFormData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
   const [alertsData, setAlertsData] = useState([]);
+  const [editingAlert, setEditingAlert] = useState(null);
 
   const fetchAlertsData = async () => {
     try {
-      const response = await axios.get('http://localhost:8052/alerts', {
+      const response = await axios.get('http://localhost:8052/alerts/edit', {
         headers: {
           'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
         },
@@ -30,6 +31,17 @@ const AlertsFormData = () => {
     // Fetch alerts data from the backend when the component mounts
     fetchAlertsData();
   }, []);
+
+  const handleEditClick = (alert) => {
+    setEditingAlert(alert.id); // Pass the entire alert object
+    openModal();
+  };
+  
+
+  const handleCancelClick = () => {
+    setEditingAlert(null);
+    closeModal();
+  };
 
   const handleDeleteClick = async (alertId) => {
     if (window.confirm('Are you sure you want to delete this alert?')) {
@@ -85,14 +97,16 @@ const AlertsFormData = () => {
             </tr>
           </thead>
           <tbody className={style.tableBody}>
-            {alertsData.map((alert, index) => (
-              <tr key={index}>
+            {alertsData.map((alert) => (
+              <tr key={alert.id}>
                 <td className={style.td}>{alert.title}</td>
                 <td className={style.td}>{alert.startDate}</td>
                 <td className={style.td}>{alert.completionDate}</td>
                 <td className={style.td}>{alert.assignTo}</td>
                 <td>
-                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+                <button className={style.btn} onClick={() => handleEditClick(alert)}>
+                Edit
+              </button>
 
                   <button
                   className={style.btn}
@@ -112,9 +126,19 @@ const AlertsFormData = () => {
               </tr>
             ))}
           </tbody>
-          <Modal isOpen={isModalOpen} onClose={closeModal}>
-                    <EditTasksForm />
-                  </Modal>
+
+          <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
+  {/* Pass the selected case data to EditTasksForm */}
+  {editingAlert && (
+    <EditTasksForm
+      alertData={alertsData.find((alert) => alert.id === editingAlert)}
+      onCancel={handleCancelClick}
+    />
+  )}
+</Modal>
+
+
+
         </table>
       </div>
     </>

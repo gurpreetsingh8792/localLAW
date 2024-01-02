@@ -1,40 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './EditBillForm.module.css';
 import axios from 'axios';
 
-const generateBillNo = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const date = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  return `${year}${month}${date}-${hours}${minutes}${seconds}`;
-};
 
-const EditBillForm = () => {
-  const [billingType, setBillingType] = useState(" "); // Default billing type
+const EditBillForm = ({ billData }) => {
+  const [billingType, setBillingType] = useState(billData.billingType || ''); // Initialize with billData.billingType or an empty string
+  const [formData, setFormData] = useState({});
+
+
+  useEffect(() => {
+
+    axios.get('http://localhost:8052/bill/edit', {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      })
+      .then((response) => {
+        const responseData = response.data[0];
+        setFormData(responseData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+   
+  }, []);
 
   const initialValues = {
-    billNumber: generateBillNo(),
-    title: '',
-    currentDate: '',
-    dateFrom: '',
-    dateTo: '',
-    fullAddress: '',
-    billingType: '',
-    totalHours: '',
-    noOfHearings: '',
-    totalAmount: '',
-    amount: '',
-    taxType: '',
-    taxPercentage: '',
-    totalAmountWithTax: '',
-    description: '',
-    addDoc: null,
+    billNumber: billData.billNumber || '',
+    title: billData.title || '',
+    currentDate: billData.currentDate || '',
+    dateFrom: billData.dateFrom || '',
+    dateTo: billData.dateTo || '',
+    fullAddress: billData.fullAddress || '',
+    billingType: billingType,
+    totalHours: billData. totalHours || '',
+    noOfHearings: billData.noOfHearings || '',
+    totalAmount: billData.totalAmount || '',
+    amount: billData.amount || '',
+    taxType: billData.taxType || '',
+    taxPercentage: billData.taxPercentage || '',
+    totalAmountWithTax: billData.totalAmountWithTax || '',
+    description: billData.description || '',
+    addDoc: '',
+    span: billData.addDoc || '',
   };
 
   let validationSchema;
@@ -77,15 +88,19 @@ try {
 
 const handleSubmit = async (values, { resetForm }) => {
   try {
-    // Make an HTTP POST request to the backend with the full server URL
-    const response = await axios.post('http://localhost:8052/bill', values, {
-      headers: {
-        'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
-      },
-    });
+    // Make an HTTP POST request to update the case
+    const response = await axios.put(
+      `http://localhost:8052/bill/edit/update/${billData.id}`,
+      values,
+      {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      }
+    );
 
-    console.log(response.data); // Log the response from the backend
-    alert('Bill Added successfully!');
+    console.log(response.data);
+    alert('Bill Updated successfully!');
     resetForm();
   } catch (error) {
     console.error(error);
@@ -107,8 +122,7 @@ const onSubmit = (values, { resetForm }) => {
         onSubmit={onSubmit}
       >
         <Form>
-        <div className={styles.billNo}><span style={{ color: 'var(--color-primary)'}}>BIL</span>
-  -{generateBillNo()}</div>
+        <div className={styles.billNo}><span style={{ color: 'var(--color-primary)'}}>BIL-</span>{initialValues.billNumber}</div>
           <div>
             <label className={styles.label}>Title</label>
             <Field type="text" name="title" className={styles['input-field']} />
@@ -211,6 +225,7 @@ const onSubmit = (values, { resetForm }) => {
             <div>
               <label className={styles.labelFile}>Add Doc</label>
               <Field type="file" name="addDoc" className={styles['file-upload']} />
+              <span>{initialValues.span ? initialValues.span.split('\\').pop() : ''}</span>
             </div>
           </div>
           <div className={styles['horizontal-fields']}>
@@ -234,8 +249,8 @@ const onSubmit = (values, { resetForm }) => {
           </div>
           </div>
           <div className={styles.BtnContainer}>
-            <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
+            <button type="submit" className={styles.submitButton}>UPDATE</button>
+            <button  className={styles.submitButton}>Cancel</button>
           </div>
         </Form>
       </Formik>

@@ -1,10 +1,10 @@
 .MainContainer{
-    height: 80vh;
+    height: 50vh;
   }
   
   .formContainer {
       width: 400px;
-      height: 80vh;
+      height: 50vh;
       margin: 0 auto;
       padding: 1rem;
       border: 1px solid #ccc;
