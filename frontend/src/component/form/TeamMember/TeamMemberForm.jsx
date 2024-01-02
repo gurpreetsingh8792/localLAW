@@ -27,6 +27,7 @@ const validationSchema = Yup.object().shape({
   city: Yup.string(),
   zipCode: Yup.string(),
   selectedGroup: Yup.string(),
+  image: Yup.mixed(),
 });
 
 
