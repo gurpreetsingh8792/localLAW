@@ -184,7 +184,7 @@ const TeamMembers = () => {
             <div className={styles.horizontalFields}>
                 <div className={styles.fieldGroup}>
                   <Field as="select" name="selectedGroup" className={styles.selectField}>
-                    <option value="">Select a Group</option>
+                    <option value="">Select a Company</option>
                     {groupNames.map((groupName) => (
                       <option key={groupName} value={groupName}>
                         {groupName}
@@ -192,19 +192,20 @@ const TeamMembers = () => {
                     ))}
                   </Field>
                   <ErrorMessage name="selectedGroup" component="div" className={styles.error} />
-                </div>
+            </div>
 
               <div className={styles.fieldGroup}>
                 <NavLink to={"#"} className={styles.link} onClick={openModalTwo}>
                   Add Company
                 </NavLink>
               </div>
-            </div>
-                      <div className={styles.BtnContainer}>
-            <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
 
-                      </div>
+            </div>
+            
+            <div className={styles.BtnContainer}>
+              <button type="submit" className={styles.submitButton}>Submit</button>
+              <button type="submit" className={styles.submitButton}>Cancel</button>
+            </div>
           </Form>
         )}
       </Formik>
@@ -216,9 +217,6 @@ const TeamMembers = () => {
     <Modal isOpen={isModalOpenTwo} onClose={() => setIsModalOpenTwo(false)}>
     <Companyform />
     </Modal>
-
-    
-
     </div>
   );
 };

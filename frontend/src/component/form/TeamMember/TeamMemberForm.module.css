@@ -79,7 +79,7 @@
   }
   
   .selectField {
-    width: 160%;
+    width: 10.5rem;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -96,13 +96,12 @@
   
   .horizontalFields {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
   }
   
   .link{
     color: var(--color-primary);
-    
   }
   .link:hover {
     text-decoration: underline;
