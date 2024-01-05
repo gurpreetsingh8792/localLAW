@@ -63,6 +63,7 @@ const validationSchema = Yup.object().shape({
 const InvoicesForm = () => {
   const [clientNames, setClientNames] = useState([]); // State to store client names
   const [caseTitles, setCaseTitles] = useState([]); // State to store case titles
+  
 
   useEffect(() => {
     // Fetch client names and populate the select options

@@ -57,7 +57,7 @@ const CaseFormData = () => {
 
 
 
-  const handleDeleteClick = async (clientId) => {
+  const handleDeleteClick = async (caseId) => {
     if (window.confirm('Are you sure you want to delete this client?')) {
       try {
         await axios.delete(

@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import styles from './EditTeamMemberForm.module.css';
 import { NavLink } from 'react-router-dom';
 import Axios from 'axios';
+import Modal from '../../Client/People/ModelPop/Modal';
+import Companyform from '../../Company/Companyform';
 
 
 
@@ -12,6 +14,11 @@ import Axios from 'axios';
 const EditTeamMembersForm = ({teamData}) => {
   const [groupNames, setGroupNames] = useState([]); // State to store group names
   const [formData, setFormData] = useState({});
+  const openModalTwo = () => setIsModalOpenTwo(true);
+  const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
+  
+  const closeModalTwo = () => setIsModalOpenTwo(false);
+  const [companyNames, setCompanyNames] = useState([]);
 
   const initialValues = {
     // image: '',
@@ -23,6 +30,7 @@ const EditTeamMembersForm = ({teamData}) => {
     city: teamData.city || '',
     zipCode: teamData.zipCode || '',
     selectedGroup: teamData.selectedGroup || '',
+    selectedCompany: teamData.selectedCompany || '',
   };
   
   const validationSchema = Yup.object().shape({
@@ -34,6 +42,7 @@ const EditTeamMembersForm = ({teamData}) => {
     city: Yup.string(),
     zipCode: Yup.string(),
     selectedGroup: Yup.string(),
+    selectedCompany: Yup.string(),
   });
   
 
@@ -54,6 +63,26 @@ const EditTeamMembersForm = ({teamData}) => {
         console.error(error);
       }
     };
+
+    const fetchCompanyNames = async () => {
+      try {
+        const response = await Axios.get('http://localhost:8052/dashboard/company', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          },
+        });
+        
+        // Extract the group names from the response data
+        const companyNamesArray = response.data.map((company) => company.companyName);
+        setCompanyNames(companyNamesArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+    
+
+
     Axios.get('http://localhost:8052/dashboard/teammemberform/edit', {
         headers: {
           'x-auth-token': localStorage.getItem('token'),
@@ -68,6 +97,7 @@ const EditTeamMembersForm = ({teamData}) => {
       });
 
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
+    fetchCompanyNames();
   }, []);
   return (
     <div className={styles.MainContainer}>
@@ -187,6 +217,26 @@ const EditTeamMembersForm = ({teamData}) => {
                 </NavLink>
               </div>
             </div>
+
+            <div className={styles.horizontalFields}>
+                <div className={styles.fieldGroup}>
+                  <Field as="select" name="selectedCompany" className={styles.selectField}>
+                    <option value="">Select a Company</option>
+                    {companyNames.map((companyName) => (
+                      <option key={companyName} value={companyName}>
+                        {companyName}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage name="selectedGroup" component="div" className={styles.error} />
+                </div>
+
+              <div className={styles.fieldGroup}>
+                <NavLink to={"#"} className={styles.link} onClick={openModalTwo}>
+                  Add Company
+                </NavLink>
+              </div>
+            </div>
                       <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>UPDATE</button>
             <button type="submit" className={styles.submitButton}>Cancel</button>
@@ -195,7 +245,12 @@ const EditTeamMembersForm = ({teamData}) => {
           </Form>
         )}
       </Formik>
+
+      
     </div>
+    <Modal isOpen={isModalOpenTwo} onClose={() => setIsModalOpenTwo(false)}>
+    <Companyform />
+    </Modal>
     </div>
   );
 };

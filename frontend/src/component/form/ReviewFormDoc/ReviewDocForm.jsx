@@ -3,6 +3,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styles from './ReviewDocForm.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import axios from 'axios';
+
 
 
 const ReviewDocForm = () => {
@@ -15,14 +17,21 @@ const ReviewDocForm = () => {
     mobileNo: '',
   };
   const onSubmit = async (values, { resetForm }) => {
-    console.log(values);
-    if (!paymentSuccess) {
-      alert('To Review Document, You have to do payment first!');
-    } else {
-     
+    try {
+      const response = await axios.post('http://localhost:8052/reviewdocform', values, {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+        },
+      });
+  
+      console.log(response.data); // Log the response from the backend
+      alert('To Review the Doc, Do Payment First');
       resetForm();
+    } catch (error) {
+      console.error(error);
     }
   };
+  
   const validationSchema = Yup.object().shape({
     reviewMethod: Yup.string().required('Please select a review method'),
     contactMethod: Yup.string().required('Please select a contact method'),

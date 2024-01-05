@@ -551,7 +551,7 @@ app.put('/calendar/appointments/:taskId', authenticateJWT, (req, res) => {
 
   db.run(
     'UPDATE Appointments SET title = ?, caseTitle = ?, caseType = ?,  appointmentDate = ?, contactPerson = ?, location = ?, startTime = ?, endTime = ?, email = ? WHERE id = ? AND user_id = ?',
-    [title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email, userId],
+    [title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email,taskId, userId],
     (err) => {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -736,7 +736,7 @@ app.get('/dashboard/teammemberform/edit', authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
   db.all(
-    'SELECT id, fullName, email, designation, address, state, city, zipCode, selectedGroup FROM TeamMembers WHERE user_id = ?',
+    'SELECT id, fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany FROM TeamMembers WHERE user_id = ?',
     [userId],
     (err, teamMembers) => {
       if (err) {
@@ -752,12 +752,12 @@ app.put('/dashboard/teammemberform/edit/update/:memberId', authenticateJWT, (req
   const memberId = req.params.memberId;
   const userId = req.user.id;
   const {
-     fullName, email, designation, address, state, city, zipCode, selectedGroup
+     fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany
   } = req.body;
 
   db.run(
-    'UPDATE TeamMembers SET  fullName = ?, email = ?, designation = ?, address = ?, state = ?, city = ?, zipCode = ?, selectedGroup = ? WHERE id = ? AND user_id = ?',
-    [ fullName, email, designation, address, state, city, zipCode, selectedGroup, memberId, userId],
+    'UPDATE TeamMembers SET  fullName = ?, email = ?, designation = ?, address = ?, state = ?, city = ?, zipCode = ?, selectedGroup = ?, selectedCompany = ? WHERE id = ? AND user_id = ?',
+    [ fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, memberId, userId],
     (err) => {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -781,11 +781,12 @@ app.post("/dashboard/teammemberform", authenticateJWT, async (req, res) => {
       city,
       zipCode,
       selectedGroup,
+      selectedCompany,
     } = req.body;
     const userId = req.user.id;
 
     db.run(
-      "INSERT INTO TeamMembers (image, fullName, email, designation, address, state, city, zipCode, selectedGroup, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO TeamMembers (image, fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         image,
         fullName,
@@ -796,6 +797,7 @@ app.post("/dashboard/teammemberform", authenticateJWT, async (req, res) => {
         city,
         zipCode,
         selectedGroup,
+        selectedCompany,
         userId,
       ],
       function (err) {
@@ -810,6 +812,38 @@ app.post("/dashboard/teammemberform", authenticateJWT, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
+app.post("/dashboard/teammemberform/companyform", authenticateJWT, async (req, res) => {
+  try {
+    const {
+      companyName,
+      person,
+      email,
+      contactNumber,
+      websiteLink,
+      address,
+    } = req.body;
+    
+    const userId = req.user.id;
+
+    // Insert data into the Companies table
+    db.run(
+      'INSERT INTO Companies (companyName, person, email, contactNumber, websiteLink, address, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [companyName, person, email, contactNumber, websiteLink, address, userId],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        return res.json({ message: "Company added successfully" });
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 app.get('/dashboard/teammemberform', authenticateJWT, (req, res) => {
   const userId = req.user.id;
@@ -1264,6 +1298,22 @@ app.get('/clientform', authenticateJWT, (req, res) => {
   }
 });
 
+app.get('/dashboard/company', authenticateJWT, (req, res) => {
+  try {
+    const userId = req.user.id;
+    db.all('SELECT companyName FROM Companies WHERE user_id = ?', [userId], (err, companyName) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      return res.json(companyName);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.get('/teammemberform', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
@@ -1503,6 +1553,27 @@ app.delete('/clientformdata/:clientId', authenticateJWT, async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.post('/reviewdocform', authenticateJWT, async (req, res) => {
+  try {
+    const {
+      reviewMethod, contactMethod, file, text, email, mobileNo, paymentId
+    } = req.body;
+    const userId = req.user.id;
+
+    if (!reviewMethod || !contactMethod) {
+      return res.status(400).json({ error: 'Required fields are missing' });
+    }
+
+    db.run('INSERT INTO ReviewDocForm (reviewMethod, contactMethod, file, text, email, mobileNo, paymentId, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [reviewMethod, contactMethod, file, text, email, mobileNo, paymentId, userId], function (err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.json({ message: 'Review document form submitted successfully' });
+    });
+  } catch (error) {
+    console.log(error);
   }
 });
 
@@ -1858,6 +1929,30 @@ app.get('/caseform', authenticateJWT, (req, res) => {
   }
 });
 
+app.get('/dashboard/people/appointmentsdates', authenticateJWT, (req, res) => {
+  try {
+    const userId = req.user.id;
+    db.all('SELECT id, title, appointmentDate FROM Appointments WHERE user_id = ?', [userId], (err, appointments) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      
+      // Format the data to include title and appointmentDate as "title(appointmentDate)"
+      const formattedAppointments = appointments.map(appointment => ({
+        id: appointment.id,
+        title: `${appointment.title} (${appointment.appointmentDate})`,
+      }));
+      
+      return res.json(formattedAppointments);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 //party Name form endpoints
 app.post('/partyname', authenticateJWT, async (req, res) => {
   try {
@@ -2161,61 +2256,77 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
     month: '2-digit',
     year: '2-digit',
   });
-  // const hearingDate = req.body.dateOfHearing;
 
-  db.run(
-    'UPDATE ProxyForm SET status = "accepted", acceptanceDate = ? WHERE id = ? AND user_id != ? AND status = "pending"',
-    [acceptanceDate, proxyId, userId],
-    (err) => {
+  db.get(
+    'SELECT dateOfHearing, zipStateProvince, type FROM ProxyForm WHERE id = ? AND user_id != ? AND status = "pending"',
+    [proxyId, userId],
+    (err, proxyData) => {
       if (err) {
         console.error('Database error:', err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
 
-      // console.log('hearingDate:', hearingDate);
-      // Record proxy activity in ProxyActivity table
+      if (!proxyData) {
+        // Proxy not found or not pending, handle accordingly
+        return res.status(404).json({ error: 'Proxy not found or not pending' });
+      }
+
+      const { dateOfHearing, zipStateProvince, type } = proxyData;
+
+      // Update the status and acceptance date in ProxyForm table
       db.run(
-        'INSERT INTO ProxyActivity (creator_user_id, acceptor_user_id, proxy_id, acceptanceDate) VALUES (?, ?, ?, ?)',
-        [req.user.id, userId, proxyId, acceptanceDate],
+        'UPDATE ProxyForm SET status = "accepted", acceptanceDate = ? WHERE id = ? AND user_id != ? AND status = "pending"',
+        [acceptanceDate, proxyId, userId],
         (err) => {
           if (err) {
             console.error('Database error:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
           }
-        }
-      );
 
-      // Retrieve the creator's user_id, fullName, dateOfHearing, and expirationDate from the ProxyForm table
-      db.get(
-        'SELECT user_id, fullName, dateOfHearing, expirationDate, zipStateProvince, city FROM ProxyForm WHERE id = ?',
-        [proxyId],
-        (err, row) => {
-          if (err) {
-            console.error('Database error:', err);
-          } else {
-            if (row.user_id) {
-              // Notify the user who created the proxy
-              const creatorNotificationMessage = `Your proxy for the hearing on ${row.dateOfHearing} in state ${row.zipStateProvince}, City ${row.city} has been accepted by user ${req.user.username}`;
+          // Record proxy activity in ProxyActivity table
+          db.run(
+            'INSERT INTO ProxyActivity (creator_user_id, acceptor_user_id, proxy_id, acceptanceDate, hearingDate, zipStateProvince, type) VALUES ( ?, ?, ?, ?, ?, ?, ?)',
+            [userId, req.user.id, proxyId, acceptanceDate, dateOfHearing, zipStateProvince, type ], // Include hearing date here
+            (err) => {
+              if (err) {
+                console.error('Database error:', err);
+              }
 
-              db.run(
-                'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
-                [row.user_id, creatorNotificationMessage, row.expirationDate],
-                (err) => {
+              // Retrieve the creator's user_id, fullName, dateOfHearing, and expirationDate from the ProxyForm table
+              db.get(
+                'SELECT user_id, fullName, dateOfHearing, expirationDate, zipStateProvince, city FROM ProxyForm WHERE id = ?',
+                [proxyId],
+                (err, row) => {
                   if (err) {
                     console.error('Database error:', err);
+                  } else {
+                    if (row.user_id) {
+                      // Notify the user who created the proxy
+                      const creatorNotificationMessage = `Your proxy for the hearing on ${row.dateOfHearing} in state ${row.zipStateProvince}, City ${row.city} has been accepted by user ${req.user.username}`;
+
+                      db.run(
+                        'INSERT INTO NotificationTable (userId, message, expirationDate) VALUES (?, ?, ?)',
+                        [row.user_id, creatorNotificationMessage, row.expirationDate],
+                        (err) => {
+                          if (err) {
+                            console.error('Database error:', err);
+                          }
+                        }
+                      );
+                    }
                   }
                 }
               );
 
-
+              return res.json({ message: 'Proxy accepted successfully' });
             }
-          }
+          );
         }
       );
-
-      return res.json({ message: 'Proxy accepted successfully' });
     }
   );
 });
+
 app.get('/dashboard/user/accepted-proxy-notifications', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   const currentDate = new Date().toISOString();
@@ -2290,7 +2401,7 @@ app.get('/dashboard/user/proxy-activity', authenticateJWT, (req, res) => {
   const currentDate = new Date().toISOString();
 
   db.all(
-    'SELECT pa.acceptanceDate, p.fullName AS creatorFullName, u.username AS acceptorUsername FROM ProxyActivity pa ' +
+    'SELECT pa.id, pa.acceptanceDate, pa.hearingDate, pa.zipStateProvince, pa.type, p.fullName AS creatorFullName, u.username AS acceptorUsername FROM ProxyActivity pa ' +
     'INNER JOIN users u ON pa.acceptor_user_id = u.id ' +
     'INNER JOIN ProxyForm p ON pa.proxy_id = p.id ' +
     'WHERE pa.creator_user_id = ? AND p.expirationDate > ?',
@@ -2304,7 +2415,11 @@ app.get('/dashboard/user/proxy-activity', authenticateJWT, (req, res) => {
       try {
         const proxyActivity = rows.map((row) => {
           return {
+            id: row.id,
             acceptanceDate: row.acceptanceDate,
+            hearingDate: row.hearingDate,
+            zipStateProvince: row.zipStateProvince,
+            type: row.type,
             creatorFullName: row.creatorFullName,
             acceptorUsername: row.acceptorUsername,
           };

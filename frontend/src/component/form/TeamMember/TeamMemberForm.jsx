@@ -19,6 +19,7 @@ const initialValues = {
   city: '',
   zipCode: '',
   selectedGroup: '',
+  selectedCompany: '',
 };
 
 const validationSchema = Yup.object().shape({
@@ -30,6 +31,7 @@ const validationSchema = Yup.object().shape({
   city: Yup.string(),
   zipCode: Yup.string(),
   selectedGroup: Yup.string(),
+  selectedCompany: Yup.string(),
   image: Yup.mixed(),
 });
 
@@ -44,6 +46,7 @@ const TeamMembers = () => {
   const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
   const closeModalOne = () => setIsModalOpenOne(false);
   const closeModalTwo = () => setIsModalOpenTwo(false);
+  const [companyNames, setCompanyNames] = useState([]); // State to store group names
 
   useEffect(() => {
     // Fetch group names and populate the select options
@@ -62,6 +65,23 @@ const TeamMembers = () => {
         console.error(error);
       }
     };
+    const fetchCompanyNames = async () => {
+      try {
+        const response = await Axios.get('http://localhost:8052/dashboard/company', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          },
+        });
+        
+        // Extract the group names from the response data
+        const companyNamesArray = response.data.map((company) => company.companyName);
+        setCompanyNames(companyNamesArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+    fetchCompanyNames();
     
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
   }, []);
@@ -184,11 +204,11 @@ const TeamMembers = () => {
             </div>
             <div className={styles.horizontalFields}>
                 <div className={styles.fieldGroup}>
-                  <Field as="select" name="selectedGroup" className={styles.selectField}>
-                    <option value="">Select a Group</option>
-                    {groupNames.map((groupName) => (
-                      <option key={groupName} value={groupName}>
-                        {groupName}
+                  <Field as="select" name="selectedCompany" className={styles.selectField}>
+                    <option value="">Select a Company</option>
+                    {companyNames.map((companyName) => (
+                      <option key={companyName} value={companyName}>
+                        {companyName}
                       </option>
                     ))}
                   </Field>

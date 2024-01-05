@@ -7,21 +7,21 @@ import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import Axios from 'axios';
 
 const initialValues = {
-  CompanyName: '',
+  companyName: '',
   person: '',
   email: '',
-  ContactNumber: '',
-  WebsiteLink: '',
+  contactNumber: '',
+  websiteLink: '',
   address: '',
   };
 
 const validationSchema = Yup.object().shape({
-  CompanyName: Yup.string().required('Company Name is required'),
+  companyName: Yup.string().required('Company Name is required'),
   email: Yup.string().email('Invalid email format').required('Email is required'),
   person: Yup.string(),
   address: Yup.string(),
-  ContactNumber: Yup.string(),
-  WebsiteLink: Yup.string(),
+  contactNumber: Yup.string(),
+  websiteLink: Yup.string(),
   selectedGroup: Yup.string(),
 });
 
@@ -30,27 +30,27 @@ const validationSchema = Yup.object().shape({
 
 const Companyform = () => {
 
-  const [groupNames, setGroupNames] = useState([]); // State to store group names
+  const [companyNames, setCompanyNames] = useState([]); // State to store group names
 
   useEffect(() => {
     // Fetch group names and populate the select options
-    const fetchGroupNames = async () => {
+    const fetchCompanyNames = async () => {
       try {
-        const response = await Axios.get('http://localhost:8052/dashboard/groupform', {
+        const response = await Axios.get('http://localhost:8052/dashboard/company', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
         });
         
         // Extract the group names from the response data
-        const groupNamesArray = response.data.map((group) => group.groupName);
-        setGroupNames(groupNamesArray);
+        const companyNamesArray = response.data.map((company) => company.companyName);
+        setCompanyNames(companyNamesArray);
       } catch (error) {
         console.error(error);
       }
     };
     
-    fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
+    fetchCompanyNames(); // Call the fetchGroupNames function when the component mounts
   }, []);
 
   return (
@@ -62,14 +62,14 @@ const Companyform = () => {
         onSubmit={async (values, { resetForm }) => {
           try {
             // Make an HTTP POST request to the backend with the full server URL
-            const response = await Axios.post('http://localhost:8052/dashboard/teammemberform', values, {
+            const response = await Axios.post('http://localhost:8052/dashboard/teammemberform/companyform', values, {
               headers: {
                 'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
               },
             });
       
             console.log(response.data); // Log the response from the backend
-            alert('Team Member Added successfully!');
+            alert('Company Added successfully!');
             resetForm();
           } catch (error) {
             console.error(error);
@@ -84,7 +84,7 @@ const Companyform = () => {
             <div className={styles.fieldGroup}>
               <Field
                 type="text"
-                name="CompanyName"
+                name="companyName"
                 placeholder="Company Name"
                 className={styles.inputField}
               />
@@ -115,11 +115,11 @@ const Companyform = () => {
             </div>
 
             <div className={styles.fieldGroup}>
-              <Field type="Number" name="ContactNumber" placeholder="Contact Number" className={styles.inputField} />
+              <Field type="text" name="contactNumber" placeholder="Contact Number" className={styles.inputField} />
             </div>
 
             <div className={styles.fieldGroup}>
-              <Field type="text" name="WebsiteLink" placeholder="URL Link" className={styles.inputField} />
+              <Field type="text" name="websiteLink" placeholder="URL Link" className={styles.inputField} />
             </div>
               
                       <div className={styles.BtnContainer}>

@@ -103,7 +103,7 @@ const TeamMemberdata = () => {
                 <td className={style.td}>{member.email}</td>
                 <td className={style.td}>{member.designation}</td>
                 <td className={style.td}>{member.selectedGroup}</td>
-                <td className={style.td}>{member.selectedGroup}</td>
+                <td className={style.td}>{member.selectedCompany}</td>
                 <td className={style.td}>
                 <button className={style.btn} onClick={() => handleEditClick(member)}>
                 Edit
