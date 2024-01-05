@@ -1,6 +1,6 @@
 import React from 'react'
 import Search from '../../component/utilities/SearchBar/Search'
-import SideNav from '../../component/utilities/SideNavBar/SideNav'
+import DashboardNavbar from '../../component/utilities/DashboardNavbar/DashboardNavbar'
 
 const Explore = () => {
   return (
@@ -8,7 +8,7 @@ const Explore = () => {
       <h1>
         
       </h1>
-      <SideNav/>
+      <DashboardNavbar/>
       <Search/>
     </>
   )

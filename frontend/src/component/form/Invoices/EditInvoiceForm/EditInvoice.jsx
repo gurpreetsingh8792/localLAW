@@ -167,7 +167,7 @@ const validationSchema = Yup.object().shape({
                     </option>
                   ))}
                 </Field>
-              <NavLink to="/clientform" className={styles.link}>
+              <NavLink to="/dashboard/peopleform" className={styles.link}>
                 Add New Client
               </NavLink>
             </div>
@@ -205,9 +205,9 @@ const validationSchema = Yup.object().shape({
             <Field as="textarea" name="fullAddress" className={styles.textareaField} placeholder="Full Address" />
             <ErrorMessage name="fullAddress" component="div" className={styles.errorMessage} />
 
-            <label className={styles.label} htmlFor="hearingDate">Hearing Date</label>
+            {/* <label className={styles.label} htmlFor="hearingDate">Hearing Date</label>
             <Field type="date" name="hearingDate" className={styles.inputFieldHearingDate} />
-            <ErrorMessage name="hearingDate" component="div" className={styles.errorMessage} />
+            <ErrorMessage name="hearingDate" component="div" className={styles.errorMessage} /> */}
 
             <div className={styles.expensesTitle}>EXPENSES</div>
             <label className={styles.label} htmlFor="title">Title</label>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './InvoicesForm.module.css';
 import axios from 'axios';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
@@ -121,6 +121,11 @@ const InvoicesForm = () => {
     }
   };
 
+  const navigate = useNavigate();
+  const HandleCancel=()=>{
+    navigate('/dashboard')
+  }
+
   return (
     <>
     <DashboardNavbar />
@@ -137,15 +142,15 @@ const InvoicesForm = () => {
   {generateInvoiceNo()}</div>
             <div className={styles.clientContainer}>
             <Field as="select" name="client" className={styles.selectFieldClient}>
-                  <option value="">Select Client</option>
+                  <option value="">Select People</option>
                   {clientNames.map((clientName) => (
                     <option key={clientName} value={clientName}>
                       {clientName}
                     </option>
                   ))}
                 </Field>
-              <NavLink to="/clientform" className={styles.link}>
-                Add New Client
+              <NavLink to="/dashboard/peopleform" className={styles.link}>
+                Add new People
               </NavLink>
             </div>
             <ErrorMessage name="client" component="div" className={styles.errorMessage} />
@@ -182,9 +187,9 @@ const InvoicesForm = () => {
             <Field as="textarea" name="fullAddress" className={styles.textareaField} placeholder="Full Address" />
             <ErrorMessage name="fullAddress" component="div" className={styles.errorMessage} />
 
-            <label className={styles.label} htmlFor="hearingDate">Hearing Date</label>
+            {/* <label className={styles.label} htmlFor="hearingDate">Hearing Date</label>
             <Field type="date" name="hearingDate" className={styles.inputFieldHearingDate} />
-            <ErrorMessage name="hearingDate" component="div" className={styles.errorMessage} />
+            <ErrorMessage name="hearingDate" component="div" className={styles.errorMessage} /> */}
 
             <div className={styles.expensesTitle}>EXPENSES</div>
             <label className={styles.label} htmlFor="title">Title</label>
@@ -235,7 +240,7 @@ const InvoicesForm = () => {
          
           <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Submit</button>
-            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Cancel</button>
+            <button type="submit" onClick={HandleCancel}   className={`${styles.submitButton}, ${styles.buttonCancel}`}  disabled={isSubmitting}>Cancel</button>
             </div>
           </Form>
         )}

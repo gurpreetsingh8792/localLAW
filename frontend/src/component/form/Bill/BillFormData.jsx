@@ -80,7 +80,7 @@ const BillFormData = () => {
     <>
       <DashboardNavbar />
       <div className={style.container}>
-        <h2 className={style.header}>Bill Form Data</h2>
+        <h2 className={style.header}>Bill Form</h2>
         <table className={style.table}>
           <thead>
             <tr className={style.tableHeaderRow}>

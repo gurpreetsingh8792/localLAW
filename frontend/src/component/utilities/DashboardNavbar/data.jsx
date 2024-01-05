@@ -70,7 +70,7 @@ export const links = [
     name: "Invoices",
     submenu:[
       {
-          name:'Add Invoces',
+          name:'Add Invoices',
           path:'/dashboard/invoicesform'
       },
       {

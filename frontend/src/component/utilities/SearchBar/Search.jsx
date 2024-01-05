@@ -168,7 +168,9 @@ const Search = () => {
       {searchMade && (
         <div className={style.resultContainer}>
           {results.length === 0 ? (
-            <div className={style.noResults}>No Result Found</div>
+            <div className={style.noResults}>
+  <span className={style.noResultsIcon}>🔍</span><p>No Results Found </p>
+</div>
           ) : (
             <>
               <h2 className={style.resultTitle}>{displayName}</h2>

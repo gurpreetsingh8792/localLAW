@@ -295,6 +295,7 @@ const Calendar = () => {
         });
     }
   };
+
   const handleStartTime = (date) => {
     setStart(date);
   };
@@ -598,7 +599,7 @@ const Calendar = () => {
       console.error("No appointment selected to update");
     }
   };
-  
+
 
   // Function to delete a Task event
   const deleteTaskEvent = () => {
@@ -928,22 +929,14 @@ const Calendar = () => {
                           Start Time
                         </label>
                         <input
-                          className={style.HearingVisibleFormTime}
-                          type="time"
-                          value={
-                            start ? start.toISOString().substring(11, 16) : ""
-                          }
-                          onChange={(e) => {
-                            if (start) {
-                              const [hours, minutes] =
-                                e.target.value.split(":");
-                              const newStartTime = new Date(
-                                start.setHours(hours, minutes)
-                              );
-                              handleStartTime(newStartTime);
-                            }
-                          }}
-                        />
+                        className={style.HearingVisibleFormTime}
+                        type="time"
+                        value={start || ""}
+                        onChange={(e) => {
+                          const newStartTime = e.target.value;
+                          console.log(handleStartTime(newStartTime));
+                        }}
+                      />
                       </div>
                       <div className={style.formRow}>
                         <label className={style.HearingVisibleFormTitle}>
@@ -1068,18 +1061,10 @@ const Calendar = () => {
                         <input
                           className={style.HearingVisibleFormTime}
                           type="time"
-                          value={
-                            start ? start.toISOString().substring(11, 16) : ""
-                          }
+                          value={start || ""}
                           onChange={(e) => {
-                            if (start) {
-                              const [hours, minutes] =
-                                e.target.value.split(":");
-                              const newStartTime = new Date(
-                                start.setHours(hours, minutes)
-                              );
-                              handleStartTime(newStartTime);
-                            }
+                            const newStartTime = e.target.value;
+                            console.log(handleStartTime(newStartTime));
                           }}
                         />
                       </div>
@@ -1090,14 +1075,11 @@ const Calendar = () => {
                         <input
                           className={style.HearingVisibleFormTime}
                           type="time"
-                          value={end ? end.toISOString().substring(11, 16) : ""}
-                          onChange={(e) =>
-                            handleEndTime(
-                              new Date(
-                                end.setHours(...e.target.value.split(":"))
-                              )
-                            )
-                          }
+                          value={end || ""}
+                          onChange={(e) => {
+                            const newEndTime = e.target.value;
+                            handleEndTime(newEndTime);
+                          }}
                         />
                       </div>
                       <div className={style.formRow}>

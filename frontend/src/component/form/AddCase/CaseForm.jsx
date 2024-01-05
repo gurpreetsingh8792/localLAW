@@ -3,7 +3,6 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { NavLink } from 'react-router-dom';
 import styles from './AddCase.module.css';
-import SideNav from '../../utilities/SideNavBar/SideNav';
 import axios from 'axios';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 
@@ -312,12 +311,12 @@ const validationSchema = Yup.object().shape({
            
             
 
-            <div className={styles.heading}>Client</div>
+            <div className={styles.heading}>People</div>
             {/* Client (Select Options) */}
             
             <div className={styles.row}>
             <div className={styles.column}>
-            <label className={styles.label}>Client:</label>
+            <label className={styles.label}>People:</label>
             <Field as="select" name="client" className={styles.selectClient}>
                     <option value="">Select</option>
                     {clientNames.map((firstName) => (
@@ -326,7 +325,7 @@ const validationSchema = Yup.object().shape({
                       </option>
                     ))}
                   </Field>
-              <NavLink className={styles.linkClient} to="/dashboard/clientform">Add New Client</NavLink>
+              <NavLink className={styles.linkClient} to="/dashboard/peopleform">Add New People</NavLink>
             </div>
             <div className={styles.columnTeam}>
             <label className={styles.labelTeam}>Team:</label>
@@ -342,13 +341,12 @@ const validationSchema = Yup.object().shape({
             </div>
             </div>
 
-            <div className={styles.column}>
+            {/* <div className={styles.column}>
             <label className={styles.label}>Client Designation:</label>
               <Field as="select" name="clientDesignation" className={styles.selectCd}>
                 <option value="">Select</option>
-                {/* Add client designation options */}
               </Field>
-            </div>
+            </div> */}
 
             {/* Opponent (Heading) */}
             <div className={styles.heading}>Opponent</div>
@@ -388,7 +386,9 @@ const validationSchema = Yup.object().shape({
 
               <div className={styles.BtnContainer}>
               <button type="submit" className={styles.submitButton}>Submit</button>
+              <NavLink to={"/dashboard"}>
               <button type="submit" className={styles.submitButton}>Cancel</button>
+              </NavLink>
               </div>
             
             {/* </div> */}

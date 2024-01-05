@@ -1,111 +1,63 @@
-footer{
+footer {
     background-color: var(--color-secondary);
     margin-top: 7rem;
-    padding-top: 7rem;
-    font-size: 0.9rem;
+    /* padding: 1rem; */
+    /* font-size: 0.9rem; */
     color: var(--color-primary);
-}
-
-
-.footerContainer{
-    display: grid;
-    margin: 0rem 3rem;
-    grid-template-columns: 26rem 1fr 1fr 1fr;
-}
-
-.footerContainer article{
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-}
-article a{
-    color: aliceblue;
+    justify-content: space-between;
+    align-items: center; 
+    flex-wrap: nowrap; 
 }
 
-.footerContainer article h4{
-    margin-bottom: 0.6rem;
-    font-size: 1rem;
+/* Adjust the logo image */
+.logo img {
+    height: 8rem; /* Adjust size as needed */
 }
 
-.footerSocial{
+/* Footer text and logo container */
+.footerCopyright {
     display: flex;
-    margin-top: 1.5rem;
+    align-items: center;
+    gap: 1rem; /* Space between items */
+}
+.footerCopy{
+    color: var(--color-fifth);
+}
+
+/* Footer social icons */
+.footerSocial {
+    display: flex;
     gap: 1rem;
-    font-size: 0.9rem;
     align-items: center;
 }
-/* svg:hover {
-    color: var(--color-secondary);
-} */
 
-.footerSocial a{
+.footerSocial a {
     background-color: var(--color-secondary);
     padding: 0.5rem;
     border: 1px solid var(--color-fourth);
     border-radius: 0.5rem;
     transition: var(--transition);
-    margin: 0;
 }
 
 .footerSocial a svg {
     color: var(--color-fourth);
 }
 
-
-.footerSocial a:hover{
+.footerSocial a:hover {
     border-color: var(--color-primary);
     background: transparent;
 }
 
-.footerCopy{
-    font-size: 0.9rem;
-    color: var(--color-primary);
-}
-
-.footerCopyright{
-    color: var(--color-fourth);
-    text-align: center;
-    padding-bottom: 1rem;
-    border-top: 2px solid var(--color-fourth);
-    margin-top: 5rem;
-}
-.footerCopyright small{
-    margin-top: 1rem;
-}
-
-
-
-/* Styles for medium-sized screens */
-@media screen and (max-width: 768px) {
-    .footerContainer {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto auto auto;
-        gap: 2rem;
-    }
-
-    .footerContainer article {
-        align-items: center;
-        text-align: center;
-    }
-}
-
-/* Styles for smaller screens */
+/* Adjust for very small screens */
 @media screen and (max-width: 480px) {
     footer {
-        padding-top: 3rem;
-    }
-
-    .footerContainer {
-        margin: 0 1rem;
-    }
-
-    .footerContainer article {
+        flex-direction: column;
         text-align: center;
+        gap: 1rem;
     }
 
     .footerSocial {
-        flex-wrap: wrap;
         justify-content: center;
     }
 }

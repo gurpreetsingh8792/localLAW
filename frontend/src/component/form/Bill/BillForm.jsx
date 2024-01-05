@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import styles from './Bill.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const generateBillNo = () => {
   const now = new Date();
@@ -97,6 +98,10 @@ const onSubmit = (values, { resetForm }) => {
   handleSubmit(values, { resetForm });
 };
 
+const navigate = useNavigate();
+const HandleCancel=()=>{
+  navigate('/dashboard')
+}
 
   return (
     <>
@@ -237,7 +242,7 @@ const onSubmit = (values, { resetForm }) => {
           </div>
           <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.buttonCancel}`}>Cancel</button>
           </div>
         </Form>
       </Formik>

@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import styles from './Alerts.module.css';
 import axios from 'axios';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import { useNavigate } from 'react-router-dom';
 
 const AlertsForm = () => {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -89,6 +90,11 @@ const AlertsForm = () => {
     // Update the formik field value for caseTitle
     formik.setFieldValue('caseTitle', event.target.value);
   };
+
+  const navigate = useNavigate();
+  const HandleCancel=()=>{
+    navigate('/dashboard')
+  }
 
   return (
     <>
@@ -231,9 +237,10 @@ const AlertsForm = () => {
               </div>
             </div>
           </div>
-          <button type="submit" className={styles.submitButton}>
-            Submit
-          </button>
+          <div className={styles.BtnContainer}>
+          <button type="submit" className={styles.submitButton}>Submit</button>
+          <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.ButtonCancel}`}>cancel</button>
+          </div>
         </form>
       </div>
     </>

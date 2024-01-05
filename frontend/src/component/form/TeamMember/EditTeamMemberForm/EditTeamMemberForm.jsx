@@ -5,7 +5,31 @@ import styles from './EditTeamMemberForm.module.css';
 import { NavLink } from 'react-router-dom';
 import Axios from 'axios';
 import Modal from '../../Client/People/ModelPop/Modal';
+import GroupForm from '../../Group/GroupForm';
 import Companyform from '../../Company/Companyform';
+
+const initialValues = {
+  image: '',
+  fullName: '',
+  email: '',
+  designation: '',
+  address: '',
+  state: '',
+  city: '',
+  zipCode: '',
+  selectedGroup: '',
+};
+
+const validationSchema = Yup.object().shape({
+  fullName: Yup.string().required('Full Name is required'),
+  email: Yup.string().email('Invalid email format').required('Email is required'),
+  designation: Yup.string(),
+  address: Yup.string(),
+  state: Yup.string(),
+  city: Yup.string(),
+  zipCode: Yup.string(),
+  selectedGroup: Yup.string(),
+});
 
 
 
@@ -16,9 +40,11 @@ const EditTeamMembersForm = ({teamData}) => {
   const [formData, setFormData] = useState({});
   const openModalTwo = () => setIsModalOpenTwo(true);
   const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
-  
+  const openModalOne = () => setIsModalOpenOne(true);
+  const [isModalOpenOne, setIsModalOpenOne] = useState(false);
   const closeModalTwo = () => setIsModalOpenTwo(false);
   const [companyNames, setCompanyNames] = useState([]);
+
 
   const initialValues = {
     // image: '',
@@ -44,7 +70,6 @@ const EditTeamMembersForm = ({teamData}) => {
     selectedGroup: Yup.string(),
     selectedCompany: Yup.string(),
   });
-  
 
   useEffect(() => {
     // Fetch group names and populate the select options
@@ -212,10 +237,31 @@ const EditTeamMembersForm = ({teamData}) => {
                 </div>
 
               <div className={styles.fieldGroup}>
-                <NavLink to={"/dashboard/groupform"} className={styles.link}>
-                  Add New Group
+                <NavLink to={"#"} className={styles.link} onClick={openModalOne}>
+                  Add Group
                 </NavLink>
               </div>
+
+            </div>
+            <div className={styles.horizontalFields}>
+                <div className={styles.fieldGroup}>
+                  <Field as="select" name="selectedGroup" className={styles.selectField}>
+                    <option value="">Select a Company</option>
+                    {groupNames.map((groupName) => (
+                      <option key={groupName} value={groupName}>
+                        {groupName}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage name="selectedGroup" component="div" className={styles.error} />
+            </div>
+
+              <div className={styles.fieldGroup}>
+                <NavLink to={"#"} className={styles.link} onClick={openModalTwo}>
+                  Add Company
+                </NavLink>
+              </div>
+
             </div>
 
             <div className={styles.horizontalFields}>
@@ -248,6 +294,10 @@ const EditTeamMembersForm = ({teamData}) => {
 
       
     </div>
+    <Modal isOpen={isModalOpenOne} onClose={() => setIsModalOpenOne(false)}>
+    <GroupForm />
+    </Modal>
+
     <Modal isOpen={isModalOpenTwo} onClose={() => setIsModalOpenTwo(false)}>
     <Companyform />
     </Modal>

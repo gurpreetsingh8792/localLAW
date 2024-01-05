@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './TeamMemberForm.module.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import Axios from 'axios';
 import Companyform from '../Company/Companyform';
@@ -85,6 +85,13 @@ const TeamMembers = () => {
     
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
   }, []);
+
+  const navigate = useNavigate();
+  const HandleCancel=()=>{
+    navigate('/dashboard')
+  }
+  
+
   return (
     <div className={styles.MainContainer}>
     <DashboardNavbar />
@@ -140,8 +147,8 @@ const TeamMembers = () => {
             <div className={styles.fieldGroup}>
               <Field
                 type="text"
-                name="fullName"
-                placeholder="Full Name"
+                name="fullName" 
+                placeholder="Full Name *"
                 className={styles.inputField}
               />
               <ErrorMessage name="fullName" component="div" className={styles.error} />
@@ -213,19 +220,20 @@ const TeamMembers = () => {
                     ))}
                   </Field>
                   <ErrorMessage name="selectedGroup" component="div" className={styles.error} />
-                </div>
+            </div>
 
               <div className={styles.fieldGroup}>
                 <NavLink to={"#"} className={styles.link} onClick={openModalTwo}>
                   Add Company
                 </NavLink>
               </div>
-            </div>
-                      <div className={styles.BtnContainer}>
-            <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
 
-                      </div>
+            </div>
+            
+            <div className={styles.BtnContainer}>
+              <button type="submit" className={styles.submitButton}>Submit</button>
+              <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.buttonCancel}`}>Cancel</button>
+            </div>
           </Form>
         )}
       </Formik>
@@ -237,9 +245,6 @@ const TeamMembers = () => {
     <Modal isOpen={isModalOpenTwo} onClose={() => setIsModalOpenTwo(false)}>
     <Companyform />
     </Modal>
-
-    
-
     </div>
   );
 };

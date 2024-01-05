@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import styles from './Advocate.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const validationSchema = Yup.object().shape({
   hearingCourt: Yup.string().required('Hearing Court is required'),
@@ -35,6 +36,10 @@ const AdvocateForm = () => {
     }
   };
 
+  const navigate = useNavigate();
+  const HandleCancel = () =>{
+    navigate("/dashboard/Importcase")
+  }
 
   return (
     <div className={styles.MainContiner}>
@@ -134,7 +139,7 @@ const AdvocateForm = () => {
           </div>
           <div className={styles.BtnContainer}>
           <button type="submit" className={styles.submitButton}>Submit</button>
-          <button type="submit" className={styles.submitButton}>Cancel</button>
+          <button type="submit" onClick={HandleCancel} className={styles.submitButton}>Cancel</button>
           </div>
 
           

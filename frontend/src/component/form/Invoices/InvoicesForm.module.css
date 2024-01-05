@@ -165,6 +165,23 @@
   margin-top: 10px;
   box-shadow: inset 0px 0px 6px 0px ;
 }
+.buttonCancel{
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: inset 0px 0px 6px 0px ;
+}
+.buttonCancel:hover{
+  background-color: var(--color-danger);
+  color: var(--color-primary);
+  transform: scale(1.05); 
+  box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+}
+
 .submitButton:hover {
   background-color: var(--color-fourth); 
   color: var(--color-primary);
