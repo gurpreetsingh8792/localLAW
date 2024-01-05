@@ -244,7 +244,7 @@ const EditTeamMembersForm = ({teamData}) => {
 
             </div>
             <div className={styles.horizontalFields}>
-                <div className={styles.fieldGroup}>
+                {/* <div className={styles.fieldGroup}>
                   <Field as="select" name="selectedGroup" className={styles.selectField}>
                     <option value="">Select a Company</option>
                     {groupNames.map((groupName) => (
@@ -254,13 +254,13 @@ const EditTeamMembersForm = ({teamData}) => {
                     ))}
                   </Field>
                   <ErrorMessage name="selectedGroup" component="div" className={styles.error} />
-            </div>
+            </div> */}
 
-              <div className={styles.fieldGroup}>
+              {/* <div className={styles.fieldGroup}>
                 <NavLink to={"#"} className={styles.link} onClick={openModalTwo}>
                   Add Company
                 </NavLink>
-              </div>
+              </div> */}
 
             </div>
 

@@ -5,19 +5,10 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './EditCaseForm.module.css';
 import axios from 'axios';
 
-<<<<<<< HEAD
 const EditCaseForm = ({ caseData }) => {
   const [clientNames, setClientNames] = useState([]);
   const [teamMembers, setTeamMembers] = useState([]);
   const [formData, setFormData] = useState({});
-=======
-
-const EditCaseForm = () => {
-  const [clientNames, setClientNames] = useState([]); // State to store client first names
-  const [teamMembers, setTeamMembers] = useState([]); // State to store team member full names
-  
- 
->>>>>>> 78debe2557c16f601f35ddc2503ce5178a1cf180
 
   useEffect(() => {
     const fetchClientNames = async () => {
@@ -412,13 +403,8 @@ const handleSubmit = async (values, { resetForm }) => {
               <label className={styles.label}></label>
 
               <div className={styles.BtnContainer}>
-<<<<<<< HEAD
-              <button type="submit" className={styles.submitButton}>update</button>
-              <button type="submit" className={styles.submitButton}>Cancel</button>
-=======
-              <button type="submit" className={styles.submitButton}>Submit</button>
+              <button type="submit" className={styles.submitButton}>UPDATE</button>
               <button type="button" onClick={handleCancel} className={styles.submitButton}>Cancel</button>
->>>>>>> 78debe2557c16f601f35ddc2503ce5178a1cf180
               </div>
             
             {/* </div> */}
