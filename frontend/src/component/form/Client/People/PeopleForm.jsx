@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./People.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink,useNavigate } from "react-router-dom";
 import axios from "axios";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -11,7 +11,8 @@ import TaskForm from "./ModelPop/TaskForm";
 
 const PeopleForm = () => {
   const [caseTitles, setCaseTitles] = useState([]);
-  const [alertTitles, setAlertTitles] = useState([]); // State to store alert titles
+  const [alertTitles, setAlertTitles] = useState([]); 
+  const [appointmentTitles, setAppointmentTitles] = useState([]); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -75,6 +76,7 @@ const PeopleForm = () => {
     assignAlerts: "",
     addNewAlert: "",
     scheduleAppointment: "",
+    assignAppointments:""
   };
 
   const validationSchema = Yup.object().shape({
@@ -97,6 +99,7 @@ const PeopleForm = () => {
     assignAlerts: Yup.string(),
     addNewAlert: Yup.string(),
     scheduleAppointment: Yup.date().nullable(),
+    assignAppointments: Yup.string(),
   });
 
   const onSubmit = async (values, { resetForm }) => {
@@ -125,6 +128,11 @@ const PeopleForm = () => {
     validationSchema,
     onSubmit,
   });
+
+  const navigate = useNavigate();
+  const HandleCancel=()=>{
+    navigate('/dashboard')
+  }
 
   return (
     <>
@@ -191,27 +199,65 @@ const PeopleForm = () => {
   )}
 </div>
 
-            <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="type">
-                Type
-              </label>
-              <select
-                id="type"
-                name="type"
-                className={styles.inputField}
-                {...formik.getFieldProps("type")}
-              >
-                <option value="">Select Type</option>
-                <option value="Client">Client</option>
-                <option value="Lawyers">Lawyers</option>
-                <option value="OpposingClient">Opposing Client</option>
-                <option value="Witness">Witness</option>
-              </select>
+<div className={styles.formGroup}>
+    <label className={styles.label} htmlFor="type">
+        Type
+    </label>
+    <select
+        id="type"
+        name="type"
+        className={styles.inputField}
+        {...formik.getFieldProps("type")}
+    >
+        <option value="">Select Type</option>
+        <option value="Client">Client</option>
+        <option value="Lawyers">Lawyers</option>
+        <option value="OpposingClient">Opposing Client</option>
+        <option value="Witness">Witness</option>
+    </select>
 
-              {formik.touched.type && formik.errors.type && (
-                <div className={styles.error}>{formik.errors.type}</div>
-              )}
-            </div>
+    {formik.touched.type && formik.errors.type && (
+        <div className={styles.error}>{formik.errors.type}</div>
+    )}
+
+    {/* Conditional rendering for 'Lawyer Types' dropdown */}
+    {formik.values.type === "Lawyers" && (
+        <div className={styles.formGroup}>
+            <label className={styles.label} htmlFor="lawyerType">
+                Lawyer Type
+            </label>
+            <select
+                id="lawyerType"
+                name="lawyerType"
+                className={styles.inputField}
+                {...formik.getFieldProps("lawyerType")}
+            >
+                <option value="">Select Lawyer Type</option>
+                <option value="CorporateLawyer">Corporate Lawyer</option>
+                <option value="CriminalDefenseLawyer">Criminal Defense Lawyer</option>
+                <option value="FamilyLawyer">Family Lawyer</option>
+                <option value="TaxLawyer">Tax Lawyer</option>
+                <option value="IntellectualPropertyLawyer">Intellectual Property Lawyer</option>
+                <option value="EmploymentLawyer">Employment Lawyer</option>
+                <option value="EnvironmentalLawyer">Environmental Lawyer</option>
+                <option value="EstatePlanningLawyer">Estate Planning Lawyer</option>
+                <option value="PersonalInjuryLawyer">Personal Injury Lawyer</option>
+                <option value="ImmigrationLawyer">Immigration Lawyer</option>
+                <option value="BankruptcyLawyer">Bankruptcy Lawyer</option>
+                <option value="CivilLitigation Lawyer">Civil Litigation Lawyer</option>
+                <option value="RealEstateLawyer">Real Estate Lawyer</option>
+                <option value="ConstitutionalLawyer">Constitutional Lawyer</option>
+                <option value="EntertainmentLawyer">Entertainment Lawyer</option>
+                {/* Add more lawyer types as needed */}
+            </select>
+
+            {formik.touched.lawyerType && formik.errors.lawyerType && (
+                <div className={styles.error}>{formik.errors.lawyerType}</div>
+            )}
+        </div>
+    )}
+</div>
+
           </div>
 
           <div className={styles.formSection}>
@@ -427,7 +473,27 @@ const PeopleForm = () => {
           
           <div className={styles.formSection}>
 
-          <NavLink to="#" onClick={openModal}>Appointment</NavLink>
+          <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="assignAppointments">
+                Assign Appointment
+              </label>
+              <select
+                id="assignAppointments"
+                name="assignAppointments"
+                className={styles.inputField}
+                {...formik.getFieldProps("assignAppointments")}
+              >
+                <option value="">Select an option</option>
+                {appointmentTitles.map((title) => (
+                  <option key={title} value={title}>
+                    {title}
+                  </option>
+                ))}
+              </select>
+
+            </div>
+
+          <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
              <TaskForm />
           </Modal>
@@ -437,7 +503,7 @@ const PeopleForm = () => {
 
           <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={styles.submitButton}>Cancel</button>
           </div>
         </form>
       </div>

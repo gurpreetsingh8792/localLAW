@@ -71,7 +71,7 @@ const InvoicesFormData = () => {
     <div>
       <DashboardNavbar />
       <div className={style.container}>
-        <h2 className={style.header}>Invoices Form Data</h2>
+        <h2 className={style.header}>Invoices Form</h2>
         <table className={style.table}>
           <thead>
             <tr className={style.tableHeaderRow}>

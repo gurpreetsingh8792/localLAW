@@ -70,7 +70,7 @@ const TeamMemberdata = () => {
     <>
       <DashboardNavbar />
       <div className={style.container}>
-        <h2 className={style.title}>Team Members Data</h2>
+        <h2 className={style.title}>Team Members</h2>
         <table className={style.table}>
           <thead>
             <tr className={style.tr}>

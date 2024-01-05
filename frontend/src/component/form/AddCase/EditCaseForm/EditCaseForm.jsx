@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState  } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './EditCaseForm.module.css';
 import axios from 'axios';
 
@@ -9,6 +9,8 @@ import axios from 'axios';
 const EditCaseForm = () => {
   const [clientNames, setClientNames] = useState([]); // State to store client first names
   const [teamMembers, setTeamMembers] = useState([]); // State to store team member full names
+  
+ 
 
   useEffect(() => {
     // Fetch client first names and populate the select options
@@ -99,6 +101,12 @@ const validationSchema = Yup.object().shape({
       console.error(error);
     }
   };
+
+
+  const navigate = useNavigate();
+  const handleCancel = () => {
+    navigate(0)
+  }
 
   return (
     <>
@@ -309,12 +317,12 @@ const validationSchema = Yup.object().shape({
            
             
 
-            <div className={styles.heading}>Client</div>
+            <div className={styles.heading}>People</div>
             {/* Client (Select Options) */}
             
             <div className={styles.row}>
             <div className={styles.column}>
-            <label className={styles.label}>Client:</label>
+            <label className={styles.label}>People:</label>
             <Field as="select" name="client" className={styles.selectClient}>
                     <option value="">Select</option>
                     {clientNames.map((firstName) => (
@@ -323,7 +331,7 @@ const validationSchema = Yup.object().shape({
                       </option>
                     ))}
                   </Field>
-              <NavLink className={styles.linkClient} to="/dashboard/clientform">Add New Client</NavLink>
+              <NavLink className={styles.linkClient} to="/dashboard/clientform">Add New People</NavLink>
             </div>
             <div className={styles.columnTeam}>
             <label className={styles.labelTeam}>Team:</label>
@@ -339,13 +347,12 @@ const validationSchema = Yup.object().shape({
             </div>
             </div>
 
-            <div className={styles.column}>
+            {/* <div className={styles.column}>
             <label className={styles.label}>Client Designation:</label>
               <Field as="select" name="clientDesignation" className={styles.selectCd}>
                 <option value="">Select</option>
-                {/* Add client designation options */}
               </Field>
-            </div>
+            </div> */}
 
             {/* Opponent (Heading) */}
             <div className={styles.heading}>Opponent</div>
@@ -385,7 +392,7 @@ const validationSchema = Yup.object().shape({
 
               <div className={styles.BtnContainer}>
               <button type="submit" className={styles.submitButton}>Submit</button>
-              <button type="submit" className={styles.submitButton}>Cancel</button>
+              <button type="button" onClick={handleCancel} className={styles.submitButton}>Cancel</button>
               </div>
             
             {/* </div> */}

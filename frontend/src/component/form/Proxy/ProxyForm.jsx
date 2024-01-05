@@ -233,7 +233,7 @@ const Proxy = () => {
           </div>
         <div className={style.row}>
           
-          <div className={style.field}>
+          {/* <diV className={style.field}>
             <label className={style.label} htmlFor="causeTitle">Cause Title</label>
             <input
               className={style.text}
@@ -247,7 +247,7 @@ const Proxy = () => {
             {formik.touched.causeTitle && formik.errors.causeTitle ? (
               <div className={style.error}>{formik.errors.causeTitle}</div>
             ) : null}
-          </div>
+          </diV> */}
           <div className={style.field}>
             <label className={style.label} htmlFor="honorableJudge">Honorable Judge</label>
             <input

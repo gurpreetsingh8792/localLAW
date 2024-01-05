@@ -20,6 +20,7 @@
     --bg-primary: #00020D; /* Cosmic Black */
     --bg-secondary: #C0C0C0; /* Starlight Silver */
     --bg-accent: #004E64; /* Neptune Teal */
+    --color-danger: rgb(232, 85, 85);
 
     --container-width-lg: 80%;
     --container-width-md: 90%;

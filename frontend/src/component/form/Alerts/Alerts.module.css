@@ -12,7 +12,13 @@
     text-align: center;
     color: var(--color-primary);
   }
-  
+
+  .BtnContainer{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
   .formField {
     margin-bottom: 15px;
     
@@ -100,8 +106,24 @@
     margin-top: 10px;
     box-shadow: inset 0px 0px 6px 0px ;
   }
+  .ButtonCancel {
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: inset 0px 0px 6px 0px ;
+  }
   .submitButton:hover {
     background-color: var(--color-fourth); 
+    color: var(--color-primary);
+    transform: scale(1.05); 
+    box-shadow: inset 0px 0px 6px 0px var(--color-primary);
+  }
+  .ButtonCancel:hover {
+    background-color: var(--color-danger); 
     color: var(--color-primary);
     transform: scale(1.05); 
     box-shadow: inset 0px 0px 6px 0px var(--color-primary);

@@ -7,6 +7,7 @@ import style from "./GenrteDocs.module.css";
 import { CircularProgress, CircularProgressLabel } from "@chakra-ui/react";
 import { stateDistrictsMap } from "./data";
 import jsPDF from 'jspdf';
+import { useNavigate } from "react-router-dom";
 
 
 // District
@@ -134,6 +135,11 @@ const GenrateDocs = () => {
     const file = event.currentTarget.files[0];
     setFieldValue("fileUpload", file);
   };
+  const navigate = useNavigate();
+  const HandleCancel=()=>{
+    navigate('/dashboard')
+  }
+
 
   return (
     <>
@@ -441,7 +447,7 @@ const GenrateDocs = () => {
                   size={20}
                 /> */}
                 <div className={style.btnContainer}>
-                <button type="submit" className={style.button}>
+                <button type="submit" onClick={HandleCancel} className={style.button}>
                   Cancel
                 </button>
                 <button

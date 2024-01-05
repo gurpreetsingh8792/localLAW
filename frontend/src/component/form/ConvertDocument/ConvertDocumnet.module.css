@@ -61,7 +61,7 @@
   }
   
   .button {
-    background-color: #4CAF50; /* Green */
+    background-color: var(--color-primary); /* Green */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -72,14 +72,14 @@
   }
   
   .button:hover {
-    background-color: #45a049;
+    background-color: var(--color-secondary);
   }
   
   .button[type="reset"] {
-    background-color: #f44336; /* Red */
+    background-color: var(--color-primary); /* Red */
   }
   
   .button[type="reset"]:hover {
-    background-color: #d32f2f;
+    background-color: red;
   }
   

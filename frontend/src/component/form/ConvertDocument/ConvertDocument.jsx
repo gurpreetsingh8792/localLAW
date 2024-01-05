@@ -1,9 +1,19 @@
 import React from 'react';
-import style from "./ConvertDocumnet.modulem.css"
+import style from "./ConvertDocumnet.module.css"
 import { Formik, Form, Field } from 'formik';
+import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import { useNavigate } from 'react-router-dom';
 
 const ConvertDocument = () => {
+   
+  const navigate = useNavigate();
+  const HandleCancel=()=>{
+    navigate('/dashboard')
+  }
+
   return (
+    <>
+    <DashboardNavbar/>
     <div className={style.Container}>
 
     <Formik
@@ -48,10 +58,10 @@ const ConvertDocument = () => {
             <button type="submit" disabled={isSubmitting} className={style.button}>
               Submit
             </button>
-            <button type="reset" className={style.button}>
+            <button onClick={HandleCancel} type="reset" className={style.button}>
               Cancel
             </button>
-            <button type="button" onClick={() => {/* define your delete action */}} className={style.button}>
+            <button type="button"  className={style.button}>
               Delete
             </button>
           </div>
@@ -59,6 +69,7 @@ const ConvertDocument = () => {
       )}
     </Formik>
     </div>
+    </>
   );
 }
 

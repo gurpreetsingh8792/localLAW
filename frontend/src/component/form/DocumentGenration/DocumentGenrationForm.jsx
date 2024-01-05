@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import styles from './DocumentGenration.module.css';
 import SideNav from '../../utilities/SideNavBar/SideNav';
@@ -92,6 +93,11 @@ const DocumentGenrationForm = () => {
     formik.handleChange(e);
     formik.setFieldValue('district', ''); 
   };
+
+  const navigate = useNavigate();
+  const HandleCancel=()=>{
+    navigate('/dashboard')
+  }
 
   return (
     <>

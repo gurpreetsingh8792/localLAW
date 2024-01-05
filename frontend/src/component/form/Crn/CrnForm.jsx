@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import styles from './CrnForm.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
 
 const validationSchema = Yup.object().shape({
   hearingCourt: Yup.string().required('Hearing Court is required'),
@@ -11,9 +12,8 @@ const validationSchema = Yup.object().shape({
   caseNo: Yup.string().required('Case Number is required'),
   caseYear: Yup.string()
     .matches(/^\d{4}$/, 'Please enter a valid year (e.g., 2023)'),
-  
-
 });
+
 
 const initialValues = {
   hearingCourt: '',
@@ -40,6 +40,12 @@ const CnrForm = () => {
       console.error(error);
     }
   };
+  
+  const navigate = useNavigate();
+    const HandleCancel = () => {
+      navigate("/dashboard/Importcase")
+    }
+
   return (
     <div className={styles.MainContainer}>
     <DashboardNavbar />
@@ -163,7 +169,7 @@ const CnrForm = () => {
           
           <div className={styles.BtnContainer}>
           <button type="submit" className={styles.submitButton}>Submit</button>
-          <button type="submit" className={styles.submitButton}>Cancel</button>
+          <button type="submit" onClick={HandleCancel} className={styles.submitButton}>Cancel</button>
           </div>
 
         </Form>

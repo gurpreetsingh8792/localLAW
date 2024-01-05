@@ -275,24 +275,28 @@ const Calendar = () => {
           setCaseType(appointmentDetails.caseType);
           setContactPerson(appointmentDetails.contactPerson);
           setLocation(appointmentDetails.location);
+          setDesc(appointmentDetails.appointmentDate);
+          setEmail(appointmentDetails.email);
           setStart(
-            appointmentDetails.appointmentDate
-              ? new Date(appointmentDetails.appointmentDate)
+            appointmentDetails.startTime
+              ? new Date(`1970-01-01T${appointmentDetails.startTime}:00`)
               : null
           );
           setEnd(
             appointmentDetails.endTime
-              ? new Date(appointmentDetails.endTime)
+              ? new Date(`1970-01-01T${appointmentDetails.endTime}:00`)
               : null
           );
-          setEmail(appointmentDetails.email);
           // Update other state variables as needed
+          
         })
+
         .catch((error) => {
           console.error("Error fetching appointment details:", error);
         });
     }
   };
+
   const handleStartTime = (date) => {
     setStart(date);
   };
@@ -844,22 +848,14 @@ const Calendar = () => {
                           Start Time
                         </label>
                         <input
-                          className={style.HearingVisibleFormTime}
-                          type="time"
-                          value={
-                            start ? start.toISOString().substring(11, 16) : ""
-                          }
-                          onChange={(e) => {
-                            if (start) {
-                              const [hours, minutes] =
-                                e.target.value.split(":");
-                              const newStartTime = new Date(
-                                start.setHours(hours, minutes)
-                              );
-                              handleStartTime(newStartTime);
-                            }
-                          }}
-                        />
+                        className={style.HearingVisibleFormTime}
+                        type="time"
+                        value={start || ""}
+                        onChange={(e) => {
+                          const newStartTime = e.target.value;
+                          console.log(handleStartTime(newStartTime));
+                        }}
+                      />
                       </div>
                       <div className={style.formRow}>
                         <label className={style.HearingVisibleFormTitle}>
@@ -984,18 +980,10 @@ const Calendar = () => {
                         <input
                           className={style.HearingVisibleFormTime}
                           type="time"
-                          value={
-                            start ? start.toISOString().substring(11, 16) : ""
-                          }
+                          value={start || ""}
                           onChange={(e) => {
-                            if (start) {
-                              const [hours, minutes] =
-                                e.target.value.split(":");
-                              const newStartTime = new Date(
-                                start.setHours(hours, minutes)
-                              );
-                              handleStartTime(newStartTime);
-                            }
+                            const newStartTime = e.target.value;
+                            console.log(handleStartTime(newStartTime));
                           }}
                         />
                       </div>
@@ -1006,14 +994,11 @@ const Calendar = () => {
                         <input
                           className={style.HearingVisibleFormTime}
                           type="time"
-                          value={end ? end.toISOString().substring(11, 16) : ""}
-                          onChange={(e) =>
-                            handleEndTime(
-                              new Date(
-                                end.setHours(...e.target.value.split(":"))
-                              )
-                            )
-                          }
+                          value={end || ""}
+                          onChange={(e) => {
+                            const newEndTime = e.target.value;
+                            handleEndTime(newEndTime);
+                          }}
                         />
                       </div>
                       <div className={style.formRow}>
@@ -1376,36 +1361,28 @@ const Calendar = () => {
                         Start Time
                       </label>
                       <input
-                        className={style.HearingVisibleFormTime}
-                        type="time"
-                        value={
-                          start ? start.toISOString().substring(11, 16) : ""
-                        }
-                        onChange={(e) => {
-                          if (start) {
-                            const [hours, minutes] = e.target.value.split(":");
-                            // Create a new Date object based on the existing start date
-                            const newStartTime = new Date(start);
-                            newStartTime.setHours(hours, minutes);
-                            handleStartTime(newStartTime);
-                          }
-                        }}
-                      />
+            className={style.HearingVisibleFormTime}
+            type="time"
+            value={start || ""}
+            onChange={(e) => {
+              const newStartTime = e.target.value;
+              handleStartTime(newStartTime);
+            }}
+          />
                     </div>
                     <div className={style.formRow}>
                       <label className={style.AppointmentFormTitle}>
                         End Time
                       </label>
                       <input
-                        className={style.HearingVisibleFormTime}
-                        type="time"
-                        value={end ? end.toISOString().substring(11, 16) : ""}
-                        onChange={(e) =>
-                          handleEndTime(
-                            new Date(end.setHours(...e.target.value.split(":")))
-                          )
-                        }
-                      />
+            className={style.HearingVisibleFormTime}
+            type="time"
+            value={end || ""}
+            onChange={(e) => {
+              const newEndTime = e.target.value;
+              console.log(handleEndTime(newEndTime));
+            }}
+          />
                     </div>
                     <div className={style.formRow}>
                       <label className={style.HearingVisibleFormTitle}>
