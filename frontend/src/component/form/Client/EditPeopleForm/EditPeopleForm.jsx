@@ -4,12 +4,19 @@ import * as Yup from 'yup';
 import styles from './EditPeopleForm.module.css';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import Modal from '../../Client/People/ModelPop/Modal'
+import TaskForm from "../../Client/People/ModelPop/TaskForm";
+
 
 
 const EditPeopleForm = ({ clientData }) => {
   const [alertTitles, setAlertTitles] = useState([]); // State to store alert titles
   const [formData, setFormData] = useState({});
   const [caseTitles, setCaseTitles] = useState([]);
+  const [appointmentTitles, setAppointmentTitles] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     // Fetch alert titles and populate the select options
@@ -57,6 +64,26 @@ const EditPeopleForm = ({ clientData }) => {
           console.error(error);
         }
       };
+      const fetchAppointmentTitles = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:8052/dashboard/people/appointmentsdates",
+            {
+              headers: {
+                "x-auth-token": localStorage.getItem("token"), // Get the token from localStorage or your authentication mechanism
+              },
+            }
+          );
+  
+          // Extract the appointment titles from the response data
+          const appointmentTitlesArray = response.data.map((appointment) => appointment.title);
+          setAppointmentTitles(appointmentTitlesArray);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      fetchAppointmentTitles();
       fetchAlertTitles();
       fetchCaseTitles();
   }, []);
@@ -75,6 +102,7 @@ const EditPeopleForm = ({ clientData }) => {
     officeAddress: clientData.officeAddress || '',
     assignAlerts: clientData.assignAlerts || '',
     addNewAlert: '',
+    assignAppointments: clientData.assignAppointments || '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -92,6 +120,7 @@ const EditPeopleForm = ({ clientData }) => {
     officeAddress: Yup.string(),
     assignAlerts: Yup.string(),
     addNewAlert: Yup.string(),
+    assignAppointments: Yup.string(),
     
   });
 
@@ -363,6 +392,36 @@ const EditPeopleForm = ({ clientData }) => {
           </NavLink>
         </div>
         </div>
+
+                  
+        <div className={styles.formSection}>
+
+<div className={styles.formGroup}>
+    <label className={styles.label} htmlFor="assignAppointments">
+      Assign Appointment
+    </label>
+    <select
+      id="assignAppointments"
+      name="assignAppointments"
+      className={styles.inputField}
+      {...formik.getFieldProps("assignAppointments")}
+    >
+      <option value="">Select an option</option>
+      {appointmentTitles.map((title) => (
+        <option key={title} value={title}>
+          {title}
+        </option>
+      ))}
+    </select>
+
+  </div>
+
+  <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+             <TaskForm />
+          </Modal>
+
+</div>
 
        
 

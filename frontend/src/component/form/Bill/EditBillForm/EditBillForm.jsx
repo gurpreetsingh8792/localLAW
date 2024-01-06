@@ -84,7 +84,20 @@ try {
   console.error('An error occurred while creating the validation schema:', error);
 }
 
-  
+const calculateTotalWithTax = (amount, taxPercentage) => {
+  return amount + (amount * (taxPercentage / 100));
+};
+
+const handleFieldChange = (e, setFieldValue, values) => {
+  const { name, value } = e.target;
+  let amount = name === 'amount' ? parseFloat(value) || 0 : parseFloat(values.amount) || 0;
+  let taxPercentage = name === 'taxPercentage' ? parseFloat(value) || 0 : parseFloat(values.taxPercentage) || 0;
+
+  setFieldValue(name, value); // Update the changed field
+
+  const totalWithTax = calculateTotalWithTax(amount, taxPercentage);
+  setFieldValue('totalAmountWithTax', totalWithTax.toFixed(2)); // Update the total amount with tax
+};
 
 const handleSubmit = async (values, { resetForm }) => {
   try {
@@ -121,6 +134,7 @@ const onSubmit = (values, { resetForm }) => {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
+        {({ setFieldValue, values }) => (
         <Form>
         <div className={styles.billNo}><span style={{ color: 'var(--color-primary)'}}>BIL-</span>{initialValues.billNumber}</div>
           <div>
@@ -190,7 +204,12 @@ const onSubmit = (values, { resetForm }) => {
           <div className={styles['horizontal-fields']}>
             <div>
               <label className={styles.label}>Amount</label>
-              <Field type="text" name="amount" className={styles['input-fieldCurrentDate']} />
+              <Field 
+              type="text" 
+              name="amount" 
+              className={styles['input-fieldCurrentDate']} 
+              onChange={(e) => handleFieldChange(e, setFieldValue, values)}
+            />
               <ErrorMessage name="amount" component="div" className={styles['error-message']} />
             </div>
             <div>
@@ -208,18 +227,24 @@ const onSubmit = (values, { resetForm }) => {
             </div>
             <div>
               <label className={styles.label}>Tax Percentage</label>
-              <Field type="text" name="taxPercentage" className={styles['input-fieldDateTo']} />
+              <Field 
+              type="text" 
+              name="taxPercentage" 
+              className={styles['input-fieldDateTo']} 
+              onChange={(e) => handleFieldChange(e, setFieldValue, values)}
+            />
               <ErrorMessage name="taxPercentage" component="div" className={styles['error-message']} />
             </div>
           </div>
           <div className={styles['horizontal-fields']}>
             <div>
               <label className={styles.label}>Total Amount with Tax</label>
-              <Field
-                type="text"
-                name="totalAmountWithTax"
-                className={styles['input-field']}
-              />
+              <Field 
+              type="text" 
+              name="totalAmountWithTax" 
+              className={styles['input-field']} 
+              readOnly
+            />
               <ErrorMessage name="totalAmountWithTax" component="div" className={styles['error-message']} />
             </div>
             <div>
@@ -253,6 +278,7 @@ const onSubmit = (values, { resetForm }) => {
             <button  className={styles.submitButton}>Cancel</button>
           </div>
         </Form>
+        )}
       </Formik>
     </div>
     </>

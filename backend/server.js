@@ -1447,7 +1447,7 @@ app.get('/dashboard/clientform/edit', authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
   db.all(
-    'SELECT id, firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts FROM ClientForm WHERE user_id = ?',
+    'SELECT id, firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, assignAppointments FROM ClientForm WHERE user_id = ?',
     [userId],
     (err, clientForms) => {
       if (err) {
@@ -1463,12 +1463,12 @@ app.put('/clients/forms/:clientId', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   const {
     firstName, lastName, email, mobileNo, alternateMobileNo, organizationName,
-    organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts
+    organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, assignAppointments
   } = req.body;
 
   db.run(
-    'UPDATE ClientForm SET firstName = ?, lastName = ?, email = ?, mobileNo = ?, alternateMobileNo = ?, organizationName = ?, organizationType = ?, organizationWebsite = ?, caseTitle = ?, type = ?, homeAddress = ?, officeAddress = ?, assignAlerts = ? WHERE id = ? AND user_id = ?',
-    [firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, clientId, userId],
+    'UPDATE ClientForm SET firstName = ?, lastName = ?, email = ?, mobileNo = ?, alternateMobileNo = ?, organizationName = ?, organizationType = ?, organizationWebsite = ?, caseTitle = ?, type = ?, homeAddress = ?, officeAddress = ?, assignAlerts = ?, assignAppointments = ? WHERE id = ? AND user_id = ?',
+    [firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts,assignAppointments, clientId, userId],
     (err) => {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -1484,7 +1484,7 @@ app.put('/clients/forms/:clientId', authenticateJWT, (req, res) => {
 app.post('/dashboard/clientform', authenticateJWT, async (req, res) => {
   try {
     const {
-      firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,caseTitle,type,homeAddress,officeAddress,assignAlerts,} = req.body;
+      firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,caseTitle,type,homeAddress,officeAddress,assignAlerts,assignAppointments} = req.body;
     if (!firstName || !email) {
       return res.status(400).json({ error: 'First Name and Email are required fields' });
     }
@@ -1493,15 +1493,15 @@ app.post('/dashboard/clientform', authenticateJWT, async (req, res) => {
       INSERT INTO ClientForm (
         firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, 
         organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, 
-        assignAlerts, user_id
+        assignAlerts,assignAppointments, user_id
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
     `;
 
     db.run(
       query,
       [
-        firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,caseTitle,type,homeAddress,officeAddress,assignAlerts,userId,
+        firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,caseTitle,type,homeAddress,officeAddress,assignAlerts,assignAppointments,userId,
       ],
       function (err) {
         if (err) {
@@ -1520,7 +1520,7 @@ app.post('/dashboard/clientform', authenticateJWT, async (req, res) => {
 app.get('/clientformdata', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
-    db.all('SELECT id,firstName,email,mobileNo,assignAlerts FROM ClientForm WHERE user_id = ?', [userId], (err, forms) => {
+    db.all('SELECT id,firstName,email,mobileNo,assignAlerts,assignAppointments FROM ClientForm WHERE user_id = ?', [userId], (err, forms) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -1566,7 +1566,11 @@ app.post('/reviewdocform', authenticateJWT, async (req, res) => {
       return res.status(400).json({ error: 'Required fields are missing' });
     }
 
-    db.run('INSERT INTO ReviewDocForm (reviewMethod, contactMethod, file, text, email, mobileNo, paymentId, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [reviewMethod, contactMethod, file, text, email, mobileNo, paymentId, userId], function (err) {
+    db.run(`
+      INSERT INTO ReviewDocForm (
+        reviewMethod, contactMethod, file, text, email, mobileNo, paymentId, user_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `, [reviewMethod, contactMethod, file, text, email, mobileNo, paymentId, userId], function (err) {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
@@ -1574,6 +1578,7 @@ app.post('/reviewdocform', authenticateJWT, async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -1622,6 +1627,7 @@ app.get('/clientformdata/download-pdf/:clientId', authenticateJWT, async (req, r
       <p>Home Address: <%= homeAddress %></p>
       <p>Office Address: <%= officeAddress %></p>
       <p>Assign Alerts: <%= assignAlerts %></p>
+      <p>Assign Appointments: <%= assignAppointments %></p>
       
     </body>
   </html>

@@ -59,7 +59,20 @@ const validationSchema = Yup.object().shape({
   expensesCumulativeAmount: Yup.number().min(0, 'Cumulative Amount must be greater than or equal to 0'),
   addDoc: Yup.mixed(),
 });
+const calculateExpensesTotalWithTax = (expensesAmount, expensesTaxPercentage) => {
+  return expensesAmount + (expensesAmount * (expensesTaxPercentage / 100));
+};
+
+const handleExpensesChange = (e, setFieldValue, values) => {
+  const { name, value } = e.target;
+  let expensesAmount = name === 'expensesAmount' ? parseFloat(value) || 0 : parseFloat(values.expensesAmount) || 0;
+  let expensesTaxPercentage = name === 'expensesTaxPercentage' ? parseFloat(value) || 0 : parseFloat(values.expensesTaxPercentage) || 0;
   
+  setFieldValue(name, value);
+
+  const totalWithTax = calculateExpensesTotalWithTax(expensesAmount, expensesTaxPercentage);
+   setFieldValue('expensesCumulativeAmount', totalWithTax.toFixed(2)); // Update the total amount with tax
+  }
 
   useEffect(() => {
     // Fetch client names and populate the select options
@@ -155,7 +168,7 @@ const validationSchema = Yup.object().shape({
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, setFieldValue, values  }) => (
           <Form>
             <div className={styles.invoiceNo}><span style={{ color: 'var(--color-primary)'}}>INV-</span>{initialValues.invoiceNumber}</div>
             <div className={styles.clientContainer}>
@@ -231,7 +244,7 @@ const validationSchema = Yup.object().shape({
                 <label className={styles.label} htmlFor="expensesAmount">
                   Amount:
                 </label>
-                <Field type="number" name="expensesAmount" className={styles.inputField3} placeholder="Amount" />
+                <Field type="number" name="expensesAmount" className={styles.inputField3} placeholder="Amount"  onChange={(e) => handleExpensesChange(e, setFieldValue, values)} />
               </div>
             </div>
             <ErrorMessage name="dateFrom" component="div" className={styles.errorMessage} />
@@ -246,8 +259,8 @@ const validationSchema = Yup.object().shape({
                 <option value="IGST">IGST</option>
                 <option value="ST">ST</option>
               </Field>
-              <Field type="number" name="expensesTaxPercentage" className={styles.inputField} placeholder="Tax Percentage" />
-              <Field type="number" name="expensesCumulativeAmount" className={styles.inputField} placeholder="Cumulative Amount" />
+              <Field type="number" name="expensesTaxPercentage" className={styles.inputField} placeholder="Tax Percentage" onChange={(e) => handleExpensesChange(e, setFieldValue, values)}/>
+              <Field type="number" name="expensesCumulativeAmount" className={styles.inputField} placeholder="Cumulative Amount" readOnly/>
             </div>
             <ErrorMessage name="expensesTaxType" component="div" className={styles.errorMessage} />
             <ErrorMessage name="expensesTaxPercentage" component="div" className={styles.errorMessage} />
