@@ -31,26 +31,28 @@ const validationSchema = Yup.object().shape({
 const Companyform = () => {
 
   const [companyNames, setCompanyNames] = useState([]); // State to store group names
+  const [clientNames, setClientNames] = useState([]);
 
   useEffect(() => {
     // Fetch group names and populate the select options
-    const fetchCompanyNames = async () => {
+    const fetchClientNames = async () => {
       try {
-        const response = await Axios.get('http://localhost:8052/dashboard/company', {
+        const response = await Axios.get('http://localhost:8052/clientform', {
           headers: {
             'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
           },
         });
-        
-        // Extract the group names from the response data
-        const companyNamesArray = response.data.map((company) => company.companyName);
-        setCompanyNames(companyNamesArray);
+
+        // Extract the first names from the response data
+        const firstNamesArray = response.data.map((client) => client.firstName);
+        setClientNames(firstNamesArray);
       } catch (error) {
         console.error(error);
       }
     };
-    
-    fetchCompanyNames(); // Call the fetchGroupNames function when the component mounts
+
+    fetchClientNames(); // Call the fetchClientNames function when the component mounts
+    // Call the fetchTeamMembers function when the component mounts
   }, []);
 
   return (
@@ -88,6 +90,7 @@ const Companyform = () => {
                 placeholder="Company Name"
                 className={styles.inputField}
               />
+
               <ErrorMessage name="CompanyName" component="div" className={styles.error} />
             </div>
 
@@ -97,12 +100,20 @@ const Companyform = () => {
             </div>
 
             <div className={styles.fieldGroup}>
-              <Field
+              {/* <Field
                 type="text"
                 name="person"
                 placeholder="person"
                 className={styles.inputField}
-              />
+              /> */}
+              <Field as="select" name="person" className={styles.selectField}>
+                    <option value="">Select Person</option>
+                    {clientNames.map((firstName) => (
+                      <option key={firstName} value={firstName}>
+                        {firstName}
+                      </option>
+                    ))}
+                  </Field>
             </div>
 
             <div className={styles.fieldGroup}>

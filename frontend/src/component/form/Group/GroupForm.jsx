@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './Group.module.css';
@@ -18,6 +18,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const GroupForm = () => {
+  const [companyNames, setCompanyNames] = useState([]); // State to store client names
   const priorityOptions = [
     { value: 'critical', label: 'Critical' },
     { value: 'important', label: 'Important' },
@@ -25,6 +26,31 @@ const GroupForm = () => {
     { value: 'routine', label: 'Routine' },
     { value: 'normal', label: 'Normal' },
   ];
+
+  useEffect(() => {
+    // Fetch client names and populate the select options
+    const fetchCompanyNames = async () => {
+      try {
+        const clientResponse = await Axios.get('http://localhost:8052/companies', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          },
+        });
+
+        // Extract the client names from the response data
+        const clientNameArray = clientResponse.data.map((company) => company.companyName);
+        setCompanyNames(clientNameArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+
+
+    fetchCompanyNames(); 
+   
+  }, []);
+
 
   return (
     <>
@@ -67,12 +93,15 @@ const GroupForm = () => {
             <label htmlFor="company" className={styles.label}>
                Company
             </label>
-            <Field
-              type="text"
-              name="company"
-              placeholder="Enter company Name"
-              className={styles.inputField}
-            />
+            
+            <Field as="select" name="company" className={styles.inputField}>
+                  <option value="">Select companies</option>
+                  {companyNames.map((companyName) => (
+                    <option key={companyName} value={companyName}>
+                      {companyName}
+                    </option>
+                  ))}
+                </Field>
             <ErrorMessage name="company" component="div" className={styles.error} />
           </div>
 

@@ -14,6 +14,7 @@ const TaskForm = () => {
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [clientNames, setClientNames] = useState([]); // State to store client first names
   // const handleClose = () => {
   //   setOpenEvent(false);
   //   setOpenSlot(false);
@@ -47,7 +48,25 @@ const TaskForm = () => {
       }
     };
 
+    const fetchClientNames = async () => {
+      try {
+        const response = await axios.get('http://localhost:8052/clientform', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          },
+        });
+
+        // Extract the first names from the response data
+        const firstNamesArray = response.data.map((client) => client.firstName);
+        setClientNames(firstNamesArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchClientNames();
     fetchCaseTitlesAndTypes(); // Call the new function to fetch case titles and types
+
   }, []);
   const setNewAppointment = async () => {
     try {
@@ -146,12 +165,18 @@ const TaskForm = () => {
             value={contactperson}
             onChange={(e) => setContactPerson(e.target.value)}
           >
-            <option value="" disabled selected>
+            {/* <option value="" disabled selected>
               Contact Person
             </option>
             <option value="Person 1">Person 1</option>
             <option value="Person 2">Person 2</option>
-            {/* Add more options as needed */}
+            Add more options as needed */}
+            <option value=""  disabled selected>Select contact person</option>
+                    {clientNames.map((firstName) => (
+                      <option key={firstName} value={firstName}>
+                        {firstName}
+                      </option>
+                    ))}
           </select>
         </div>
 

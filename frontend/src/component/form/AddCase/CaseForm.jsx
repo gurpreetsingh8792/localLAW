@@ -69,6 +69,8 @@ const initialValues = {
   addNewClient: '',
   team: '',
   addNewMember: '',
+  type: '', // New field for Type
+  lawyerType: '',
   clientDesignation: '',
   opponentPartyName: '',
   lawyerName: '',
@@ -311,7 +313,7 @@ const validationSchema = Yup.object().shape({
            
             
 
-            <div className={styles.heading}>People</div>
+            <div className={styles.heading}>Concerned Person</div>
             {/* Client (Select Options) */}
             
             <div className={styles.row}>
@@ -347,6 +349,51 @@ const validationSchema = Yup.object().shape({
                 <option value="">Select</option>
               </Field>
             </div> */}
+         {/* Type Dropdown */}
+<div className={styles.formGroup}>
+
+<div className={styles.column}>
+  <label className={styles.label} htmlFor="type">Type</label>
+  <Field as="select" name="type"  className={styles.selectCd}>
+    <option value="">Select Type</option>
+    <option value="Client">Client</option>
+    <option value="Lawyers">Lawyers</option>
+    <option value="OpposingClient">Opposing Client</option>
+    <option value="Witness">Witness</option>
+  </Field>
+  <ErrorMessage name="type" component="div" className={styles.error} />
+</div>
+</div>
+
+
+{/* Conditional Lawyer Type Dropdown */}
+{values.type === "Lawyers" && (
+  <div className={styles.formGroup}>
+    <div className={styles.column}>
+    <label className={styles.label} htmlFor="lawyerType">Lawyer Type</label>
+    <Field as="select" name="lawyerType" className={styles.selectCd}>
+      <option value="">Select Lawyer Type</option>
+      <option value="CorporateLawyer">Corporate Lawyer</option>
+      <option value="CriminalDefenseLawyer">Criminal Defense Lawyer</option>
+      <option value="FamilyLawyer">Family Lawyer</option>
+      <option value="TaxLawyer">Tax Lawyer</option>
+      <option value="IntellectualPropertyLawyer">Intellectual Property Lawyer</option>
+      <option value="EmploymentLawyer">Employment Lawyer</option>
+      <option value="EnvironmentalLawyer">Environmental Lawyer</option>
+      <option value="EstatePlanningLawyer">Estate Planning Lawyer</option>
+      <option value="PersonalInjuryLawyer">Personal Injury Lawyer</option>
+      <option value="ImmigrationLawyer">Immigration Lawyer</option>
+      <option value="BankruptcyLawyer">Bankruptcy Lawyer</option>
+      <option value="CivilLitigationLawyer">Civil Litigation Lawyer</option>
+      <option value="RealEstateLawyer">Real Estate Lawyer</option>
+      <option value="ConstitutionalLawyer">Constitutional Lawyer</option>
+      <option value="EntertainmentLawyer">Entertainment Lawyer</option>
+    </Field>
+    <ErrorMessage name="lawyerType" component="div" className={styles.error} />
+  </div>
+  </div>
+)}
+ 
 
             {/* Opponent (Heading) */}
             <div className={styles.heading}>Opponent</div>

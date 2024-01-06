@@ -1193,7 +1193,7 @@ app.get("/edit/caseform", authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
   db.all(
-    "SELECT id, title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId FROM CasesForm WHERE user_id = ?",
+    "SELECT id, title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, client, team,type,lawyerType, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId FROM CasesForm WHERE user_id = ?",
     [userId],
     (err, forms) => {
       if (err) {
@@ -1210,13 +1210,13 @@ app.put('/edit/caseform/update/:caseId', authenticateJWT, (req, res) => {
   const {
     title, caseType, courtType, courtName, caveatNo, caseCode, caseURL,
     caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling,
-    practiceArea, manage, client, team, clientDesignation, opponentPartyName,
+    practiceArea, manage, client, team,type,lawyerType, clientDesignation, opponentPartyName,
     lawyerName, mobileNo, emailId
   } = req.body;
 
   db.run(
-    'UPDATE CasesForm SET title = ?, caseType = ?, courtType = ?, courtName = ?, caveatNo = ?, caseCode = ?, caseURL = ?, caseStatus = ?, honorableJudge = ?, courtHallNo = ?, cnrNo = ?, batchNo = ?, dateOfFiling = ?, practiceArea = ?, manage = ?, client = ?, team = ?, clientDesignation = ?, opponentPartyName = ?, lawyerName = ?, mobileNo = ?, emailId = ? WHERE id = ? AND user_id = ?',
-    [title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, caseId, userId],
+    'UPDATE CasesForm SET title = ?, caseType = ?, courtType = ?, courtName = ?, caveatNo = ?, caseCode = ?, caseURL = ?, caseStatus = ?, honorableJudge = ?, courtHallNo = ?, cnrNo = ?, batchNo = ?, dateOfFiling = ?, practiceArea = ?, manage = ?, client = ?, team = ?,type = ?,lawyerType = ?, clientDesignation = ?, opponentPartyName = ?, lawyerName = ?, mobileNo = ?, emailId = ? WHERE id = ? AND user_id = ?',
+    [title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, client, team,type,lawyerType, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, caseId, userId],
     (err) => {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -1234,7 +1234,7 @@ app.put('/edit/caseform/update/:caseId', authenticateJWT, (req, res) => {
 app.post('/caseform', authenticateJWT, async (req, res) => {
   try {
     const {
-      title,caseType,courtType,courtName,caveatNo,caseCode,caseURL,caseStatus,honorableJudge,courtHallNo,cnrNo,batchNo,dateOfFiling,practiceArea,manage,client,team,clientDesignation, opponentPartyName,lawyerName,mobileNo,emailId,} = req.body;
+      title,caseType,courtType,courtName,caveatNo,caseCode,caseURL,caseStatus,honorableJudge,courtHallNo,cnrNo,batchNo,dateOfFiling,practiceArea,manage,client,team,clientDesignation, opponentPartyName,lawyerName,mobileNo,emailId,type,lawyerType} = req.body;
     if (!title) {
       return res.status(400).json({ error: 'Title is a required field' });
     }
@@ -1244,15 +1244,15 @@ app.post('/caseform', authenticateJWT, async (req, res) => {
       INSERT INTO CasesForm (
         title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus,
         honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage,
-        client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, user_id
+        client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, user_id,type,lawyerType
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     db.run(
       query,
       [
-        title,caseType,courtType,courtName,caveatNo,caseCode,caseURL,caseStatus,honorableJudge,courtHallNo,cnrNo,batchNo,dateOfFiling, practiceArea, manage,client,team,clientDesignation,opponentPartyName,lawyerName,mobileNo,emailId,userId,
+        title,caseType,courtType,courtName,caveatNo,caseCode,caseURL,caseStatus,honorableJudge,courtHallNo,cnrNo,batchNo,dateOfFiling, practiceArea, manage,client,team,clientDesignation,opponentPartyName,lawyerName,mobileNo,emailId,userId,type,lawyerType
       ],
       function (err) {
         if (err) {
@@ -1323,6 +1323,22 @@ app.get('/teammemberform', authenticateJWT, (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
       }
       return res.json(fullName);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/companies', authenticateJWT, (req, res) => {
+  try {
+    const userId = req.user.id;
+    db.all('SELECT companyName FROM Companies WHERE user_id = ?', [userId], (err, companyName) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      return res.json(companyName);
     });
   } catch (error) {
     console.error(error);

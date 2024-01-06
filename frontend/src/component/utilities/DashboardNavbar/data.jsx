@@ -74,7 +74,7 @@ export const links = [
           path:'/dashboard/invoicesform'
       },
       {
-          name:'Show Invoces',
+          name:'Show Invoices',
           path:'/dashboard/invoicesformdata'
       }
     ]
