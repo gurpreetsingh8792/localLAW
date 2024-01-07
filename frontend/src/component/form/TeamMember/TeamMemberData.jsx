@@ -11,10 +11,11 @@ const TeamMemberdata = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
   const [teamMembers, setTeamMembers] = useState([]);
+  const [editingTeam, setEditingTeam] = useState(null);
 
   const fetchTeamMembers = async () => {
     try {
-      const response = await axios.get('http://localhost:8052/dashboard/teammemberform', {
+      const response = await axios.get('http://localhost:8052/dashboard/teammemberform/edit', {
         headers: {
           'x-auth-token': localStorage.getItem('token'),
         },
@@ -30,6 +31,17 @@ const TeamMemberdata = () => {
     // Fetch team members data from the backend when the component mounts
     fetchTeamMembers();
   }, []);
+
+  const handleEditClick = (member) => {
+    setEditingTeam(member.id);
+    openModal();
+  };
+
+  const handleCancelClick = () => {
+    setEditingTeam(null);
+    closeModal();
+  };
+
 
   const handleDeleteClick = async (memberId) => {
     if (window.confirm('Are you sure you want to delete this team member?')) {
@@ -85,15 +97,17 @@ const TeamMemberdata = () => {
             </tr>
           </thead>
           <tbody>
-            {teamMembers.map((member, index) => (
-              <tr className={style.trs} key={index}>
+            {teamMembers.map((member) => (
+              <tr className={style.trs} key={member.id}>
                 <td className={style.td}>{member.fullName}</td>
                 <td className={style.td}>{member.email}</td>
                 <td className={style.td}>{member.designation}</td>
                 <td className={style.td}>{member.selectedGroup}</td>
-                <td className={style.td}>{member.selectedGroup}</td>
+                <td className={style.td}>{member.selectedCompany}</td>
                 <td className={style.td}>
-                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+                <button className={style.btn} onClick={() => handleEditClick(member)}>
+                Edit
+              </button>
 
                   <button
                   className={style.btn}
@@ -113,9 +127,18 @@ const TeamMemberdata = () => {
               </tr>
             ))}
           </tbody>
-          <Modal isOpen={isModalOpen} onClose={closeModal}>
-                    <EditTeamMembersForm onClose={closeModal}/>
-                  </Modal>
+          
+          <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
+          {/* Pass the selected case data to EditCaseForm */}
+          {editingTeam && (
+            <EditTeamMembersForm
+              teamData={teamMembers.find((member) => member.id === editingTeam)}
+              onCancel={handleCancelClick}
+              onClose={closeModal}
+            />
+          )}
+        </Modal>
+
         </table>
       </div>
     </>

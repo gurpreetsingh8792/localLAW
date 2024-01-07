@@ -55,6 +55,26 @@ const PeopleForm = () => {
         console.error(error);
       }
     };
+    const fetchAppointmentTitles = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8052/dashboard/people/appointmentsdates",
+          {
+            headers: {
+              "x-auth-token": localStorage.getItem("token"), // Get the token from localStorage or your authentication mechanism
+            },
+          }
+        );
+
+        // Extract the appointment titles from the response data
+        const appointmentTitlesArray = response.data.map((appointment) => appointment.title);
+        setAppointmentTitles(appointmentTitlesArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchAppointmentTitles();
     fetchAlertTitles();
     fetchCaseTitles();
 

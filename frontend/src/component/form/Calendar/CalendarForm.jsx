@@ -40,7 +40,7 @@ const Calendar = () => {
   const [client, setClient] = useState("");
   const [desc, setDesc] = useState("");
   const [location, setLocation] = useState("");
-
+  const [clientNames, setClientNames] = useState([]);
   const [contactperson, setContactPerson] = useState("");
   const [openSlot, setOpenSlot] = useState(false);
   const [openEvent, setOpenEvent] = useState(false);
@@ -166,7 +166,23 @@ const Calendar = () => {
         console.error("Error fetching team members:", error);
       }
     };
+    const fetchClientNames = async () => {
+      try {
+        const response = await axios.get('http://localhost:8052/clientform', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          },
+        });
 
+        // Extract the first names from the response data
+        const firstNamesArray = response.data.map((client) => client.firstName);
+        setClientNames(firstNamesArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchClientNames();
     fetchTasks();
     fetchAppointments();
     fetchHearings();
@@ -289,7 +305,6 @@ const Calendar = () => {
           );
           // Update other state variables as needed
         })
-
         .catch((error) => {
           console.error("Error fetching appointment details:", error);
         });
@@ -351,8 +366,9 @@ const Calendar = () => {
         appointmentDate: desc,
         contactPerson: contactperson,
         location,
-        start: start,
-        end: end,
+        
+        startTime: start ? start.toISOString().substring(11, 16) : "", // Start time
+        endTime: end ? end.toISOString().substring(11, 16) : "", 
         email,
         type: "appointment",
         style: { backgroundColor: "green" },
@@ -550,6 +566,55 @@ const Calendar = () => {
     }
   };
 
+  const updateAppointmentEvent = () => {
+    if (clickedEvent && clickedEvent.type === "appointment") {
+      const appointmentIdToUpdate = clickedEvent.id;
+  
+      const updatedAppointmentData = {
+        title,
+        caseTitle: casetitle,
+        caseType: caseTypeMap[casetitle] || "",
+        appointmentDate: desc,
+        contactPerson: contactperson,
+        location,
+        startTime: start ? start.toISOString().substring(11, 16) : "",
+        endTime: end ? end.toISOString().substring(11, 16) : "",
+        email,
+      };
+  
+      axios
+        .put(
+          `http://localhost:8052/calendar/appointments/${appointmentIdToUpdate}`,
+          updatedAppointmentData,
+          {
+            headers: {
+              "x-auth-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((response) => {
+          // Handle success
+          console.log("Appointment updated successfully:", response.data);
+          handleClose();
+  
+          // Update the event in the events state with the new data
+          const updatedEvents = events.map((event) =>
+            event.id === appointmentIdToUpdate
+              ? { ...event, ...updatedAppointmentData }
+              : event
+          );
+          setEvents(updatedEvents);
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating appointment:", error);
+        });
+    } else {
+      console.error("No appointment selected to update");
+    }
+  };
+
+
   // Function to delete a Task event
   const deleteTaskEvent = () => {
     if (clickedEvent && clickedEvent.type === "Tasks") {
@@ -614,7 +679,39 @@ const Calendar = () => {
       console.error("No hearing selected to delete");
     }
   };
-
+  const deleteAppointmentEvent = () => {
+    if (clickedEvent && clickedEvent.type === "appointment") {
+      const appointmentIdToDelete = clickedEvent.id;
+  
+      axios
+        .delete(
+          `http://localhost:8052/calendar/appointments/${appointmentIdToDelete}`,
+          {
+            headers: {
+              "x-auth-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((response) => {
+          // Handle success
+          console.log("Appointment deleted successfully:", response.data);
+          handleClose();
+  
+          // Remove the deleted event from the events state
+          const updatedEvents = events.filter(
+            (event) => event.id !== appointmentIdToDelete
+          );
+          setEvents(updatedEvents);
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error deleting appointment:", error);
+        });
+    } else {
+      console.error("No appointment selected to delete");
+    }
+  };
+  
   return (
     <>
       <DashboardNavBar />

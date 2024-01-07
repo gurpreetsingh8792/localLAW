@@ -4,10 +4,19 @@ import * as Yup from 'yup';
 import styles from './EditPeopleForm.module.css';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import Modal from '../../Client/People/ModelPop/Modal'
+import TaskForm from "../../Client/People/ModelPop/TaskForm";
 
 
-const EditPeopleForm = () => {
+
+const EditPeopleForm = ({ clientData }) => {
   const [alertTitles, setAlertTitles] = useState([]); // State to store alert titles
+  const [formData, setFormData] = useState({});
+  const [caseTitles, setCaseTitles] = useState([]);
+  const [appointmentTitles, setAppointmentTitles] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     // Fetch alert titles and populate the select options
@@ -26,25 +35,74 @@ const EditPeopleForm = () => {
         console.error(error);
       }
     };
+    axios
+      .get('http://localhost:8052/dashboard/clientform/edit', {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      })
+      .then((response) => {
+        const responseData = response.data[0];
+        setFormData(responseData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-    fetchAlertTitles(); // Call the fetchAlertTitles function when the component mounts
+      const fetchCaseTitles = async () => {
+        try {
+          const response = await axios.get("http://localhost:8052/caseform", {
+            headers: {
+              "x-auth-token": localStorage.getItem("token"),
+            },
+          });
+    
+          // Extract the case titles from the response data
+          const caseTitlesArray = response.data.map((caseItem) => caseItem.title);
+          setCaseTitles(caseTitlesArray);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      const fetchAppointmentTitles = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:8052/dashboard/people/appointmentsdates",
+            {
+              headers: {
+                "x-auth-token": localStorage.getItem("token"), // Get the token from localStorage or your authentication mechanism
+              },
+            }
+          );
+  
+          // Extract the appointment titles from the response data
+          const appointmentTitlesArray = response.data.map((appointment) => appointment.title);
+          setAppointmentTitles(appointmentTitlesArray);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      fetchAppointmentTitles();
+      fetchAlertTitles();
+      fetchCaseTitles();
   }, []);
   const initialValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    mobileNo: '',
-    alternateMobileNo: '',
-    organizationName: '',
-    organizationType: '',
-    organizationWebsite: '',
-    gstNo: '',
-    panNo: '',
-    homeAddress: '',
-    officeAddress: '',
-    assignAlerts: '',
+    firstName: clientData.firstName || '',
+    lastName: clientData.lastName || '',
+    email: clientData.email || '',
+    mobileNo: clientData.mobileNo || '',
+    alternateMobileNo: clientData.alternateMobileNo || '',
+    organizationName: clientData.organizationName || '',
+    organizationType: clientData.organizationType || '',
+    organizationWebsite: clientData.organizationWebsite || '',
+    caseTitle: clientData.caseTitle || '',
+    type: clientData.type || '',
+    homeAddress: clientData.homeAddress || '',
+    officeAddress: clientData.officeAddress || '',
+    assignAlerts: clientData.assignAlerts || '',
     addNewAlert: '',
-    scheduleAppointment: '',
+    assignAppointments: clientData.assignAppointments || '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -62,20 +120,25 @@ const EditPeopleForm = () => {
     officeAddress: Yup.string(),
     assignAlerts: Yup.string(),
     addNewAlert: Yup.string(),
-    scheduleAppointment: Yup.date().nullable(),
+    assignAppointments: Yup.string(),
+    
   });
 
   const onSubmit = async (values, { resetForm }) => {
     try {
-      // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://localhost:8052/dashboard/clientform', values, {
-        headers: {
-          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
-        },
-      });
-
-      console.log(response.data); // Log the response from the backend
-      alert('Client Added successfully!');
+      // Make an HTTP POST request to update the case
+      const response = await axios.put(
+        `http://localhost:8052/clients/forms/${clientData.id}`,
+        values,
+        {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'),
+          },
+        }
+      );
+  
+      console.log(response.data);
+      alert('Case Updated successfully!');
       resetForm();
     } catch (error) {
       console.error(error);
@@ -125,7 +188,52 @@ const EditPeopleForm = () => {
             )}
           </div>
         </div>
-        
+        <div className={styles.formSection}>
+          <div className={styles.formGroup}>
+  <label className={styles.label} htmlFor="caseTitle">
+    Case
+  </label>
+  <select
+    id="caseTitle"
+    name="caseTitle"
+    className={styles.inputField}
+    {...formik.getFieldProps("caseTitle")}
+  >
+    <option value="">Select a case Title</option>
+    {caseTitles.map((title) => (
+      <option key={title} value={title}>
+        {title}
+      </option>
+    ))}
+  </select>
+
+  {formik.touched.case && formik.errors.case && (
+    <div className={styles.error}>{formik.errors.case}</div>
+  )}
+</div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="type">
+                Type
+              </label>
+              <select
+                id="type"
+                name="type"
+                className={styles.inputField}
+                {...formik.getFieldProps("type")}
+              >
+                <option value="">Select Type</option>
+                <option value="Client">Client</option>
+                <option value="Lawyers">Lawyers</option>
+                <option value="OpposingClient">Opposing Client</option>
+                <option value="Witness">Witness</option>
+              </select>
+
+              {formik.touched.type && formik.errors.type && (
+                <div className={styles.error}>{formik.errors.type}</div>
+              )}
+            </div>
+          </div>
 
         <div className={styles.formSection}>
           <div className={styles.formGroup}>
@@ -219,29 +327,7 @@ const EditPeopleForm = () => {
           </div>
         </div>
         
-        <div className={styles.formSection}>
-          <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="gstNo">GST No.</label>
-            <input
-              type="text"
-              id="gstNo"
-              name="gstNo"
-              className={styles.inputField}
-              {...formik.getFieldProps('gstNo')}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="panNo">PAN No.</label>
-            <input
-              type="text"
-              id="panNo"
-              name="panNo"
-              className={styles.inputField}
-              {...formik.getFieldProps('panNo')}
-            />
-          </div>
-        </div>
+        
 
         <div className={styles.formSection}>
           <div className={styles.formGroup}>
@@ -307,25 +393,41 @@ const EditPeopleForm = () => {
         </div>
         </div>
 
+                  
         <div className={styles.formSection}>
-          <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="scheduleAppointment">Appointment Date</label>
-            <input
-              type="date"
-              id="scheduleAppointment"
-              name="scheduleAppointment"
-              className={styles.inputField}
-              {...formik.getFieldProps('scheduleAppointment')}
-            />
-            {formik.touched.scheduleAppointment && formik.errors.scheduleAppointment && (
-              <div className={styles.error}>{formik.errors.scheduleAppointment}</div>
-              )}
-          </div>
-        </div>
+
+<div className={styles.formGroup}>
+    <label className={styles.label} htmlFor="assignAppointments">
+      Assign Appointment
+    </label>
+    <select
+      id="assignAppointments"
+      name="assignAppointments"
+      className={styles.inputField}
+      {...formik.getFieldProps("assignAppointments")}
+    >
+      <option value="">Select an option</option>
+      {appointmentTitles.map((title) => (
+        <option key={title} value={title}>
+          {title}
+        </option>
+      ))}
+    </select>
+
+  </div>
+
+  <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+             <TaskForm />
+          </Modal>
+
+</div>
+
+       
 
         <div className={styles.formSection}>
           <button type="submit" className={styles.submitButton}>
-            Submit
+            UPDATE
           </button>
         </div>
       </form>

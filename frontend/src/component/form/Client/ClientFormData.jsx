@@ -11,10 +11,11 @@ const ClientFormData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
   const [clientData, setClientData] = useState([]);
+  const [editingClient, setEditingClient] = useState(null);
 
   const fetchClientData = async () => {
     try {
-      const response = await axios.get('http://localhost:8052/clientformdata', {
+      const response = await axios.get('http://localhost:8052/dashboard/clientform/edit', {
         headers: {
           'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
         },
@@ -44,7 +45,15 @@ const ClientFormData = () => {
     }
     console.log('Delete button clicked with clientId:', clientId); // Add this line for debugging
   };
-
+   
+  const handleEditClick = (clientItem) => {
+    setEditingClient(clientItem.id);
+    openModal();
+  };
+  const handleCancelClick = () => {
+    setEditingClient(null);
+    closeModal();
+  };
   const handleDownloadClick = async (clientId) => {
     try {
       // Make an HTTP GET request to download the PDF for the specified client ID
@@ -81,7 +90,7 @@ const ClientFormData = () => {
               <th>Email</th>
               <th>Mobile No</th>
               <th>Assign Alerts</th>
-              {/* <th>Schedule Appointment</th> */}
+              <th>Schedule Appointment</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -92,9 +101,11 @@ const ClientFormData = () => {
                 <td>{clientItem.email}</td>
                 <td>{clientItem.mobileNo}</td>
                 <td>{clientItem.assignAlerts}</td>
-                {/* <td>{clientItem.scheduleAppointment}</td> */}
+                <td>{clientItem.assignAppointments}</td>
                 
-                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+                <button className={style.btn} onClick={() => handleEditClick(clientItem)}>
+                Edit
+              </button>
                   <button
                     className={style.btn}
                     type="button"
@@ -113,9 +124,16 @@ const ClientFormData = () => {
                 
             ))}
           </tbody>
-                  <Modal isOpen={isModalOpen} onClose={closeModal}>
-                    <EditPeopleForm />
-                  </Modal>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+          {/* Pass the selected case data to EditCaseForm */}
+          {editingClient && (
+            <EditPeopleForm
+              clientData={clientData.find((clientItem) => clientItem.id === editingClient)}
+              onCancel={handleCancelClick}
+            />
+          )}
+        </Modal>
+                 
         </table>
       </div>
       

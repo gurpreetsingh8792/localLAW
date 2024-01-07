@@ -25,7 +25,6 @@ const CaseFormData = () => {
   useEffect(() => {
     fetchCasesData();
   }, []);
-  
 
 
 
@@ -34,14 +33,12 @@ const CaseFormData = () => {
   
   const fetchCasesData = async () => {
     try {
-      const response = await axios.get("http://localhost:8052/caseformdata", {
+      const response = await axios.get("http://localhost:8052/edit/caseform", {
         headers: {
           "x-auth-token": localStorage.getItem("token"),
         },
       });
       const data = response.data;
-      setCasesData(response.data);
-      console.log("Fetched data:", data); // Log the fetched data
       setCasesData(data);
     } catch (error) {
       console.error(error);
@@ -50,85 +47,51 @@ const CaseFormData = () => {
 
   const handleEditClick = (caseItem) => {
     setEditingCase(caseItem.id);
-    setEditFormData(caseItem);
+    openModal();
   };
 
   const handleCancelClick = () => {
     setEditingCase(null);
+    closeModal();
   };
 
 
 
-  const handleDeleteClick = async (clientId) => {
+  const handleDeleteClick = async (caseId) => {
     if (window.confirm('Are you sure you want to delete this client?')) {
       try {
-        await axios.delete(`http://localhost:8052/clientformdata/${clientId}`, {
-          headers: { 'x-auth-token': localStorage.getItem('token') },
-        });
-        fetchCasesData(); // Refetch the clients to update the UI
+        await axios.delete(
+          `http://localhost:8052/dashboard/caseformdata/${caseId}`,
+          {
+            headers: { "x-auth-token": localStorage.getItem("token") },
+          }
+        );
+        fetchCasesData();
       } catch (error) {
         console.error(error);
       }
     }
-    console.log('Delete button clicked with clientId:', clientId); // Add this line for debugging
   };
 
-  useEffect(() => {
-    // Fetch client data from the backend when the component mounts
-    fetchCasesData();
-  }, []);
-
-
- 
   const handleDownloadClick = async (caseId) => {
     try {
-      // Make an HTTP GET request to download the PDF for the specified case ID
       const response = await axios.get(
         `http://localhost:8052/dashboard/caseformdata/download-pdf/${caseId}`,
         {
-          responseType: "blob", // Set responseType to 'blob' to receive binary data
+          responseType: "blob",
           headers: {
             "x-auth-token": localStorage.getItem("token"),
           },
         }
       );
 
-      // Create a URL for the blob data
       const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
 
-      // Create an anchor element and trigger the download
       const a = document.createElement("a");
       a.href = url;
       a.download = `Case_${caseId}.pdf`;
       a.click();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleEditFormChange = (event) => {
-    const { name, value } = event.target;
-    setEditFormData({ ...editFormData, [name]: value });
-  };
-
-  const handleEditFormSubmit = async (event) => {
-    event.preventDefault();
-    const editedCase = {
-      id: editingCase,
-      ...editFormData,
-    };
-
-    try {
-      await axios.put(
-        `http://localhost:8052/caseformdata/${editingCase}`,
-        editedCase,
-        {
-          headers: { "x-auth-token": localStorage.getItem("token") },
-        }
-      );
-      setEditingCase(null);
-      fetchCasesData();
     } catch (error) {
       console.error(error);
     }

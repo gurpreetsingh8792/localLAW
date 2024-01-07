@@ -6,23 +6,22 @@ import styles from './EditCaseForm.module.css';
 import axios from 'axios';
 
 
-const EditCaseForm = ({onClose}) => {
-  const [clientNames, setClientNames] = useState([]); // State to store client first names
-  const [teamMembers, setTeamMembers] = useState([]); // State to store team member full names
-  
+
  
+const EditCaseForm = ({onClose, caseData }) => {
+  const [clientNames, setClientNames] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    // Fetch client first names and populate the select options
     const fetchClientNames = async () => {
       try {
         const response = await axios.get('http://localhost:8052/clientform', {
           headers: {
-            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+            'x-auth-token': localStorage.getItem('token'),
           },
         });
 
-        // Extract the first names from the response data
         const firstNamesArray = response.data.map((client) => client.firstName);
         setClientNames(firstNamesArray);
       } catch (error) {
@@ -30,16 +29,14 @@ const EditCaseForm = ({onClose}) => {
       }
     };
 
-    // Fetch team member full names and populate the select options
     const fetchTeamMembers = async () => {
       try {
-        const response = await axios.get('http://localhost:8052/teammembers', {
+        const response = await axios.get('http://localhost:8052/teammemberform', {
           headers: {
-            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+            'x-auth-token': localStorage.getItem('token'),
           },
         });
 
-        // Extract the full names from the response data
         const fullNamesArray = response.data.map((member) => member.fullName);
         setTeamMembers(fullNamesArray);
       } catch (error) {
@@ -47,35 +44,52 @@ const EditCaseForm = ({onClose}) => {
       }
     };
 
-    fetchClientNames(); // Call the fetchClientNames function when the component mounts
-    fetchTeamMembers(); // Call the fetchTeamMembers function when the component mounts
+    axios
+      .get('http://localhost:8052/edit/caseform', {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      })
+      .then((response) => {
+        const responseData = response.data[0];
+        setFormData(responseData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    fetchClientNames();
+    fetchTeamMembers();
   }, []);
-const initialValues = {
-  title: '',
-  caseType: '',
-  courtType: '',
-  courtName: '',
-  caveatNo: '',
-  caseCode: '',
-  caseURL: '',
-  caseStatus: '',
-  honorableJudge: '',
-  courtHallNo: '',
-  cnrNo: '',
-  batchNo: '',
-  dateOfFiling: '',
-  practiceArea: '',
-  manage: '',
-  client: '',
-  addNewClient: '',
-  team: '',
-  addNewMember: '',
-  clientDesignation: '',
-  opponentPartyName: '',
-  lawyerName: '',
-  mobileNo: '',
-  emailId: '',
-};
+  const initialValues = {
+    title: caseData.title || '',
+    caseType: caseData.caseType || '',
+    courtType: caseData.courtType || '',
+    courtName: caseData.courtName || '',
+    caveatNo: caseData.caveatNo || '',
+    caseCode: caseData.caseCode || '',
+    caseURL: caseData.caseURL || '',
+    caseStatus: caseData.caseStatus || '',
+    honorableJudge: caseData.honorableJudge || '',
+    courtHallNo: caseData.courtHallNo || '',
+    cnrNo: caseData.cnrNo || '',
+    batchNo: caseData.batchNo || '',
+    dateOfFiling: caseData.dateOfFiling || '',
+    practiceArea: caseData.practiceArea || '',
+    manage: caseData.manage || '',
+    client: caseData.client || '',
+    addNewClient: caseData.addNewClient || '',
+    team: caseData.team || '',
+    addNewMember: caseData.addNewMember || '',
+    type: caseData.type || '',
+    lawyerType: caseData.lawyerType || '',
+    clientDesignation: caseData.clientDesignation || '',
+    opponentPartyName: caseData.opponentPartyName || '',
+    lawyerName: caseData.lawyerName || '',
+    mobileNo: caseData.mobileNo || '',
+    emailId: caseData.emailId || '',
+  };
+
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
@@ -85,22 +99,26 @@ const validationSchema = Yup.object().shape({
 });
 
 
-  const handleSubmit = async (values, { resetForm }) => {
-    try {
-      // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://localhost:8052/caseform', values, {
+const handleSubmit = async (values, { resetForm }) => {
+  try {
+    // Make an HTTP POST request to update the case
+    const response = await axios.put(
+      `http://localhost:8052/edit/caseform/update/${caseData.id}`,
+      values,
+      {
         headers: {
-          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          'x-auth-token': localStorage.getItem('token'),
         },
-      });
+      }
+    );
 
-      console.log(response.data); // Log the response from the backend
-      alert('Case Added successfully!');
-      resetForm();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    console.log(response.data);
+    alert('Case Updated successfully!');
+    resetForm();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
   const handleCancel = () => {
@@ -110,23 +128,22 @@ const validationSchema = Yup.object().shape({
   return (
     <>
       <div className={styles.container}>
-      <h2 style={{textAlign:'center'}}>Add Case</h2>
+        <h2 style={{ textAlign: 'center' }}>Edit Case</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-           {({ values }) => (
-          <Form className={styles.form}>
-            {/* Title */}
-           
-            <div className={styles.row}>
-            <div className={styles.column}> 
-            <label className={styles.label}>Title:</label>
-              <Field type="text" name="title" className={styles.inputTitle} />
-              <ErrorMessage name="title" component="div" className={styles.error} />
+          {({ values }) => (
+            <Form className={styles.form}>
+              {/* Title */}
+              <div className={styles.row}>
+                <div className={styles.column}>
+                  <label className={styles.label}>Title:</label>
+                  <Field type="text" name="title" className={styles.inputTitle} />
+                  <ErrorMessage name="title" component="div" className={styles.error} />
+                </div>
               </div>
-            </div>
 
             {/* Case Type (Radio Buttons) */}
            
@@ -334,7 +351,7 @@ const validationSchema = Yup.object().shape({
             </div>
             <div className={styles.columnTeam}>
             <label className={styles.labelTeam}>Team:</label>
-            <Field as="select" name="assignTo" className={styles.selectTeam}>
+            <Field as="select" name="team" className={styles.selectTeam}>
                     <option value="">Select an option</option>
                     {teamMembers.map((fullName) => (
                       <option key={fullName} value={fullName}>
@@ -346,12 +363,49 @@ const validationSchema = Yup.object().shape({
             </div>
             </div>
 
-            {/* <div className={styles.column}>
-            <label className={styles.label}>Client Designation:</label>
-              <Field as="select" name="clientDesignation" className={styles.selectCd}>
-                <option value="">Select</option>
-              </Field>
-            </div> */}
+            <div className={styles.formGroup}>
+
+<div className={styles.column}>
+  <label className={styles.label} htmlFor="type">Type</label>
+  <Field as="select" name="type"  className={styles.selectCd}>
+    <option value="">Select Type</option>
+    <option value="Client">Client</option>
+    <option value="Lawyers">Lawyers</option>
+    <option value="OpposingClient">Opposing Client</option>
+    <option value="Witness">Witness</option>
+  </Field>
+  <ErrorMessage name="type" component="div" className={styles.error} />
+</div>
+</div>
+
+
+{/* Conditional Lawyer Type Dropdown */}
+{values.type === "Lawyers" && (
+  <div className={styles.formGroup}>
+    <div className={styles.column}>
+    <label className={styles.label} htmlFor="lawyerType">Lawyer Type</label>
+    <Field as="select" name="lawyerType" className={styles.selectCd}>
+      <option value="">Select Lawyer Type</option>
+      <option value="CorporateLawyer">Corporate Lawyer</option>
+      <option value="CriminalDefenseLawyer">Criminal Defense Lawyer</option>
+      <option value="FamilyLawyer">Family Lawyer</option>
+      <option value="TaxLawyer">Tax Lawyer</option>
+      <option value="IntellectualPropertyLawyer">Intellectual Property Lawyer</option>
+      <option value="EmploymentLawyer">Employment Lawyer</option>
+      <option value="EnvironmentalLawyer">Environmental Lawyer</option>
+      <option value="EstatePlanningLawyer">Estate Planning Lawyer</option>
+      <option value="PersonalInjuryLawyer">Personal Injury Lawyer</option>
+      <option value="ImmigrationLawyer">Immigration Lawyer</option>
+      <option value="BankruptcyLawyer">Bankruptcy Lawyer</option>
+      <option value="CivilLitigationLawyer">Civil Litigation Lawyer</option>
+      <option value="RealEstateLawyer">Real Estate Lawyer</option>
+      <option value="ConstitutionalLawyer">Constitutional Lawyer</option>
+      <option value="EntertainmentLawyer">Entertainment Lawyer</option>
+    </Field>
+    <ErrorMessage name="lawyerType" component="div" className={styles.error} />
+  </div>
+  </div>
+)}
 
             {/* Opponent (Heading) */}
             <div className={styles.heading}>Opponent</div>
@@ -381,7 +435,7 @@ const validationSchema = Yup.object().shape({
             {/* Email Id */}
             <div className={styles.column}>
               <label className={styles.labelei}>Email Id:</label>
-              <Field type="text" name="emailId" className={styles.inputei} />
+              <Field type="text" name="emailId" className={styles.inputei}  />
             </div>
             </div>
 
@@ -390,7 +444,7 @@ const validationSchema = Yup.object().shape({
               <label className={styles.label}></label>
 
               <div className={styles.BtnContainer}>
-              <button type="submit" className={styles.submitButton}>Submit</button>
+              <button type="submit" className={styles.submitButton}>UPDATE</button>
               <button type="button" onClick={handleCancel} className={styles.submitButton}>Cancel</button>
               </div>
             

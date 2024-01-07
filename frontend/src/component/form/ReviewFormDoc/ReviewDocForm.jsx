@@ -3,6 +3,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styles from './ReviewDocForm.module.css';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
+import axios from 'axios';
+
 
 
 const ReviewDocForm = () => {
@@ -13,16 +15,24 @@ const ReviewDocForm = () => {
     text: '',
     email: '',
     mobileNo: '',
+    paymentId: '',
   };
   const onSubmit = async (values, { resetForm }) => {
-    console.log(values);
-    if (!paymentSuccess) {
-      alert('To Review Document, You have to do payment first!');
-    } else {
-     
+    try {
+      const response = await axios.post('http://localhost:8052/reviewdocform', values, {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+        },
+      });
+
+      console.log(response.data); // Log the response from the backend
+      alert('To Review the Doc, Do Payment First');
       resetForm();
+    } catch (error) {
+      console.error(error);
     }
   };
+  
   const validationSchema = Yup.object().shape({
     reviewMethod: Yup.string().required('Please select a review method'),
     contactMethod: Yup.string().required('Please select a contact method'),
@@ -30,6 +40,7 @@ const ReviewDocForm = () => {
     text: Yup.string(),
     email: Yup.string(),
     mobileNo: Yup.string(),
+    paymentId: Yup.string(),
   });
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
@@ -66,9 +77,12 @@ const ReviewDocForm = () => {
       description: "Payment for Document Review",
       // image: "",
       handler: function (response) {
-        alert(`Payment Successfully\nPayment ID: ${response.razorpay_payment_id}`);
+        const paymentId = response.razorpay_payment_id;
+        alert(`Payment Successfully\nPayment ID: $${paymentId}`);
+       
 
         setPaymentSuccess(true);
+        formik.setFieldValue('paymentId', paymentId);
       },
       prefill: {
         name: formik.values.name,

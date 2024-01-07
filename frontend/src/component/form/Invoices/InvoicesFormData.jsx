@@ -11,10 +11,11 @@ const InvoicesFormData = () => {
   const openModal = () => setIsModalOpen(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
+  const [editingInvoice, setEditingInvoice] = useState(null);
 
   const fetchInvoicesData = async () => {
     try {
-      const response = await axios.get('http://localhost:8052/invoiceformdata', {
+      const response = await axios.get('http://localhost:8052/invoiceform/edit', {
         headers: {
           'x-auth-token': localStorage.getItem('token'),
         },
@@ -30,6 +31,16 @@ const InvoicesFormData = () => {
     // Fetch invoice data from the backend when the component mounts
     fetchInvoicesData();
   }, []);
+
+  const handleEditClick = (invoice) => {
+    setEditingInvoice(invoice.id);
+    openModal();
+  };
+
+  const handleCancelClick = () => {
+    setEditingInvoice(null);
+    closeModal();
+  };
 
   const handleDeleteClick = async (invoiceId) => {
     if (window.confirm('Are you sure you want to delete this invoice?')) {
@@ -84,8 +95,8 @@ const InvoicesFormData = () => {
             </tr>
           </thead>
           <tbody>
-            {invoicesData.map((invoice, index) => (
-              <tr key={index} className={style.tableBodyRow}>
+            {invoicesData.map((invoice) => (
+              <tr key={invoice.id} className={style.tableBodyRow}>
                 <td className={style.tableBodyCell}>{invoice.title}</td>
                 <td className={style.tableBodyCell}>{invoice.invoiceNumber}</td>
                 <td className={style.tableBodyCell}>{invoice.date}</td>
@@ -93,7 +104,9 @@ const InvoicesFormData = () => {
                 <td className={style.tableBodyCell}>{invoice.expensesCumulativeAmount}</td>
                 <td className={style.tableBodyCell}>
                 
-                <NavLink to="#"><button className={style.btn} onClick={openModal}>Edit</button></NavLink>
+                <button className={style.btn} onClick={() => handleEditClick(invoice)}>
+                Edit
+              </button>
 
                   <button
                   className={style.btn}
@@ -112,9 +125,19 @@ const InvoicesFormData = () => {
                 </td>
               </tr>
             ))}
-            <Modal isOpen={isModalOpen} onClose={closeModal}>
-                    <EditInvoicesForm onClose={closeModal} />
-                  </Modal>
+           
+            <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
+          {/* Pass the selected case data to EditCaseForm */}
+          {editingInvoice && (
+            <EditInvoicesForm
+            onClose={closeModal}
+              invoiceData={invoicesData.find((invoice) => invoice.id === editingInvoice)}
+              onCancel={handleCancelClick}
+            />
+          )}
+        </Modal>
+
+
           </tbody>
         </table>
       </div>

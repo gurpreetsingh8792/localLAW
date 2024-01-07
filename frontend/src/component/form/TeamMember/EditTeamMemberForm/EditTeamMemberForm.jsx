@@ -34,14 +34,43 @@ const validationSchema = Yup.object().shape({
 
 
 
-const EditTeamMembersForm = ({onClose}) => {
-  const [groupNames, setGroupNames] = useState([]);
-  const openModalOne = () => setIsModalOpenOne(true);
-  const [isModalOpenOne, setIsModalOpenOne] = useState(false);
+
+
+const EditTeamMembersForm = ({teamData, onClose}) => {
+  const [groupNames, setGroupNames] = useState([]); // State to store group names
+  const [formData, setFormData] = useState({});
   const openModalTwo = () => setIsModalOpenTwo(true);
   const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
-  const closeModalOne = () => setIsModalOpenOne(false);
+  const openModalOne = () => setIsModalOpenOne(true);
+  const [isModalOpenOne, setIsModalOpenOne] = useState(false);
   const closeModalTwo = () => setIsModalOpenTwo(false);
+  const [companyNames, setCompanyNames] = useState([]);
+
+
+  const initialValues = {
+    // image: '',
+    fullName: teamData.fullName || '',
+    email: teamData.email || '',
+    designation: teamData.designation || '',
+    address: teamData.address || '',
+    state: teamData.state || '',
+    city: teamData.city || '',
+    zipCode: teamData.zipCode || '',
+    selectedGroup: teamData.selectedGroup || '',
+    selectedCompany: teamData.selectedCompany || '',
+  };
+  
+  const validationSchema = Yup.object().shape({
+    fullName: Yup.string().required('Full Name is required'),
+    email: Yup.string().email('Invalid email format').required('Email is required'),
+    designation: Yup.string(),
+    address: Yup.string(),
+    state: Yup.string(),
+    city: Yup.string(),
+    zipCode: Yup.string(),
+    selectedGroup: Yup.string(),
+    selectedCompany: Yup.string(),
+  });
 
   useEffect(() => {
     // Fetch group names and populate the select options
@@ -61,7 +90,40 @@ const EditTeamMembersForm = ({onClose}) => {
       }
     };
 
+    const fetchCompanyNames = async () => {
+      try {
+        const response = await Axios.get('http://localhost:8052/dashboard/company', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          },
+        });
+        
+        // Extract the group names from the response data
+        const companyNamesArray = response.data.map((company) => company.companyName);
+        setCompanyNames(companyNamesArray);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+    
+
+
+    Axios.get('http://localhost:8052/dashboard/teammemberform/edit', {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      })
+      .then((response) => {
+        const responseData = response.data[0];
+        setFormData(responseData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
+    fetchCompanyNames();
   }, []);
 
   const HandleCancel=()=>{
@@ -76,15 +138,18 @@ const EditTeamMembersForm = ({onClose}) => {
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
           try {
-            // Make an HTTP POST request to the backend with the full server URL
-            const response = await Axios.post('http://localhost:8052/dashboard/teammemberform', values, {
-              headers: {
-                'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
-              },
-            });
-      
-            console.log(response.data); // Log the response from the backend
-            alert('Team Member Added successfully!');
+            const response = await Axios.put(
+              `http://localhost:8052/dashboard/teammemberform/edit/update/${teamData.id}`,
+              values,
+              {
+                headers: {
+                  'x-auth-token': localStorage.getItem('token'),
+                },
+              }
+            );
+        
+            console.log(response.data);
+            alert('Team Updated successfully!');
             resetForm();
           } catch (error) {
             console.error(error);
@@ -93,7 +158,7 @@ const EditTeamMembersForm = ({onClose}) => {
       >
         {({ values, setFieldValue }) => (
           <Form>
-            <div className={styles.imageUpload}>
+            {/* <div className={styles.imageUpload}>
               <label className={styles.imageLabel} htmlFor="image">
                 {values.image ? (
                   <img
@@ -117,7 +182,7 @@ const EditTeamMembersForm = ({onClose}) => {
                 className={styles.imageInput}
               />
               <ErrorMessage name="image" component="div" className={styles.error} />
-            </div>
+            </div> */}
 
             <div className={styles.fieldGroup}>
               <Field
@@ -184,25 +249,26 @@ const EditTeamMembersForm = ({onClose}) => {
               </div>
 
             </div>
+       
+
             <div className={styles.horizontalFields}>
                 <div className={styles.fieldGroup}>
-                  <Field as="select" name="selectedGroup" className={styles.selectField}>
+                  <Field as="select" name="selectedCompany" className={styles.selectField}>
                     <option value="">Select a Company</option>
-                    {groupNames.map((groupName) => (
-                      <option key={groupName} value={groupName}>
-                        {groupName}
+                    {companyNames.map((companyName) => (
+                      <option key={companyName} value={companyName}>
+                        {companyName}
                       </option>
                     ))}
                   </Field>
                   <ErrorMessage name="selectedGroup" component="div" className={styles.error} />
-            </div>
+                </div>
 
               <div className={styles.fieldGroup}>
                 <NavLink to={"#"} className={styles.link} onClick={openModalTwo}>
                   Add Company
                 </NavLink>
               </div>
-
             </div>
                       <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>Submit</button>
@@ -212,11 +278,13 @@ const EditTeamMembersForm = ({onClose}) => {
           </Form>
         )}
       </Formik>
+
+      
     </div>
     <Modal isOpen={isModalOpenOne} onClose={() => setIsModalOpenOne(false)}>
     <GroupForm />
     </Modal>
-
+    
     <Modal isOpen={isModalOpenTwo} onClose={() => setIsModalOpenTwo(false)}>
     <Companyform />
     </Modal>

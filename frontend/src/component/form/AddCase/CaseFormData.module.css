@@ -1,65 +1,61 @@
-/* ClientForm.module.css */
-
-.container {
+.Container {
+  /* background-color: #f5f5f5; */
   padding: 20px;
+  display: flex;
+  justify-content: center;
   height: 100vh;
-  /* background-color: white;  */
+}
+
+.casesContainer {
+  /* background-color: #f5f5f5; */
   border-radius: 8px;
-  /* box-shadow: 0 20px 40px 10px rgba(0, 0, 0, 0.1); */
-  margin: 20px;
-}
-.DataColume{
-  color: var(--color-fifth);
+  width: 60%; /* Adjust as needed */
+  max-width: 600px; /* Adjust for maximum width */
 }
 
-.heading {
+.header {
   color: #333;
-  margin-bottom: 15px;
   text-align: center;
+  margin-bottom: 20px;
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.tableHead {
-  background-color: var(--color-fourth);
-  color: white;
-  margin-bottom: 1rem;
-}
-
-.tableHead th {
+.card {
+  background-color: #cec8c8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
   padding: 10px;
-  text-align: left;
+}
+
+.cardHeader {
   border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
-.tableBody {
-  /* background-color: #fff; */
-  padding-top: 1rem;
+.cardBody p {
+  margin: 5px 0;
 }
 
-.tableBody tr:nth-child(odd) {
-  /* background-color: #f2f2f2; */
+.cardActions {
+  text-align: right;
 }
-.tableBody tr {
-  transition: background-color 0.3s ease, transform 0.3s ease;
+
+.cardActions button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-primary); /* Replace with your primary color */
+  color: white;
   cursor: pointer;
 }
-.tableBody tr:hover {
-  transform: scale(1.03); 
-}
-.CaseInfo{
-  color: var(--color-fifth);
+
+.cardActions button:hover {
+  opacity: 0.8;
 }
 
-.tableBody td {
-  padding: 10px;
-  text-align: left;
-  /* border-bottom: 1px solid #ddd; */
-}
-
+/* Add more styles as needed */
 
 .btn {
   background-color: var(--primary-color); /* Replace with your primary color variable */
