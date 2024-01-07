@@ -6,7 +6,7 @@ import styles from './EditCaseForm.module.css';
 import axios from 'axios';
 
 
-const EditCaseForm = () => {
+const EditCaseForm = ({onClose}) => {
   const [clientNames, setClientNames] = useState([]); // State to store client first names
   const [teamMembers, setTeamMembers] = useState([]); // State to store team member full names
   
@@ -103,9 +103,8 @@ const validationSchema = Yup.object().shape({
   };
 
 
-  const navigate = useNavigate();
   const handleCancel = () => {
-    navigate(0)
+    onClose();
   }
 
   return (

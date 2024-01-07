@@ -28,7 +28,7 @@ const validationSchema = Yup.object().shape({
 
 
 
-const Companyform = () => {
+const Companyform = ({onClose}) => {
 
   const [groupNames, setGroupNames] = useState([]); // State to store group names
 
@@ -52,6 +52,10 @@ const Companyform = () => {
     
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
   }, []);
+
+  const HandleCancel=()=>{
+    onClose();
+  }
 
   return (
       <div className={styles.MainContainer}>
@@ -124,7 +128,7 @@ const Companyform = () => {
               
                       <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
 
                       </div>
           </Form>

@@ -17,7 +17,7 @@ const validationSchema = Yup.object().shape({
   priority: Yup.string().required('Priority is required'),
 });
 
-const GroupForm = () => {
+const GroupForm = ({onClose}) => {
   const priorityOptions = [
     { value: 'critical', label: 'Critical' },
     { value: 'important', label: 'Important' },
@@ -26,6 +26,9 @@ const GroupForm = () => {
     { value: 'normal', label: 'Normal' },
   ];
 
+  const HandleCancel=()=>{
+    onClose();
+  }
   return (
     <>
     <div className={styles.formContainer}>
@@ -95,9 +98,8 @@ const GroupForm = () => {
             <ErrorMessage name="priority" component="div" className={styles.error} />
           </div>
 
-          <button type="submit" className={styles.submitButton}>
-            Submit
-          </button>
+          <button type="submit" className={styles.submitButton}>Submit</button>
+          <button type="submit" onClick={HandleCancel} className={styles.submitButton}>Cancel</button>
         </Form>
       </Formik>
     </div>

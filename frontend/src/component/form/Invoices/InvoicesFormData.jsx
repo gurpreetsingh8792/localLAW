@@ -113,7 +113,7 @@ const InvoicesFormData = () => {
               </tr>
             ))}
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-                    <EditInvoicesForm />
+                    <EditInvoicesForm onClose={closeModal} />
                   </Modal>
           </tbody>
         </table>

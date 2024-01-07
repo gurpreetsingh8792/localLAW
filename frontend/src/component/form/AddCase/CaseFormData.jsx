@@ -4,7 +4,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
 import Modal from "../Client/People/ModelPop/Modal";
-import TaskForm from "../Client/People/ModelPop/TaskForm";
+// import TaskForm from "../Client/People/ModelPop/TaskForm";
 import EditCaseForm from "./EditCaseForm/EditCaseForm";
 import CaseHistory from "./CaseHistory/CaseHistory";
 
@@ -171,7 +171,7 @@ const CaseFormData = () => {
         </tbody>
       </table>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <EditCaseForm />
+        <EditCaseForm onClose={closeModal}/>
       </Modal>
     </div>
   </>

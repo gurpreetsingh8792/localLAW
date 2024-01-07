@@ -34,7 +34,7 @@ const validationSchema = Yup.object().shape({
 
 
 
-const EditTeamMembersForm = () => {
+const EditTeamMembersForm = ({onClose}) => {
   const [groupNames, setGroupNames] = useState([]);
   const openModalOne = () => setIsModalOpenOne(true);
   const [isModalOpenOne, setIsModalOpenOne] = useState(false);
@@ -63,6 +63,11 @@ const EditTeamMembersForm = () => {
 
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
   }, []);
+
+  const HandleCancel=()=>{
+    onClose();
+  }
+
   return (
     <div className={styles.MainContainer}>
     <div className={styles.formContainer}>
@@ -201,7 +206,7 @@ const EditTeamMembersForm = () => {
             </div>
                       <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
 
                       </div>
           </Form>

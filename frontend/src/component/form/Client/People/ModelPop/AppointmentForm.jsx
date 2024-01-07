@@ -1,8 +1,9 @@
-import style from "./Task.module.css";
+import style from "./AppointmentForm.module.css";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const TaskForm = () => {
+const AppointmentForm = ({ onClose }) => {
   const [caseTitles, setCaseTitles] = useState([]); // Store fetched case titles
   const [caseTypeMap, setCaseTypeMap] = useState({}); // Store case types based on titles
   const [casetitle, setCaseTitle] = useState("");
@@ -20,6 +21,11 @@ const TaskForm = () => {
   // };
   const handleStartTime = (newStartTime) => {
     setStart(newStartTime);
+  };
+
+  // const navigate = useNavigate();
+  const HandleCancel = () => {
+    onClose();
   };
 
   const handleEndTime = (newEndTime) => {
@@ -90,9 +96,13 @@ const TaskForm = () => {
 
   return (
     <div>
-      <h2 style={{}}>Appointment </h2>
+      <h2 style={{textAlign:'center'}}>Appointment </h2>
+
       <div className={style.AppointmentVisibleForm}>
+
         <div className={style.formRow}>
+        <div className={style.formGroup}>
+
           <label className={style.AppointmentFormTitle}>Title</label>
           <input
             className={style.TasksVisibleInput}
@@ -100,8 +110,9 @@ const TaskForm = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-        </div>
-        <div className={style.formRow}>
+          </div>
+          <div className={style.formGroup}>
+
           <label className={style.TasksVisibleTitle}>Case Title</label>
           <select
             className={style.TasksVisibleInput}
@@ -117,8 +128,12 @@ const TaskForm = () => {
               </option>
             ))}
           </select>
+          </div>
         </div>
+
         <div className={style.formRow}>
+        <div className={style.formGroup}>
+
           <label className={style.AppointmentFormTitle}>Case Type</label>
           <input
             className={style.TasksVisibleInput}
@@ -127,8 +142,9 @@ const TaskForm = () => {
             readOnly
             placeholder="Case Type"
           />
-        </div>
-        <div className={style.formRow}>
+          </div>
+
+          <div className={style.formGroup}>
           <label className={style.HearingVisibleFormTitle}>
             Appointment Date
           </label>
@@ -138,8 +154,11 @@ const TaskForm = () => {
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
           />
+          </div>
         </div>
         <div className={style.formRow}>
+        <div className={style.formGroup}>
+
           <label className={style.AppointmentFormTitle}>Contact Person</label>
           <select
             className={style.TasksVisibleInput}
@@ -153,9 +172,9 @@ const TaskForm = () => {
             <option value="Person 2">Person 2</option>
             {/* Add more options as needed */}
           </select>
-        </div>
+          </div>
 
-        <div className={style.formRow}>
+          <div className={style.formGroup}>
           <label className={style.AppointmentFormTitle}>Location</label>
           <input
             className={style.HearingVisibleFormInput}
@@ -164,32 +183,37 @@ const TaskForm = () => {
             placeholder="Location"
             onChange={(e) => setLocation(e.target.value)}
           />
+          </div>
         </div>
+
         <div className={style.formRow}>
-          <label className={style.AppointmentFormTitle}>Start Time</label>
-          <input
-            className={style.HearingVisibleFormTime}
-            type="time"
-            value={start || ""}
-            onChange={(e) => {
-              const newStartTime = e.target.value;
-              handleStartTime(newStartTime);
-            }}
-          />
-        </div>
-        <div className={style.formRow}>
-          <label className={style.AppointmentFormTitle}>End Time</label>
-          <input
-            className={style.HearingVisibleFormTime}
-            type="time"
-            value={end || ""}
-            onChange={(e) => {
-              const newEndTime = e.target.value;
-              handleEndTime(newEndTime);
-            }}
-          />
-        </div>
-        <div className={style.formRow}>
+          <div className={style.formGroup}>
+            <label className={style.AppointmentFormTitle}>Start Time</label>
+            <input
+              className={style.formInput}
+              type="time"
+              value={start || ""}
+              onChange={(e) => {
+                const newStartTime = e.target.value;
+                handleStartTime(newStartTime);
+              }}
+            />
+          </div>
+
+          <div className={style.formGroup}>
+            <label className={style.AppointmentFormTitle}>End Time</label>
+            <input
+              className={style.formInput}
+              type="time"
+              value={end || ""}
+              onChange={(e) => {
+                const newEndTime = e.target.value;
+                handleEndTime(newEndTime);
+              }}
+            />
+          </div>
+
+          <div className={style.formGroup}>
           <label className={style.HearingVisibleFormTitle}>Email</label>
           <input
             className={style.HearingVisibleFormInput}
@@ -199,20 +223,18 @@ const TaskForm = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-      </div>
+        </div>
       <div className={style.BtnContainerAppoint}>
-        <button
-          className={style.btn}
-          //  onClick={}
-        >
-          Cancel
-        </button>
         <button className={style.btn} onClick={setNewAppointment}>
           Submit
         </button>
-      </div>{" "}
+        <button className={style.btn} onClick={HandleCancel}>
+          Cancel
+        </button>
+      </div>
+      </div>
     </div>
   );
 };
 
-export default TaskForm;
+export default AppointmentForm;

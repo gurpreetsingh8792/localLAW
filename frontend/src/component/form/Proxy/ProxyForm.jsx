@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import style from './Proxy.module.css';
 import axios from 'axios';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
+import { NavLink } from 'react-router-dom';
 
 const Proxy = () => {
   const [isSuccessPopupVisible, setIsSuccessPopupVisible] = useState(false);
@@ -363,7 +364,10 @@ const Proxy = () => {
           <div className={style.BtnContainer}>
           
             <button className={style.btn} type="submit">Submit</button>
+            <NavLink to={"/dashboard"}>
             <button className={style.btn} type="submit">Cancel</button>
+            </NavLink>
+
           </div>
         {/* </div> */}
       </form>

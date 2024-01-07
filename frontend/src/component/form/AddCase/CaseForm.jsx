@@ -386,8 +386,8 @@ const validationSchema = Yup.object().shape({
 
               <div className={styles.BtnContainer}>
               <button type="submit" className={styles.submitButton}>Submit</button>
-              <NavLink to={"/dashboard"}>
-              <button type="submit" className={styles.submitButton}>Cancel</button>
+              <NavLink to={"/dashboard/Importcase"}>
+              <button type="submit" className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
               </NavLink>
               </div>
             

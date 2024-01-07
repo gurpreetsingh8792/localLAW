@@ -114,7 +114,7 @@ const TeamMemberdata = () => {
             ))}
           </tbody>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-                    <EditTeamMembersForm />
+                    <EditTeamMembersForm onClose={closeModal}/>
                   </Modal>
         </table>
       </div>

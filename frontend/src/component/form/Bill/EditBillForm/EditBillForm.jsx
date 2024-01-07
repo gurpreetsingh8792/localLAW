@@ -15,7 +15,7 @@ const generateBillNo = () => {
   return `${year}${month}${date}-${hours}${minutes}${seconds}`;
 };
 
-const EditBillForm = () => {
+const EditBillForm = ({onClose}) => {
   const [billingType, setBillingType] = useState(" "); // Default billing type
 
   const initialValues = {
@@ -95,7 +95,9 @@ const handleSubmit = async (values, { resetForm }) => {
 const onSubmit = (values, { resetForm }) => {
   handleSubmit(values, { resetForm });
 };
-
+const HandleCancel=()=>{
+  onClose();
+}
 
   return (
     <>
@@ -235,7 +237,7 @@ const onSubmit = (values, { resetForm }) => {
           </div>
           <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
           </div>
         </Form>
       </Formik>

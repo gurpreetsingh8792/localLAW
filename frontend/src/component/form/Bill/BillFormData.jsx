@@ -113,7 +113,7 @@ const BillFormData = () => {
             ))}
           </tbody>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-             <EditBillForm />
+             <EditBillForm onClose={closeModal}/>
           </Modal>
         </table>
       </div>

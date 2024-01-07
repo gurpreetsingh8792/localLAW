@@ -14,7 +14,6 @@ const Navbar = () => {
 
   const handleSignOut = () => {
     localStorage.removeItem('token');
-    // Perform logout actions here (e.g., clear authentication tokens)
     setIsNavShowing(false);
     logout();
   };
@@ -31,6 +30,7 @@ const Navbar = () => {
 
       <div className={`navbar-menu-links ${isNavShowing ? 'show-nav' : 'hide-nav'}`}>
         <ul>
+
           {isLoggedIn ? (
             <>
               {links.map(({ name, path }, index) => (
@@ -44,7 +44,9 @@ const Navbar = () => {
                 <NavLink to='/' onClick={handleSignOut}>Sign Out</NavLink>
               </li>
             </>
-          ) : (
+
+          ):(
+
             <>
               <li>
                 <NavLink to="/login" onClick={() => setIsNavShowing(false)}>

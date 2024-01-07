@@ -45,19 +45,6 @@
     border-radius: 4px;
   }
   
-  .button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .button:hover {
-    background-color: #45a049;
-  }
   
   .header {
     color: #333;
@@ -78,6 +65,7 @@
     padding: 10px;
   }
   
+
   /* Button Styles */
   .btn1 {
     /* color: var(--color-secondary); */
@@ -119,73 +107,14 @@
     color: var(--color-primary);
   }
   
-  .btnContainer {
-    display: flex;
-    flex-direction:row-reverse;
-    gap: 1rem;
-   
-  }
+
   
-  .btnOpenEvent {
+  /* .btnOpenEvent {
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
-  }
-  
-  /* Additional styling for Title and Description */
-  h5 {
-    margin-top: 10px;
-    margin-bottom: 5px;
-    color: #333;
-    font-size: 1rem;
-  }
-  
-  /* Assuming you want to style the HearingVisibleForm class */
-  
-  /* .HearingVisibleForm {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px; 
-    margin: 0 auto; 
   } */
-  /* 
-  .HearingVisibleFormTitle {
-    margin-top: 10px;
-    margin-bottom: 5px;
-    color: #333;
-    font-size: 1rem;
-  }
-  
-  .HearingVisibleFormInput {
-    width: 35%;
-    padding: 1px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .HearingVisibleFormDate,
-  .HearingVisibleFormTime {
-    width: 48%; 
-    margin-right: 4px; 
-  }
-  
-  /* Optional: Add styling for buttons or any other elements inside the form */
-  .HearingVisibleFormButton {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .HearingVisibleFormButton:hover {
-    background-color: #45a049;
-  } 
+
   
   
   /* Task visible form css */
@@ -196,12 +125,12 @@
     max-width: 100%;
     margin: auto;
   }
-  
+/*   
   .TasksVisibleContainer {
     display: flex;
     flex-direction: column;
   }
-  
+   */
   .TasksVisibleTitle {
     margin-bottom: 5px;
     font-size: 14px;
@@ -209,8 +138,8 @@
   
   .TasksVisibleInput {
     width: calc(100% - 10px); 
-    margin-bottom: 23.2px;
-    /* padding: 8px; */
+    /* margin-bottom: 0.4rem; */
+    /* padding: 0.2rem; */
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
@@ -220,70 +149,111 @@
     display: flex;
     flex-direction: column;
   }
-  
+
+
+  .BtnContainerUpDateTask,
+  .BtnContainerUpdateHearing{
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: 7rem;
+    gap: 1rem;
+    position: relative;
+    bottom: 4.8rem;
+    justify-content: center;
+  }
+
+  .BtnContainerTask{
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: 7rem;
+    gap: 1rem;
+    position: relative;
+    bottom: 4.8rem;
+    justify-content: center;
+  }
 
   
   
   /* css for hearing */
-  .HearingVisibleForm {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 5px; 
-    max-width: 100%;
-    margin: auto;
-  }
-  
-  .formRow {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .HearingVisibleFormTitle {
-    margin-bottom: 5px;
-    font-size: 4px;
-  }
-  
-  .HearingVisibleFormInput,
-  .HearingVisibleFormTime,
-  .HearingVisibleFormDate {
-    width: 100%; 
-    margin-bottom: 24.5px;
-  }
-  
-  .HearingVisibleFormInput {
-    padding: 0px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .HearingVisibleFormTime {
-    margin-right: 0;
-  }
-  
-  /* Convert h6 to label */
-  .HearingVisibleForm label {
-    margin-bottom: 5px;
-    font-size: 14px;
-    display: block;
-  }
+.HearingVisibleForm {
+  /* Add styles for the form container if needed */
+}
+
+.formRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.formGroup {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.formGroup:last-child {
+  margin-right: 0;
+}
+
+/* .TasksVisibleTitle,
+.HearingVisibleFormTitle {
+  display: block;
+  margin-bottom: 50px;
+  font-weight: bold;
+  color: #333;
+} */
+
+.TasksVisibleInput,
+.HearingVisibleFormInput,
+.HearingVisibleFormDate,
+.HearingVisibleFormTime {
+  width: 100%;
+  /* padding: 4px; */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.BtnContainerHearing{
+  display: flex;
+  /* flex-direction: row-reverse; */
+  margin-top: 6.8rem;
+  gap: 1rem;
+  position: relative;
+  bottom: 4.8rem;
+  justify-content: center;
+}
+
+
+
+.btn {
+  background-color: #007bff; /* Example: blue */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+
+.btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
   
   /* appointment css */
+
   .AppointmentVisibleForm {
-    display: grid;
+    /* display: grid;
     grid-template-columns: repeat(2, 1fr); 
     gap: 5px; 
     max-width: 100%; 
-    margin: auto;
+    margin: auto; */
   }
 
-  .formRow {
-    display: flex;
-    flex-direction: column;
-  }
-  
+ 
   .AppointmentFormTitle {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
     font-size: 4px;
   }
   
@@ -291,8 +261,9 @@
   .AppointmentVisibleFormTime,
   .AppointmentVisibleFormDate {
     width: 100%; 
-    margin-bottom: 24.5px;
+    margin-bottom: 20px;
   }
+
   
   .AppointmentVisibleFormInput {
     padding: 0px;
@@ -307,24 +278,29 @@
   
   /* Convert h6 to label */
   .AppointmentVisibleForm label {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
     font-size: 14px;
     display: block;
   }
 
-
-  .BtnContainerAppoint{
+  .BtnContainer{
     display: flex;
     flex-direction: row-reverse;
-    padding-top: 0.3rem;
+    margin-top: 6.56rem;
     gap: 1rem;
     position: relative;
     bottom: 4.8rem;
+    justify-content: center;
   }
-
-  
-  
-  
+  .BtnContainerUpdateAppointment{
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: 7rem;
+    gap: 1rem;
+    position: relative;
+    bottom: 4.8rem;
+    justify-content: center;
+  }
   
   /* Update clickedEvent */
   .btnContainerclickedEvent{

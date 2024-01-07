@@ -59,7 +59,7 @@ const validationSchema = Yup.object().shape({
 });
 
 
-const EditInvoicesForm = () => {
+const EditInvoicesForm = ({onClose}) => {
   const [clientNames, setClientNames] = useState([]); // State to store client names
   const [caseTitles, setCaseTitles] = useState([]); // State to store case titles
 
@@ -118,6 +118,10 @@ const EditInvoicesForm = () => {
       console.error(error);
     }
   };
+
+  const HandleCancel=()=>{
+    onClose();
+  }
 
   return (
     <>
@@ -232,7 +236,7 @@ const EditInvoicesForm = () => {
          
           <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Submit</button>
-            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.CancelButton}`} disabled={isSubmitting}>Cancel</button>
             </div>
           </Form>
         )}

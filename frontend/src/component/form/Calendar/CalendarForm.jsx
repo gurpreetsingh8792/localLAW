@@ -288,7 +288,6 @@ const Calendar = () => {
               : null
           );
           // Update other state variables as needed
-          
         })
 
         .catch((error) => {
@@ -427,7 +426,6 @@ const Calendar = () => {
           },
         })
         .then((response) => {
-          // Handle success
           console.log("Hearing saved successfully:", response.data);
           const newEvent = {
             title: response.data.title, // Replace with the correct field name for hearing title
@@ -669,7 +667,9 @@ const Calendar = () => {
 
                 {visibleForm === "Tasks" && (
                   <>
-                    <div className={style.visibleForm}>
+                    {/* <div className={style.visibleForm}> */}
+
+                    <div className={style.formGroup}>
                       <label className={style.TasksVisibleTitle}>Title</label>
                       <input
                         className={style.TasksVisibleInput}
@@ -677,7 +677,10 @@ const Calendar = () => {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                       />
-                      <div className={style.TasksVisibleContainer}>
+                    </div>
+
+                    <div className={style.formRow}>
+                      <div className={style.formGroup}>
                         <label className={style.TasksVisibleTitle}>
                           Case Title
                         </label>
@@ -695,19 +698,27 @@ const Calendar = () => {
                             </option>
                           ))}
                         </select>
+                      </div>
+
+                      <div className={style.formGroup}>
                         <label className={style.TasksVisibleTitle}>
-                          Start Date
+                          Case Type
                         </label>
                         <input
                           className={style.TasksVisibleInput}
-                          type="date"
-                          value={moment(start).format("YYYY-MM-DD")}
-                          onChange={(e) => setStart(e.target.value)}
+                          type="text"
+                          value={caseTypeMap[casetitle] || ""}
+                          readOnly
+                          placeholder="Case Type"
                         />
+                      </div>
+                    </div>
+
+                    <div className={style.formRow}>
+                      <div className={style.formGroup}>
                         <label className={style.TasksVisibleTitle}>
                           Assignment From
                         </label>
-
                         <select
                           id="assignFrom"
                           name="assignFrom"
@@ -724,28 +735,8 @@ const Calendar = () => {
                         </select>
                         <br />
                       </div>
-                      <div className={style.TimeContainer}>
-                        <label className={style.TasksVisibleTitle}>
-                          Case Type
-                        </label>
-                        <input
-                          className={style.TasksVisibleInput}
-                          type="text"
-                          value={caseTypeMap[casetitle] || ""}
-                          readOnly
-                          placeholder="Case Type"
-                        />
 
-                        <label className={style.TasksVisibleTitle}>
-                          End Date
-                        </label>
-                        <input
-                          className={style.TasksVisibleInput}
-                          type="date"
-                          value={moment(end).format("YYYY-MM-DD")}
-                          onChange={(e) => setEnd(e.target.value)}
-                        />
-
+                      <div className={style.formGroup}>
                         <label className={style.TasksVisibleTitle}>
                           Assignment To
                         </label>
@@ -765,7 +756,33 @@ const Calendar = () => {
                         </select>
                       </div>
                     </div>
-                    <div className={style.btnContainer}>
+
+                    <div className={style.formRow}>
+                      <div className={style.formGroup}>
+                        <label className={style.TasksVisibleTitle}>
+                          Start Date
+                        </label>
+                        <input
+                          className={style.TasksVisibleInput}
+                          type="date"
+                          value={moment(start).format("YYYY-MM-DD")}
+                          onChange={(e) => setStart(e.target.value)}
+                        />
+                      </div>
+
+                      <div className={style.formGroup}>
+                        <label className={style.TasksVisibleTitle}>
+                          End Date
+                        </label>
+                        <input
+                          className={style.TasksVisibleInput}
+                          type="date"
+                          value={moment(end).format("YYYY-MM-DD")}
+                          onChange={(e) => setEnd(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className={style.BtnContainerTask}>
                       <button className={style.btn} onClick={handleClose}>
                         Cancel
                       </button>
@@ -773,13 +790,15 @@ const Calendar = () => {
                         Submit
                       </button>
                     </div>
+                    {/* </div> */}
+
                   </>
                 )}
 
                 {visibleForm === "Hearing Date" && (
                   <>
                     <div className={style.HearingVisibleForm}>
-                      <div className={style.formRow}>
+                      <div className={style.formGroup}>
                         <label className={style.TasksVisibleTitle}>Title</label>
                         <input
                           className={style.TasksVisibleInput}
@@ -789,99 +808,124 @@ const Calendar = () => {
                           onChange={(e) => setTitle(e.target.value)}
                         />
                       </div>
+
                       <div className={style.formRow}>
-                        <label className={style.TasksVisibleTitle}>
-                          Case Title
-                        </label>
-                        <select
-                          className={style.TasksVisibleInput}
-                          value={casetitle}
-                          onChange={(e) => setCaseTitle(e.target.value)}
-                        >
-                          <option value="" disabled>
-                            Select Case Title
-                          </option>
-                          {caseTitles.map((title) => (
-                            <option key={title} value={title}>
-                              {title}
+                        <div className={style.formGroup}>
+                          <label className={style.TasksVisibleTitle}>
+                            Case Title
+                          </label>
+                          <select
+                            className={style.TasksVisibleInput}
+                            value={casetitle}
+                            onChange={(e) => setCaseTitle(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select Case Title
                             </option>
-                          ))}
-                        </select>
+                            {caseTitles.map((title) => (
+                              <option key={title} value={title}>
+                                {title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className={style.formGroup}>
+                          <label className={style.TasksVisibleTitle}>
+                            Case Type
+                          </label>
+                          <input
+                            className={style.TasksVisibleInput}
+                            type="text"
+                            value={caseTypeMap[casetitle] || ""}
+                            readOnly
+                            placeholder="Case Type"
+                          />
+                        </div>
                       </div>
+
                       <div className={style.formRow}>
-                        <label className={style.HearingVisibleFormTitle}>
-                          Assigned Lawyer
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormInput}
-                          type="text"
-                          value={casetype}
-                          placeholder="Case type"
-                          onChange={(e) => setCaseType(e.target.value)}
-                        />
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Assigned Lawyer
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormInput}
+                            type="text"
+                            value={casetype}
+                            placeholder="Case type"
+                            onChange={(e) => setCaseType(e.target.value)}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Status
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormInput}
+                            type="text"
+                            value={client}
+                            placeholder="Assign Team Member"
+                            onChange={(e) => setClient(e.target.value)}
+                          />
+                        </div>
                       </div>
+
                       <div className={style.formRow}>
-                        <label className={style.HearingVisibleFormTitle}>
-                          Status
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormInput}
-                          type="text"
-                          value={client}
-                          placeholder="Assign Team Member"
-                          onChange={(e) => setClient(e.target.value)}
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.HearingVisibleFormTitle}>
-                          Hearing Date
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormDate}
-                          type="date"
-                          value={desc}
-                          onChange={(e) => setDesc(e.target.value)}
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.HearingVisibleFormTitle}>
-                          Start Time
-                        </label>
-                        <input
-                        className={style.HearingVisibleFormTime}
-                        type="time"
-                        value={start || ""}
-                        onChange={(e) => {
-                          const newStartTime = e.target.value;
-                          console.log(handleStartTime(newStartTime));
-                        }}
-                      />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.HearingVisibleFormTitle}>
-                          End Time
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormTime}
-                          type="time"
-                          value={end ? end.toISOString().substring(11, 16) : ""}
-                          onChange={(e) =>
-                            handleEndTime(
-                              new Date(
-                                end.setHours(...e.target.value.split(":"))
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Hearing Date
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormDate}
+                            type="date"
+                            value={desc}
+                            onChange={(e) => setDesc(e.target.value)}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Start Time
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormTime}
+                            type="time"
+                            value={start || ""}
+                            onChange={(e) => {
+                              const newStartTime = e.target.value;
+                              console.log(handleStartTime(newStartTime));
+                            }}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            End Time
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormTime}
+                            type="time"
+                            value={
+                              end ? end.toISOString().substring(11, 16) : ""
+                            }
+                            onChange={(e) =>
+                              handleEndTime(
+                                new Date(
+                                  end.setHours(...e.target.value.split(":"))
+                                )
                               )
-                            )
-                          }
-                        />
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
-
-                    <div className={style.btnContainer}>
-                      <button className={style.btn} onClick={handleClose}>
-                        Cancel
-                      </button>
+                    <div className={style.BtnContainerHearing}>
                       <button className={style.btn} onClick={setNewHearing}>
                         Submit
+                      </button>
+                      <button className={style.btn} onClick={handleClose}>
+                        Cancel
                       </button>
                     </div>
                   </>
@@ -891,131 +935,146 @@ const Calendar = () => {
                   <>
                     <div className={style.AppointmentVisibleForm}>
                       <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          Title
-                        </label>
-                        <input
-                          className={style.TasksVisibleInput}
-                          type="text"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.TasksVisibleTitle}>
-                          Case Title
-                        </label>
-                        <select
-                          className={style.TasksVisibleInput}
-                          value={casetitle}
-                          onChange={(e) => setCaseTitle(e.target.value)}
-                        >
-                          <option value="" disabled>
-                            Select Case Title
-                          </option>
-                          {caseTitles.map((title) => (
-                            <option key={title} value={title}>
-                              {title}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          Case Type
-                        </label>
-                        <input
-                          className={style.TasksVisibleInput}
-                          type="text"
-                          value={caseTypeMap[casetitle] || ""}
-                          readOnly
-                          placeholder="Case Type"
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.HearingVisibleFormTitle}>
-                          Appointment Date
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormDate}
-                          type="date"
-                          value={desc}
-                          onChange={(e) => setDesc(e.target.value)}
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          Contact Person
-                        </label>
-                        <select
-                          className={style.TasksVisibleInput}
-                          value={contactperson}
-                          onChange={(e) => setContactPerson(e.target.value)}
-                        >
-                          <option value="" disabled selected>
-                            Contact Person
-                          </option>
-                          <option value="Person 1">Person 1</option>
-                          <option value="Person 2">Person 2</option>
-                          {/* Add more options as needed */}
-                        </select>
+                        <div className={style.formGroup}>
+                          <label className={style.AppointmentFormTitle}>
+                            Title
+                          </label>
+                          <input
+                            className={style.TasksVisibleInput}
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Email
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormInput}
+                            type="email"
+                            value={email}
+                            placeholder="Email"
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                        </div>
                       </div>
 
                       <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          Location
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormInput}
-                          type="text"
-                          value={location}
-                          placeholder="Location"
-                          onChange={(e) => setLocation(e.target.value)}
-                        />
+                        <div className={style.formGroup}>
+                          <label className={style.TasksVisibleTitle}>
+                            Case Title
+                          </label>
+                          <select
+                            className={style.TasksVisibleInput}
+                            value={casetitle}
+                            onChange={(e) => setCaseTitle(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select Case Title
+                            </option>
+                            {caseTitles.map((title) => (
+                              <option key={title} value={title}>
+                                {title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.AppointmentFormTitle}>
+                            Case Type
+                          </label>
+                          <input
+                            className={style.TasksVisibleInput}
+                            type="text"
+                            value={caseTypeMap[casetitle] || ""}
+                            readOnly
+                            placeholder="Case Type"
+                          />
+                        </div>
                       </div>
+
                       <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          Start Time
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormTime}
-                          type="time"
-                          value={start || ""}
-                          onChange={(e) => {
-                            const newStartTime = e.target.value;
-                            console.log(handleStartTime(newStartTime));
-                          }}
-                        />
+                        <div className={style.formGroup}>
+                          <label className={style.AppointmentFormTitle}>
+                            Contact Person
+                          </label>
+                          <select
+                            className={style.TasksVisibleInput}
+                            value={contactperson}
+                            onChange={(e) => setContactPerson(e.target.value)}
+                          >
+                            <option value="" disabled selected>
+                              Contact Person
+                            </option>
+                            <option value="Person 1">Person 1</option>
+                            <option value="Person 2">Person 2</option>
+                            {/* Add more options as needed */}
+                          </select>
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.AppointmentFormTitle}>
+                            Location
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormInput}
+                            type="text"
+                            value={location}
+                            placeholder="Location"
+                            onChange={(e) => setLocation(e.target.value)}
+                          />
+                        </div>
                       </div>
+
                       <div className={style.formRow}>
-                        <label className={style.AppointmentFormTitle}>
-                          End Time
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormTime}
-                          type="time"
-                          value={end || ""}
-                          onChange={(e) => {
-                            const newEndTime = e.target.value;
-                            handleEndTime(newEndTime);
-                          }}
-                        />
-                      </div>
-                      <div className={style.formRow}>
-                        <label className={style.HearingVisibleFormTitle}>
-                          Email
-                        </label>
-                        <input
-                          className={style.HearingVisibleFormInput}
-                          type="email"
-                          value={email}
-                          placeholder="Email"
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Appointment Date
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormDate}
+                            type="date"
+                            value={desc}
+                            onChange={(e) => setDesc(e.target.value)}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.AppointmentFormTitle}>
+                            Start Time
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormTime}
+                            type="time"
+                            value={start || ""}
+                            onChange={(e) => {
+                              const newStartTime = e.target.value;
+                              console.log(handleStartTime(newStartTime));
+                            }}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.AppointmentFormTitle}>
+                            End Time
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormTime}
+                            type="time"
+                            value={end || ""}
+                            onChange={(e) => {
+                              const newEndTime = e.target.value;
+                              handleEndTime(newEndTime);
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    <div className={style.BtnContainerAppoint}>
+                    <div className={style.BtnContainer}>
                       <button className={style.btn} onClick={handleClose}>
                         Cancel
                       </button>
@@ -1037,8 +1096,9 @@ const Calendar = () => {
               {clickedEvent.type === "Tasks" && (
                 <div>
                   <h2 style={{ textAlign: "center" }}>Update Tasks</h2>
-                  <div className={style.visibleForm}>
-                    {/* Title */}
+
+                  {/* Title */}
+                  <div className={style.formGroup}>
                     <label className={style.TasksVisibleTitle}>Title</label>
                     <input
                       className={style.TasksVisibleInput}
@@ -1046,96 +1106,121 @@ const Calendar = () => {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                     />
-
-                    {/* Case Title (Dropdown) */}
-                    <label className={style.TasksVisibleTitle}>
-                      Case Title
-                    </label>
-                    <select
-                      className={style.TasksVisibleInput}
-                      value={casetitle}
-                      onChange={(e) => setCaseTitle(e.target.value)}
-                    >
-                      <option value="" disabled>
-                        Select Case Title
-                      </option>
-                      {caseTitles.map((title) => (
-                        <option key={title} value={title}>
-                          {title}
-                        </option>
-                      ))}
-                    </select>
-
-                    {/* Start Date */}
-                    <label className={style.TasksVisibleTitle}>
-                      Start Date
-                    </label>
-                    <input
-                      className={style.TasksVisibleInput}
-                      type="date"
-                      value={moment(start).format("YYYY-MM-DD")}
-                      onChange={(e) => setStart(e.target.value)}
-                    />
-
-                    {/* Assignment From (Dropdown) */}
-                    <label className={style.TasksVisibleTitle}>
-                      Assignment From
-                    </label>
-                    <select
-                      id="assignFrom"
-                      name="assignFrom"
-                      className="selectField"
-                      value={assignmentfrom}
-                      onChange={(e) => setAssignmentFrom(e.target.value)}
-                    >
-                      <option value="">Select an option</option>
-                      {teamMembers.map((member) => (
-                        <option key={member} value={member}>
-                          {member}
-                        </option>
-                      ))}
-                    </select>
-
-                    {/* Case Type (Read-only) */}
-                    <label className={style.TasksVisibleTitle}>Case Type</label>
-                    <input
-                      className={style.TasksVisibleInput}
-                      type="text"
-                      value={caseTypeMap[casetitle] || ""}
-                      readOnly
-                      placeholder="Case Type"
-                    />
-
-                    {/* End Date */}
-                    <label className={style.TasksVisibleTitle}>End Date</label>
-                    <input
-                      className={style.TasksVisibleInput}
-                      type="date"
-                      value={moment(end).format("YYYY-MM-DD")}
-                      onChange={(e) => setEnd(e.target.value)}
-                    />
-
-                    {/* Assignment To (Dropdown) */}
-                    <label className={style.TasksVisibleTitle}>
-                      Assignment To
-                    </label>
-                    <select
-                      id="assignTo"
-                      name="assignTo"
-                      className="selectField"
-                      value={assignmentto}
-                      onChange={(e) => setAssignmentTo(e.target.value)}
-                    >
-                      <option value="">Select an option</option>
-                      {teamMembers.map((member) => (
-                        <option key={member} value={member}>
-                          {member}
-                        </option>
-                      ))}
-                    </select>
                   </div>
 
-                  <div className={style.btnContainerclickedEvent}>
+                  <div className={style.formRow}>
+                    <div className={style.formGroup}>
+                      {/* Case Title (Dropdown) */}
+                      <label className={style.TasksVisibleTitle}>
+                        Case Title
+                      </label>
+                      <select
+                        className={style.TasksVisibleInput}
+                        value={casetitle}
+                        onChange={(e) => setCaseTitle(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select Case Title
+                        </option>
+                        {caseTitles.map((title) => (
+                          <option key={title} value={title}>
+                            {title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Start Date */}
+                    <div className={style.formGroup}>
+                      <label className={style.TasksVisibleTitle}>
+                        Case Type
+                      </label>
+                      <input
+                        className={style.TasksVisibleInput}
+                        type="text"
+                        value={caseTypeMap[casetitle] || ""}
+                        readOnly
+                        placeholder="Case Type"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Assignment From (Dropdown) */}
+                  <div className={style.formRow}>
+                    <div className={style.formGroup}>
+                      <label className={style.TasksVisibleTitle}>
+                        Assignment From
+                      </label>
+                      <select
+                        id="assignFrom"
+                        name="assignFrom"
+                        className="selectField"
+                        value={assignmentfrom}
+                        onChange={(e) => setAssignmentFrom(e.target.value)}
+                      >
+                        <option value="">Select an option</option>
+                        {teamMembers.map((member) => (
+                          <option key={member} value={member}>
+                            {member}
+                          </option>
+                        ))}
+                      </select>
+                      <br />
+                    </div>
+
+                    {/* Case Type (Read-only) */}
+
+                    <div className={style.formGroup}>
+                      <label className={style.TasksVisibleTitle}>
+                        Assignment To 
+                      </label>
+                      <br/>
+                      <select
+                        id="assignTo"
+                        name="assignTo"
+                        className="selectField"
+                        value={assignmentto}
+                        onChange={(e) => setAssignmentTo(e.target.value)}
+                      >
+                        <option value="">Select an option</option>
+                        {teamMembers.map((member) => (
+                          <option key={member} value={member}>
+                            {member}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* End Date */}
+                  <div className={style.formRow}>
+                    <div className={style.formGroup}>
+                      <label className={style.TasksVisibleTitle}>
+                        Start Date
+                      </label>
+                      <input
+                        className={style.TasksVisibleInput}
+                        type="date"
+                        value={moment(start).format("YYYY-MM-DD")}
+                        onChange={(e) => setStart(e.target.value)}
+                      />
+                    </div>
+
+                    {/* Assignment To (Dropdown) */}
+                    <div className={style.formGroup}>
+                      <label className={style.TasksVisibleTitle}>
+                        End Date
+                      </label>
+                      <input
+                        className={style.TasksVisibleInput}
+                        type="date"
+                        value={moment(end).format("YYYY-MM-DD")}
+                        onChange={(e) => setEnd(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className={style.BtnContainerTask}>
                     <button className={style.btn} onClick={handleClose}>
                       Cancel
                     </button>
@@ -1154,108 +1239,129 @@ const Calendar = () => {
                   <h2 style={{ textAlign: "center" }}>Update Hearing</h2>
 
                   <div className={style.HearingVisibleForm}>
-                    <div className={style.formRow}>
-                      <label className={style.TasksVisibleTitle}>Title</label>
-                      <input
-                        className={style.TasksVisibleInput}
-                        type="text"
-                        value={title}
-                        placeholder="Enter Title"
-                        onChange={(e) => setTitle(e.target.value)}
-                      />
+                      <div className={style.formGroup}>
+                        <label className={style.TasksVisibleTitle}>Title</label>
+                        <input
+                          className={style.TasksVisibleInput}
+                          type="text"
+                          value={title}
+                          placeholder="Enter Title"
+                          onChange={(e) => setTitle(e.target.value)}
+                        />
+                      </div>
+
+                      <div className={style.formRow}>
+                        <div className={style.formGroup}>
+                          <label className={style.TasksVisibleTitle}>
+                            Case Title
+                          </label>
+                          <select
+                            className={style.TasksVisibleInput}
+                            value={casetitle}
+                            onChange={(e) => setCaseTitle(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select Case Title
+                            </option>
+                            {caseTitles.map((title) => (
+                              <option key={title} value={title}>
+                                {title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className={style.formGroup}>
+                          <label className={style.TasksVisibleTitle}>
+                            Case Type
+                          </label>
+                          <input
+                            className={style.TasksVisibleInput}
+                            type="text"
+                            value={caseTypeMap[casetitle] || ""}
+                            readOnly
+                            placeholder="Case Type"
+                          />
+                        </div>
+                      </div>
+
+                      <div className={style.formRow}>
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Assigned Lawyer
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormInput}
+                            type="text"
+                            value={casetype}
+                            placeholder="Case type"
+                            onChange={(e) => setCaseType(e.target.value)}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Status
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormInput}
+                            type="text"
+                            value={client}
+                            placeholder="Assign Team Member"
+                            onChange={(e) => setClient(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className={style.formRow}>
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Hearing Date
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormDate}
+                            type="date"
+                            value={desc}
+                            onChange={(e) => setDesc(e.target.value)}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            Start Time
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormTime}
+                            type="time"
+                            value={start || ""}
+                            onChange={(e) => {
+                              const newStartTime = e.target.value;
+                              console.log(handleStartTime(newStartTime));
+                            }}
+                          />
+                        </div>
+
+                        <div className={style.formGroup}>
+                          <label className={style.HearingVisibleFormTitle}>
+                            End Time
+                          </label>
+                          <input
+                            className={style.HearingVisibleFormTime}
+                            type="time"
+                            value={
+                              end ? end.toISOString().substring(11, 16) : ""
+                            }
+                            onChange={(e) =>
+                              handleEndTime(
+                                new Date(
+                                  end.setHours(...e.target.value.split(":"))
+                                )
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div className={style.formRow}>
-                      <label className={style.TasksVisibleTitle}>
-                        Case Title
-                      </label>
-                      <select
-                        className={style.TasksVisibleInput}
-                        value={casetitle}
-                        onChange={(e) => setCaseTitle(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Case Title
-                        </option>
-                        {caseTitles.map((title) => (
-                          <option key={title} value={title}>
-                            {title}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.HearingVisibleFormTitle}>
-                        Assigned Lawyer
-                      </label>
-                      <input
-                        className={style.HearingVisibleFormInput}
-                        type="text"
-                        value={casetype}
-                        placeholder="Case type"
-                        onChange={(e) => setCaseType(e.target.value)}
-                      />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.HearingVisibleFormTitle}>
-                        Status
-                      </label>
-                      <input
-                        className={style.HearingVisibleFormInput}
-                        type="text"
-                        value={client}
-                        placeholder="Assign Team Member"
-                        onChange={(e) => setClient(e.target.value)}
-                      />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.HearingVisibleFormTitle}>
-                        Hearing Date
-                      </label>
-                      <input
-                        className={style.HearingVisibleFormDate}
-                        type="date"
-                        value={desc}
-                        onChange={(e) => setDesc(e.target.value)}
-                      />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.HearingVisibleFormTitle}>
-                        Start Time
-                      </label>
-                      <input
-                        className={style.HearingVisibleFormTime}
-                        type="time"
-                        value={
-                          start ? start.toISOString().substring(11, 16) : ""
-                        }
-                        onChange={(e) => {
-                          if (start) {
-                            const [hours, minutes] = e.target.value.split(":");
-                            const newStartTime = new Date(
-                              start.setHours(hours, minutes)
-                            );
-                            handleStartTime(newStartTime);
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.HearingVisibleFormTitle}>
-                        End Time
-                      </label>
-                      <input
-                        className={style.HearingVisibleFormTime}
-                        type="time"
-                        value={end ? end.toISOString().substring(11, 16) : ""}
-                        onChange={(e) =>
-                          handleEndTime(
-                            new Date(end.setHours(...e.target.value.split(":")))
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className={style.btnContainer}>
+                  <div className={style.BtnContainerUpdateHearing}>
                     <button className={style.btn} onClick={handleClose}>
                       Cancel
                     </button>
@@ -1272,142 +1378,164 @@ const Calendar = () => {
               {clickedEvent.type === "appointment" && (
                 <>
                   <h2 style={{ textAlign: "center" }}>Update Appointment</h2>
+
                   <div className={style.AppointmentVisibleForm}>
                     <div className={style.formRow}>
-                      <label className={style.AppointmentFormTitle}>
-                        Title
-                      </label>
-                      <input
-                        className={style.TasksVisibleInput}
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                      />
+                      <div className={style.formGroup}>
+                        <label className={style.AppointmentFormTitle}>
+                          Title
+                        </label>
+                        <input
+                          className={style.TasksVisibleInput}
+                          type="text"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                        />
+                      </div>
+
+                      <div className={style.formGroup}>
+                        <label className={style.HearingVisibleFormTitle}>
+                          Email
+                        </label>
+                        <input
+                          className={style.HearingVisibleFormInput}
+                          type="email"
+                          value={email}
+                          placeholder="Email"
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </div>
                     </div>
+
                     <div className={style.formRow}>
-                      <label className={style.TasksVisibleTitle}>
-                        Case Title
-                      </label>
-                      <select
-                        className={style.TasksVisibleInput}
-                        value={casetitle}
-                        onChange={(e) => setCaseTitle(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Case Title
-                        </option>
-                        {caseTitles.map((title) => (
-                          <option key={title} value={title}>
-                            {title}
+                      <div className={style.formGroup}>
+                        <label className={style.TasksVisibleTitle}>
+                          Case Title
+                        </label>
+                        <select
+                          className={style.TasksVisibleInput}
+                          value={casetitle}
+                          onChange={(e) => setCaseTitle(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select Case Title
                           </option>
-                        ))}
-                      </select>
+                          {caseTitles.map((title) => (
+                            <option key={title} value={title}>
+                              {title}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className={style.formGroup}>
+                        <label className={style.AppointmentFormTitle}>
+                          Case Type
+                        </label>
+                        <input
+                          className={style.TasksVisibleInput}
+                          type="text"
+                          value={caseTypeMap[casetitle] || ""}
+                          readOnly
+                          placeholder="Case Type"
+                        />
+                      </div>
                     </div>
+
                     <div className={style.formRow}>
-                      <label className={style.AppointmentFormTitle}>
-                        Case Type
-                      </label>
-                      <input
-                        className={style.TasksVisibleInput}
-                        type="text"
-                        value={caseTypeMap[casetitle] || ""}
-                        readOnly
-                        placeholder="Case Type"
-                      />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.HearingVisibleFormTitle}>
-                        Appointment Date
-                      </label>
-                      <input
-                        className={style.HearingVisibleFormDate}
-                        type="date"
-                        value={desc}
-                        onChange={(e) => setDesc(e.target.value)}
-                      />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.AppointmentFormTitle}>
-                        Contact Person
-                      </label>
-                      <select
-                        className={style.TasksVisibleInput}
-                        value={contactperson}
-                        onChange={(e) => setContactPerson(e.target.value)}
-                      >
-                        <option value="" disabled selected>
+                      <div className={style.formGroup}>
+                        <label className={style.AppointmentFormTitle}>
                           Contact Person
-                        </option>
-                        <option value="Person 1">Person 1</option>
-                        <option value="Person 2">Person 2</option>
-                        {/* Add more options as needed */}
-                      </select>
+                        </label>
+                        <select
+                          className={style.TasksVisibleInput}
+                          value={contactperson}
+                          onChange={(e) => setContactPerson(e.target.value)}
+                        >
+                          <option value="" disabled selected>
+                            Contact Person
+                          </option>
+                          <option value="Person 1">Person 1</option>
+                          <option value="Person 2">Person 2</option>
+                          {/* Add more options as needed */}
+                        </select>
+                      </div>
+
+                      <div className={style.formGroup}>
+                        <label className={style.AppointmentFormTitle}>
+                          Location
+                        </label>
+                        <input
+                          className={style.HearingVisibleFormInput}
+                          type="text"
+                          value={location}
+                          placeholder="Location"
+                          onChange={(e) => setLocation(e.target.value)}
+                        />
+                      </div>
                     </div>
 
                     <div className={style.formRow}>
-                      <label className={style.AppointmentFormTitle}>
-                        Location
-                      </label>
-                      <input
-                        className={style.HearingVisibleFormInput}
-                        type="text"
-                        value={location}
-                        placeholder="Location"
-                        onChange={(e) => setLocation(e.target.value)}
-                      />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.AppointmentFormTitle}>
-                        Start Time
-                      </label>
-                      <input
-            className={style.HearingVisibleFormTime}
-            type="time"
-            value={start || ""}
-            onChange={(e) => {
-              const newStartTime = e.target.value;
-              handleStartTime(newStartTime);
-            }}
-          />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.AppointmentFormTitle}>
-                        End Time
-                      </label>
-                      <input
-            className={style.HearingVisibleFormTime}
-            type="time"
-            value={end || ""}
-            onChange={(e) => {
-              const newEndTime = e.target.value;
-              console.log(handleEndTime(newEndTime));
-            }}
-          />
-                    </div>
-                    <div className={style.formRow}>
-                      <label className={style.HearingVisibleFormTitle}>
-                        Email
-                      </label>
-                      <input
-                        className={style.HearingVisibleFormInput}
-                        type="email"
-                        value={email}
-                        placeholder="Email"
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                  </div>
+                      <div className={style.formGroup}>
+                        <label className={style.HearingVisibleFormTitle}>
+                          Appointment Date
+                        </label>
+                        <input
+                          className={style.HearingVisibleFormDate}
+                          type="date"
+                          value={desc}
+                          onChange={(e) => setDesc(e.target.value)}
+                        />
+                      </div>
 
-                  <div className={style.btnContainer}>
-                    <button className={style.btn} onClick={handleClose}>
-                      Cancel
-                    </button>
-                    <button className={style.btn} onClick={updateHearingEvent}>
-                      Update
-                    </button>
-                    <button className={style.btn} onClick={deleteHearingEvent}>
-                      Delete
-                    </button>
+                      <div className={style.formGroup}>
+                        <label className={style.AppointmentFormTitle}>
+                          Start Time
+                        </label>
+                        <input
+                          className={style.HearingVisibleFormTime}
+                          type="time"
+                          value={start || ""}
+                          onChange={(e) => {
+                            const newStartTime = e.target.value;
+                            handleStartTime(newStartTime);
+                          }}
+                        />
+                      </div>
+
+                      <div className={style.formGroup}>
+                        <label className={style.AppointmentFormTitle}>
+                          End Time
+                        </label>
+                        <input
+                          className={style.HearingVisibleFormTime}
+                          type="time"
+                          value={end || ""}
+                          onChange={(e) => {
+                            const newEndTime = e.target.value;
+                            console.log(handleEndTime(newEndTime));
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className={style.BtnContainerUpdateAppointment}>
+                      <button className={style.btn} onClick={handleClose}>
+                        Cancel
+                      </button>
+                      <button
+                        className={style.btn}
+                        onClick={updateHearingEvent}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className={style.btn}
+                        onClick={deleteHearingEvent}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </>
               )}
