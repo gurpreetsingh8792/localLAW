@@ -520,9 +520,6 @@ const PeopleForm = () => {
             </div>
 
           <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
-          <Modal isOpen={isModalOpen} onClose={closeModal}>
-             <AppointmentForm onClose={closeModal}/>
-          </Modal>
           
           </div>
 
@@ -533,6 +530,9 @@ const PeopleForm = () => {
           </div>
         </form>
       </div>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+             <AppointmentForm onClose={closeModal}/>
+          </Modal>
     </>
   );
 };

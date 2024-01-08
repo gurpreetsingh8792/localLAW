@@ -5,7 +5,7 @@ import styles from './EditPeopleForm.module.css';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import Modal from '../../Client/People/ModelPop/Modal'
-import TaskForm from "../../Client/People/ModelPop/TaskForm";
+// import TaskForm;
 
 
 
@@ -416,10 +416,9 @@ const EditPeopleForm = ({ clientData }) => {
 
   </div>
 
-  <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
+  {/* <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-             <TaskForm />
-          </Modal>
+          </Modal> */}
 
 </div>
 

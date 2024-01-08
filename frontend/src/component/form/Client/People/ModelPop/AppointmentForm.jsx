@@ -74,6 +74,7 @@ const AppointmentForm = ({ onClose }) => {
     fetchCaseTitlesAndTypes(); // Call the new function to fetch case titles and types
 
   }, []);
+  
   const setNewAppointment = async () => {
     try {
       const formData = {
