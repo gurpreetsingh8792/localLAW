@@ -2280,7 +2280,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
   });
 
   db.get(
-    'SELECT dateOfHearing, zipStateProvince, type FROM ProxyForm WHERE id = ? AND user_id != ? AND status = "pending"',
+    'SELECT dateOfHearing, zipStateProvince, type, user_id AS creator_user_id FROM ProxyForm WHERE id = ? AND user_id != ? AND status = "pending"',
     [proxyId, userId],
     (err, proxyData) => {
       if (err) {
@@ -2293,7 +2293,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
         return res.status(404).json({ error: 'Proxy not found or not pending' });
       }
 
-      const { dateOfHearing, zipStateProvince, type } = proxyData;
+      const { dateOfHearing, zipStateProvince, type, creator_user_id } = proxyData;
 
       // Update the status and acceptance date in ProxyForm table
       db.run(
@@ -2308,7 +2308,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
           // Record proxy activity in ProxyActivity table
           db.run(
             'INSERT INTO ProxyActivity (creator_user_id, acceptor_user_id, proxy_id, acceptanceDate, hearingDate, zipStateProvince, type) VALUES ( ?, ?, ?, ?, ?, ?, ?)',
-            [userId, req.user.id, proxyId, acceptanceDate, dateOfHearing, zipStateProvince, type ], // Include hearing date here
+            [creator_user_id, userId, proxyId, acceptanceDate, dateOfHearing, zipStateProvince, type ], // Include hearing date here
             (err) => {
               if (err) {
                 console.error('Database error:', err);
@@ -2418,6 +2418,8 @@ app.delete('/dashboard/user/notifications/:notificationId', authenticateJWT, (re
 });
 // show proxy
 // Endpoint for retrieving proxy activity for the logged-in user
+// show proxy
+// Endpoint for retrieving proxy activity for the logged-in user
 app.get('/dashboard/user/proxy-activity', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   const currentDate = new Date().toISOString();
@@ -2455,6 +2457,7 @@ app.get('/dashboard/user/proxy-activity', authenticateJWT, (req, res) => {
     }
   );
 });
+
 
 // Endpoint for deleting proxy activity for the logged-in user
 app.delete('/dashboard/user/proxy-activity/:activityId', authenticateJWT, (req, res) => {

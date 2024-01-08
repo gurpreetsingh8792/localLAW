@@ -236,7 +236,7 @@
     
   }
   .selectClient {
-    width: 330%;
+    width: 220%;
     padding: 5px;
     border: 1px solid #ccc;
     box-shadow: inset 0px 0px 4px 0px var(--color-Third);
@@ -245,12 +245,13 @@
     
   }
   .selectTeam {
-    width: 300%;
+    width: 250%;
     padding: 5px;
     border: 1px solid #ccc;
     box-shadow: inset 0px 0px 4px 0px var(--color-Third);
     border-radius: 4px;
     font-size: 16px;
+   
     
   }
   .selectPa {
