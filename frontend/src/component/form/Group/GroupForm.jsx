@@ -17,7 +17,7 @@ const validationSchema = Yup.object().shape({
   priority: Yup.string().required('Priority is required'),
 });
 
-const GroupForm = ({onClose}) => {
+const GroupForm = ({onClose, onGroupAdded }) => {
   const [companyNames, setCompanyNames] = useState([]); // State to store client names
   const priorityOptions = [
     { value: 'critical', label: 'Critical' },
@@ -30,6 +30,7 @@ const GroupForm = ({onClose}) => {
   const HandleCancel=()=>{
     onClose();
   }
+
   useEffect(() => {
     // Fetch client names and populate the select options
     const fetchCompanyNames = async () => {

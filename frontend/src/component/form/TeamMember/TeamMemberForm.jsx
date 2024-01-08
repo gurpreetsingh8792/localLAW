@@ -88,7 +88,7 @@ const TeamMembers = () => {
 
   const navigate = useNavigate();
   const HandleCancel=()=>{
-    navigate('/dashboard')
+    navigate(-1)
   }
   
 

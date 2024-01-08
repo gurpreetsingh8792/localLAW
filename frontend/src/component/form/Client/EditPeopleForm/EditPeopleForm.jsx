@@ -419,6 +419,7 @@ const EditPeopleForm = ({ clientData }) => {
   {/* <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
           </Modal> */}
+          
 
 </div>
 

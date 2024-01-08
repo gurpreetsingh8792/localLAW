@@ -93,7 +93,7 @@ const AlertsForm = () => {
 
   const navigate = useNavigate();
   const HandleCancel=()=>{
-    navigate('/dashboard')
+    navigate(-1)
   }
 
   return (

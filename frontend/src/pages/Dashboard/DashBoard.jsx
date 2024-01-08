@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Headers from "../../component/utilities/Header/Headers";
 import Footer from "../../component/utilities/footer/footer";
 import image from "../../assets/dashboard.jpg";
@@ -11,9 +11,20 @@ import Card from "../../component/utilities/card/Card";
 import { data } from "./data";
 import { AiOutlineSearch } from "react-icons/ai";
 import DashboardNavbar from "../../component/utilities/DashboardNavbar/DashboardNavbar";
+import { fetchAndUpdateCounts } from "./data";
+
 
 const DashBoard = () => {
+  const [dashboardData, setDashboardData] = useState(data);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchAndUpdateCounts(); // Assuming this function updates 'data' array
+      setDashboardData([...data]); // Update local state to trigger re-render
+    };
+
+    fetchData();
+  }, []);
 
   
   return (
@@ -34,7 +45,7 @@ const DashBoard = () => {
       </h2>
       <div className={style.benfitsWrapper}>
         {/* function for render data from data.jsx */}
-        {data.map(
+        {dashboardData.map(
           ({
             id,
             icon,

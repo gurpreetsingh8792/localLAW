@@ -8,6 +8,7 @@ import Modal from "../Client/People/ModelPop/Modal";
 import EditCaseForm from "./EditCaseForm/EditCaseForm";
 import CaseHistory from "./CaseHistory/CaseHistory";
 
+
 const CaseFormData = () => {
   const openModal = () => setIsModalOpen(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,11 +26,6 @@ const CaseFormData = () => {
   useEffect(() => {
     fetchCasesData();
   }, []);
-
-
-
-
-
   
   const fetchCasesData = async () => {
     try {
@@ -54,7 +50,6 @@ const CaseFormData = () => {
     setEditingCase(null);
     closeModal();
   };
-
 
 
   const handleDeleteClick = async (caseId) => {
@@ -125,7 +120,7 @@ const CaseFormData = () => {
               <td>{caseItem.opponentPartyName}</td>
               
               <td>
-                <button className={style.btn} onClick={() => setIsModalOpen(true)}>Edit</button>
+                <button className={style.btn} onClick={() => handleEditClick(caseItem)}>Edit</button>
                 <button className={style.btn}  onClick={() => handleDeleteClick(caseItem.id)}>Delete</button>
                 <button className={style.btn} onClick={() => handleDownloadClick(caseItem.id)}>Download</button>
               </td>
@@ -133,9 +128,15 @@ const CaseFormData = () => {
           ))}
         </tbody>
       </table>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <EditCaseForm onClose={closeModal}/>
-      </Modal>
+
+      <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
+      {editingCase && (
+            <EditCaseForm
+              caseData={casesData.find((caseItem) => caseItem.id === editingCase)}
+              onCancel={handleCancelClick}
+            />
+          )}
+          </Modal>
     </div>
   </>
   );
