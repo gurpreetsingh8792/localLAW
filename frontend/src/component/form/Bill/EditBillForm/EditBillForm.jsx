@@ -3,12 +3,14 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './EditBillForm.module.css';
 import axios from 'axios';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 
 
 const EditBillForm = ({ onClose, billData }) => {
   const [billingType, setBillingType] = useState(billData.billingType || ''); // Initialize with billData.billingType or an empty string
   const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -115,6 +117,7 @@ const handleSubmit = async (values, { resetForm }) => {
 
     console.log(response.data);
     alert('Bill Updated successfully!');
+    navigate(0);
     resetForm();
   } catch (error) {
     console.error(error);

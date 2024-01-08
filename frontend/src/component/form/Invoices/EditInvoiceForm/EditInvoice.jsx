@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './EditInvoiceForm.module.css';
 import axios from 'axios';
 
@@ -17,6 +17,7 @@ const EditInvoicesForm = ({ invoiceData, onClose }) => {
   const [filePath, setFilePath] = useState(null); // Add this line
   const [filePathMessage, setFilePathMessage] = useState("");
   const [initialAddDocFileName, setInitialAddDocFileName] = useState(""); // Store initial file name
+  const navigate = useNavigate();
 
   const initialValues = {
     client: invoiceData.client || '',
@@ -153,6 +154,7 @@ const handleExpensesChange = (e, setFieldValue, values) => {
   
       console.log(response.data);
       alert('Invoice Updated successfully!');
+      navigate(0);
       resetForm();
     } catch (error) {
       console.error(error);
