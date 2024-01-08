@@ -108,16 +108,18 @@ const validationSchema = Yup.object().shape({
       <DashboardNavbar />
       <div className={styles.container}>
       <h2 style={{textAlign:'center'}}>Add Case</h2>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-           {({ values }) => (
-          <Form className={styles.form}>
-            {/* Title */}
-           
-            <div className={styles.row}>
+
+
+      
+      <Formik
+        initialValues={{ initialValues}}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}>
+
+        {({ values }) => (
+          <Form>
+            
+          <div className={styles.row}>
             <div className={styles.column}> 
             <label className={styles.label}>Title:</label>
               <Field type="text" name="title" className={styles.inputTitle} />
@@ -310,10 +312,31 @@ const validationSchema = Yup.object().shape({
             </div>
             </div>
 
-           
-            
 
-            <div className={styles.heading}>Concerned Person</div>
+            <div className={styles.BtnContainer}>
+              <button type="submit" className={styles.submitButton}>Submit Form 1</button>
+              <NavLink to={"/dashboard/Importcase"}>
+              <button type="submit" className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
+              </NavLink>
+              </div>
+          </Form>
+        )}
+      </Formik>
+
+
+
+      <Formik
+        initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+        {({ values }) => (
+          
+
+  <Form>
+  
+
+  <div className={styles.heading}>Concerned Person</div>
             {/* Client (Select Options) */}
             
             <div className={styles.row}>
@@ -392,57 +415,73 @@ const validationSchema = Yup.object().shape({
     <ErrorMessage name="lawyerType" component="div" className={styles.error} />
   </div>
   </div>
-)}
- 
+)}   
 
-            {/* Opponent (Heading) */}
-            <div className={styles.heading}>Opponent</div>
-
-            {/* Opponent Party Name */}
-            <div className={styles.row1}>
-            <div className={styles.column}>
-            <label className={styles.label}>Party:</label>
-              <Field type="text" name="opponentPartyName" className={styles.inputopn} />
-            </div>
-
-            {/* Lawyer Name */}
-            
-            <div className={styles.column}>
-            <label className={styles.labelln}>Lawyer Name:</label>
-              <Field type="text" name="lawyerName" className={styles.inputln} />
-            </div>
-            </div>
-
-            {/* Mobile No */}
-            <div className={styles.row1}>
-            <div className={styles.column}>
-            <label className={styles.label}>Mobile No:</label>
-              <Field type="text" name="mobileNo" className={styles.inputmn} />
-            </div>
-
-            {/* Email Id */}
-            <div className={styles.column}>
-              <label className={styles.labelei}>Email Id:</label>
-              <Field type="text" name="emailId" className={styles.inputei} />
-            </div>
-            </div>
-
-            {/* Submit Button */}
-            {/* <div className={styles.row}> */}
-              <label className={styles.label}></label>
-
-              <div className={styles.BtnContainer}>
-              <button type="submit" className={styles.submitButton}>Submit</button>
-              <NavLink to={"/dashboard"}>
-              <button type="submit" className={styles.submitButton}>Cancel</button>
+ <div className={styles.BtnContainer}>
+              <button type="submit" className={styles.submitButton}>Submit Form 2</button>
+              <NavLink to={"/dashboard/Importcase"}>
+              <button type="submit" className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
               </NavLink>
               </div>
-            
-            {/* </div> */}
-          </Form>
-          )}
-           </Formik>
-      </div>
+  </Form>
+  )}
+</Formik>
+
+
+
+<Formik
+ initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+        {({ values }) => (
+  <Form>
+
+ {/* Opponent (Heading) */}
+ <div className={styles.heading}>Opponent</div>
+
+{/* Opponent Party Name */}
+<div className={styles.row1}>
+<div className={styles.column}>
+<label className={styles.label}>Party:</label>
+  <Field type="text" name="opponentPartyName" className={styles.inputopn} />
+</div>
+
+{/* Lawyer Name */}
+
+<div className={styles.column}>
+<label className={styles.labelln}>Lawyer Name:</label>
+  <Field type="text" name="lawyerName" className={styles.inputln} />
+</div>
+</div>
+
+{/* Mobile No */}
+<div className={styles.row1}>
+<div className={styles.column}>
+<label className={styles.label}>Mobile No:</label>
+  <Field type="text" name="mobileNo" className={styles.inputmn} />
+</div>
+
+{/* Email Id */}
+<div className={styles.column}>
+  <label className={styles.labelei}>Email Id:</label>
+  <Field type="text" name="emailId" className={styles.inputei} />
+</div>
+</div>
+    <div className={styles.BtnContainer}>
+              <button type="submit" className={styles.submitButton}>Submit Form 3</button>
+              <NavLink to={"/dashboard/Importcase"}>
+              <button type="submit" className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
+              </NavLink>
+              </div> 
+               </Form>
+              )}
+
+</Formik>
+
+
+
+</div>
     </>
   );
 };

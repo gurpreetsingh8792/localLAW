@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './Group.module.css';
 import SideNav from '../../utilities/SideNavBar/SideNav';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
 const initialValues = {
@@ -17,8 +18,9 @@ const validationSchema = Yup.object().shape({
   priority: Yup.string().required('Priority is required'),
 });
 
-const GroupForm = () => {
+const GroupForm = ({onClose, onGroupAdded }) => {
   const [companyNames, setCompanyNames] = useState([]); // State to store client names
+  const navigate = useNavigate();
   const priorityOptions = [
     { value: 'critical', label: 'Critical' },
     { value: 'important', label: 'Important' },
@@ -26,6 +28,10 @@ const GroupForm = () => {
     { value: 'routine', label: 'Routine' },
     { value: 'normal', label: 'Normal' },
   ];
+
+  const HandleCancel=()=>{
+    onClose();
+  }
 
   useEffect(() => {
     // Fetch client names and populate the select options
@@ -70,6 +76,7 @@ const GroupForm = () => {
       
             console.log(response.data); // Log the response from the backend
             alert('Group Added successfully!');
+            navigate(0);
             resetForm();
           } catch (error) {
             console.error(error);
@@ -124,9 +131,8 @@ const GroupForm = () => {
             <ErrorMessage name="priority" component="div" className={styles.error} />
           </div>
 
-          <button type="submit" className={styles.submitButton}>
-            Submit
-          </button>
+          <button type="submit" className={styles.submitButton}>Submit</button>
+          <button type="submit" onClick={HandleCancel} className={styles.submitButton}>Cancel</button>
         </Form>
       </Formik>
     </div>

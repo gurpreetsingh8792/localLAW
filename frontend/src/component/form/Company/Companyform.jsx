@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './Companyform.module.css';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import Axios from 'axios';
 
@@ -28,10 +28,11 @@ const validationSchema = Yup.object().shape({
 
 
 
-const Companyform = () => {
+const Companyform = ({onClose}) => {
 
   const [companyNames, setCompanyNames] = useState([]); // State to store group names
   const [clientNames, setClientNames] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch group names and populate the select options
@@ -55,6 +56,10 @@ const Companyform = () => {
     // Call the fetchTeamMembers function when the component mounts
   }, []);
 
+  const HandleCancel=()=>{
+    onClose();
+  }
+
   return (
       <div className={styles.MainContainer}>
     <div className={styles.formContainer}>
@@ -72,6 +77,7 @@ const Companyform = () => {
       
             console.log(response.data); // Log the response from the backend
             alert('Company Added successfully!');
+            navigate(0);
             resetForm();
           } catch (error) {
             console.error(error);
@@ -135,7 +141,7 @@ const Companyform = () => {
               
                       <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
 
                       </div>
           </Form>

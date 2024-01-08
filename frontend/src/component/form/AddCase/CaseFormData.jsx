@@ -4,9 +4,10 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar'
 import Modal from "../Client/People/ModelPop/Modal";
-import TaskForm from "../Client/People/ModelPop/TaskForm";
+// import TaskForm from "../Client/People/ModelPop/TaskForm";
 import EditCaseForm from "./EditCaseForm/EditCaseForm";
 import CaseHistory from "./CaseHistory/CaseHistory";
+
 
 const CaseFormData = () => {
   const openModal = () => setIsModalOpen(true);
@@ -25,11 +26,6 @@ const CaseFormData = () => {
   useEffect(() => {
     fetchCasesData();
   }, []);
-
-
-
-
-
   
   const fetchCasesData = async () => {
     try {
@@ -54,7 +50,6 @@ const CaseFormData = () => {
     setEditingCase(null);
     closeModal();
   };
-
 
 
   const handleDeleteClick = async (caseId) => {
@@ -100,43 +95,48 @@ const CaseFormData = () => {
   return (
     <>
     <DashboardNavbar />
-    <div className={style.Container}>
-      <div className={style.casesContainer}>
-        <h2 className={style.header}>Cases Form Data</h2>
-        {casesData.map((caseItem) => (
-          <div className={style.card} key={caseItem.id}>
-            <div className={style.cardHeader}>
-              <h3>{caseItem.title}</h3>
-            </div>
-            <div className={style.cardBody}>
-              <p><strong>Case Code:</strong> {caseItem.caseCode}</p>
-              <p><strong>Client:</strong> {caseItem.client}</p>
-              <p><strong>Judge:</strong> {caseItem.honorableJudge}</p>
-              <p><strong>Lawyer:</strong> {caseItem.honorableJudge}</p>
-              <p><strong>Hearing Date:</strong> {caseItem.honorableJudge}</p>
-              <p><strong>Description:</strong> {caseItem.honorableJudge}</p>
-              <p><strong>Opponent:</strong> {caseItem.opponentPartyName}</p>
-            </div>
-            <div className={style.cardActions}>
-              <button className={style.btn} onClick={() => handleEditClick(caseItem)}>
-                Edit
-              </button>
-              <button className={style.btn} onClick={() => handleDeleteClick(caseItem.id)}>
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
-        <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
-          {/* Pass the selected case data to EditCaseForm */}
-          {editingCase && (
+    <div className={style.container}>
+      <h2 className={style.heading}>Cases Form Data</h2>
+      <table className={style.table}>
+      <thead className={style.tableHead}>
+          <tr>
+            <th>Title</th>
+            <th>Case Code</th>
+            <th>Client</th>
+            <th>Judge</th>
+            <th>Opponent Party Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody className={style.tableBody}>
+
+          {casesData.map((caseItem) => (
+            <tr className={style.CaseInfo} key={caseItem.id}>
+            
+              <td><NavLink style={{color:'white'}} to={"/case/cases"}>{caseItem.title}</NavLink></td>
+              <td>{caseItem.caseCode}</td>
+              <td>{caseItem.client}</td>
+              <td>{caseItem.honorableJudge}</td>
+              <td>{caseItem.opponentPartyName}</td>
+              
+              <td>
+                <button className={style.btn} onClick={() => handleEditClick(caseItem)}>Edit</button>
+                <button className={style.btn}  onClick={() => handleDeleteClick(caseItem.id)}>Delete</button>
+                <button className={style.btn} onClick={() => handleDownloadClick(caseItem.id)}>Download</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
+      {editingCase && (
             <EditCaseForm
               caseData={casesData.find((caseItem) => caseItem.id === editingCase)}
               onCancel={handleCancelClick}
             />
           )}
-        </Modal>
-      </div>
+          </Modal>
     </div>
   </>
   );

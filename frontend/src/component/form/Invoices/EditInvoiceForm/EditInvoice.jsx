@@ -9,7 +9,7 @@ import axios from 'axios';
 
 
 
-const EditInvoicesForm = ({ invoiceData }) => {
+const EditInvoicesForm = ({ invoiceData, onClose }) => {
   const [clientNames, setClientNames] = useState([]); // State to store client names
   const [caseTitles, setCaseTitles] = useState([]); // State to store case titles
   const [formData, setFormData] = useState({});
@@ -159,6 +159,10 @@ const handleExpensesChange = (e, setFieldValue, values) => {
     }
   };
 
+  const HandleCancel=()=>{
+    onClose();
+  }
+
   return (
     <>
     <div className={styles.formContainer}>
@@ -280,7 +284,7 @@ const handleExpensesChange = (e, setFieldValue, values) => {
          
           <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Submit</button>
-            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.CancelButton}`} disabled={isSubmitting}>Cancel</button>
             </div>
           </Form>
         )}

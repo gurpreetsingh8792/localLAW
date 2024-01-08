@@ -127,12 +127,14 @@ const TeamMemberdata = () => {
               </tr>
             ))}
           </tbody>
+          
           <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
           {/* Pass the selected case data to EditCaseForm */}
           {editingTeam && (
             <EditTeamMembersForm
               teamData={teamMembers.find((member) => member.id === editingTeam)}
               onCancel={handleCancelClick}
+              onClose={closeModal}
             />
           )}
         </Modal>

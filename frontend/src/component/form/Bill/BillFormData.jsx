@@ -125,10 +125,14 @@ const BillFormData = () => {
               </tr>
             ))}
           </tbody>
-          <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
+          {/* <Modal isOpen={isModalOpen} onClose={closeModal}>
+             <EditBillForm onClose={closeModal}/>
+          </Modal> */}
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
           {/* Pass the selected case data to EditCaseForm */}
           {editingBill && (
             <EditBillForm
+            onClose={closeModal}
               billData={billData.find((bill) => bill.id === editingBill)}
               onCancel={handleCancelClick}
             />

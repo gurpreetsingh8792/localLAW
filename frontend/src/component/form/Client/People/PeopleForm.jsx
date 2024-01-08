@@ -7,12 +7,14 @@ import { useFormik } from "formik";
 import DashboardNavbar from "../../../utilities/DashboardNavbar/DashboardNavbar";
 import AlertsForm from "../../Alerts/AlertsForm";
 import Modal from './ModelPop/Modal'
-import TaskForm from "./ModelPop/TaskForm";
+import TaskForm from "./ModelPop/AppointmentForm";
+import AppointmentForm from "./ModelPop/AppointmentForm";
 
 const PeopleForm = () => {
   const [caseTitles, setCaseTitles] = useState([]);
   const [alertTitles, setAlertTitles] = useState([]); 
-  const [appointmentTitles, setAppointmentTitles] = useState([]); 
+  const [appointmentTitles, setAppointmentTitles] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -151,7 +153,7 @@ const PeopleForm = () => {
 
   const navigate = useNavigate();
   const HandleCancel=()=>{
-    navigate('/dashboard')
+    navigate(-1)
   }
 
   return (
@@ -240,11 +242,15 @@ const PeopleForm = () => {
         <div className={styles.error}>{formik.errors.type}</div>
     )}
 
+</div>
+</div>
     {/* Conditional rendering for 'Lawyer Types' dropdown */}
+
     {formik.values.type === "Lawyers" && (
+      <div className={styles.formSection}>
         <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="lawyerType">
-                Lawyer Type
+                Lawyer
             </label>
             <select
                 id="lawyerType"
@@ -275,10 +281,10 @@ const PeopleForm = () => {
                 <div className={styles.error}>{formik.errors.lawyerType}</div>
             )}
         </div>
-    )}
 </div>
+    )}
 
-          </div>
+
 
           <div className={styles.formSection}>
             <div className={styles.formGroup}>
@@ -514,19 +520,19 @@ const PeopleForm = () => {
             </div>
 
           <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
-          <Modal isOpen={isModalOpen} onClose={closeModal}>
-             <TaskForm />
-          </Modal>
           
           </div>
 
 
           <div className={styles.BtnContainer}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="submit" onClick={HandleCancel} className={styles.submitButton}>Cancel</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton} ${styles.cancelButton}`}>Cancel</button>
           </div>
         </form>
       </div>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+             <AppointmentForm onClose={closeModal}/>
+          </Modal>
     </>
   );
 };

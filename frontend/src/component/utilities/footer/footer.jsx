@@ -18,16 +18,16 @@ const footer = () => {
       right reserved
     </small>
     <div className={style.footerSocial}>
-      <a href="http://linkedin.com" target="_blank">
+      <a className={style.LinkedIn} href="http://linkedin.com" target="_blank">
         <AiFillLinkedin />
       </a>
-      <a href="http://facebook.com" target="_blank">
+      <a className={style.FaceBook} href="http://facebook.com" target="_blank">
         <AiFillFacebook />
       </a>
-      <a href="http://instagram.com" target="_blank">
+      <a className={style.InstaGram} href="http://instagram.com" target="_blank">
         <AiFillInstagram />
       </a>
-      <a href="http://youtube.com" target="_blank">
+      <a className={style.YouTuber} href="http://youtube.com" target="_blank">
         <AiFillYoutube />
       </a>
     </div>

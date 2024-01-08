@@ -125,10 +125,12 @@ const InvoicesFormData = () => {
                 </td>
               </tr>
             ))}
+           
             <Modal isOpen={isModalOpen} onClose={handleCancelClick}>
           {/* Pass the selected case data to EditCaseForm */}
           {editingInvoice && (
             <EditInvoicesForm
+            onClose={closeModal}
               invoiceData={invoicesData.find((invoice) => invoice.id === editingInvoice)}
               onCancel={handleCancelClick}
             />

@@ -1,0 +1,73 @@
+/* AppointmentForm.module.css */
+.AppointmentVisibleForm {
+    background-color: #f9f9f9; /* Light grey background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .formRow {
+    margin-bottom: 15px;
+  }
+  
+  .AppointmentFormTitle,
+  .TasksVisibleTitle,
+  .HearingVisibleFormTitle {
+    display: block; /* Make labels block level for better control */
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333; /* Dark grey color for text */
+  }
+  
+  .TasksVisibleInput,
+  .HearingVisibleFormInput,
+  .HearingVisibleFormDate,
+  .HearingVisibleFormTime {
+    width: 100%; /* Full width */
+    padding: 8px;
+    border: 1px solid #ddd; /* Light grey border */
+    border-radius: 4px;
+    box-sizing: border-box; /* Box sizing to ensure padding doesn't affect width */
+  }
+  
+  .btn {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3; /* Darker shade for hover */
+  }
+  
+  .BtnContainerAppoint {
+    text-align: center; /* Align buttons to the right */
+    margin-top: 20px;
+  }
+  
+  /* AppointmentForm.module.css */
+.formRow {
+    display: flex; /* Enables Flexbox */
+    justify-content: space-between; /* Space out the child elements */
+    margin-bottom: 15px;
+  }
+  
+  .formGroup {
+    flex: 1; /* Allows each group to take equal width */
+    margin-right: 10px; /* Adds some space between the input groups */
+  }
+  
+  .formGroup:last-child {
+    margin-right: 0; /* Removes margin for the last group in the row */
+  }
+  
+  .formInput {
+    width: 100%; /* Full width inside the flex container */
+    /* ... other styles for input ... */
+  }
+  

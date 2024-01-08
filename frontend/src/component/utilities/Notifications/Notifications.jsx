@@ -143,28 +143,30 @@ const Notifications = () => {
   return (
     <>
     <DashboardNavbar/>
+
     {/* <div className={style.MenuItem} onClick={() => { 
   console.log('Accepting proxy with ID:', proxyItem.id); 
   handleAccept(proxyItem.id, 'proxy'); 
 }}>Accept</div> */}
 
     <div className={style.notificationsContainer}>
-      {/* ... (header and loading indicators remain the same) */}
+    <div className={style.tasksProxiesContainer}>
+          {/* ... (header and loading indicators remain the same) */}
 
       {/* Alerts Section */}
-      <div>
+         <div className={style.tasksSection}>
         <h2 className="header">Tasks</h2>
         {tasksLoading ? <p>Loading Tasks...</p> : (
           <ul>
             {tasks.map((alert, index) => (
               <li key={index} className={style.notificationItem}>
                 <span className={style.notificationTextUnread}>{alert}</span>
-                <button onClick={() => toggleDropdown(index, 'alert')} className={style.dropdownToggle}>⋮</button>
-                {showDropdown[`alert-${index}`] && (
+                {/* <button onClick={() => toggleDropdown(index, 'alert')} className={style.dropdownToggle}>⋮</button> */}
+                {/* {showDropdown[`alert-${index}`] && (
                   <div className={`${style.dropdownMenu} ${showDropdown[`alert-${index}`] ? style.dropdownMenuVisible : ''}`}>                  
                     <div className={style.MenuItem} onClick={() => handleDelete(alert.id, 'alert')}>Delete</div>
                   </div>
-                )}
+                )} */}
               </li>
             ))}
           </ul>
@@ -172,28 +174,29 @@ const Notifications = () => {
       </div>
 
       {/* Proxies Section */}
-      <div>
-        <h2 className="header">Proxies</h2>
-        {proxyLoading ? <p>Loading proxies...</p> : (
-          
+      <div className={style.proxiesSection}>
+          <h2 className="header">Proxies</h2>
+          {proxyLoading ? <p>Loading proxies...</p> : (
+
           <ul>
             {proxy.map((proxyItem, index) => (
               <li key={index} className={style.notificationItem}>
                 <span className={style.notificationTextUnread}>{proxyItem.message}</span>
                 <button onClick={() => toggleDropdown(index, 'proxy')} className={style.dropdownToggle}>⋮</button>
                 {showDropdown[`proxy-${index}`] && (
-                  
                   <div className={`${style.dropdownMenu} ${showDropdown[`proxy-${index}`] ? style.dropdownMenuVisible : ''}`}>                    <div className={style.MenuItem} onClick={() => handleDelete(proxyItem.id, 'proxy')}>Delete</div>
                     <div className={style.MenuItem} onClick={() => handleAccept(proxyItem.id, 'proxy')}>Accept</div>
                   </div>
-                  
                 )}
               </li>
             ))}
           </ul>
+          
         )}
       </div>
     </div>
+    </div>
+
   </>
   );
 };

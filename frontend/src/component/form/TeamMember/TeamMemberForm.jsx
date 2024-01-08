@@ -88,7 +88,7 @@ const TeamMembers = () => {
 
   const navigate = useNavigate();
   const HandleCancel=()=>{
-    navigate('/dashboard')
+    navigate(-1)
   }
   
 
@@ -238,12 +238,15 @@ const TeamMembers = () => {
         )}
       </Formik>
     </div>
+
     <Modal isOpen={isModalOpenOne} onClose={() => setIsModalOpenOne(false)}>
-    <GroupForm />
+    
+      <GroupForm onClose={closeModalOne}/>
+
     </Modal>
 
     <Modal isOpen={isModalOpenTwo} onClose={() => setIsModalOpenTwo(false)}>
-    <Companyform />
+    <Companyform onClose={closeModalTwo}/>
     </Modal>
     </div>
   );

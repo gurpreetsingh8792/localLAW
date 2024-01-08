@@ -5,7 +5,10 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './EditCaseForm.module.css';
 import axios from 'axios';
 
-const EditCaseForm = ({ caseData }) => {
+
+
+ 
+const EditCaseForm = ({onClose, caseData }) => {
   const [clientNames, setClientNames] = useState([]);
   const [teamMembers, setTeamMembers] = useState([]);
   const [formData, setFormData] = useState({});
@@ -118,9 +121,8 @@ const handleSubmit = async (values, { resetForm }) => {
 };
 
 
-  const navigate = useNavigate();
   const handleCancel = () => {
-    navigate(0)
+    onClose();
   }
 
   return (
@@ -443,7 +445,7 @@ const handleSubmit = async (values, { resetForm }) => {
 
               <div className={styles.BtnContainer}>
               <button type="submit" className={styles.submitButton}>UPDATE</button>
-              <button type="button" onClick={handleCancel} className={styles.submitButton}>Cancel</button>
+              <button type="button" onClose={handleCancel} className={styles.submitButton}>Cancel</button>
               </div>
             
             {/* </div> */}

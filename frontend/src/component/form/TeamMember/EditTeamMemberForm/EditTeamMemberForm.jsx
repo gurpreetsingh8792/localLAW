@@ -35,7 +35,8 @@ const validationSchema = Yup.object().shape({
 
 
 
-const EditTeamMembersForm = ({teamData}) => {
+
+const EditTeamMembersForm = ({teamData, onClose}) => {
   const [groupNames, setGroupNames] = useState([]); // State to store group names
   const [formData, setFormData] = useState({});
   const openModalTwo = () => setIsModalOpenTwo(true);
@@ -124,6 +125,11 @@ const EditTeamMembersForm = ({teamData}) => {
     fetchGroupNames(); // Call the fetchGroupNames function when the component mounts
     fetchCompanyNames();
   }, []);
+
+  const HandleCancel=()=>{
+    onClose();
+  }
+
   return (
     <div className={styles.MainContainer}>
     <div className={styles.formContainer}>
@@ -265,8 +271,8 @@ const EditTeamMembersForm = ({teamData}) => {
               </div>
             </div>
                       <div className={styles.BtnContainer}>
-            <button type="submit" className={styles.submitButton}>UPDATE</button>
-            <button type="submit" className={styles.submitButton}>Cancel</button>
+            <button type="submit" className={styles.submitButton}>Submit</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
 
                       </div>
           </Form>
@@ -278,7 +284,7 @@ const EditTeamMembersForm = ({teamData}) => {
     <Modal isOpen={isModalOpenOne} onClose={() => setIsModalOpenOne(false)}>
     <GroupForm />
     </Modal>
-
+    
     <Modal isOpen={isModalOpenTwo} onClose={() => setIsModalOpenTwo(false)}>
     <Companyform />
     </Modal>

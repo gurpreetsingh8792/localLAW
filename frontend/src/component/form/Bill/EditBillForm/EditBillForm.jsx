@@ -5,7 +5,8 @@ import styles from './EditBillForm.module.css';
 import axios from 'axios';
 
 
-const EditBillForm = ({ billData }) => {
+
+const EditBillForm = ({ onClose, billData }) => {
   const [billingType, setBillingType] = useState(billData.billingType || ''); // Initialize with billData.billingType or an empty string
   const [formData, setFormData] = useState({});
 
@@ -123,7 +124,9 @@ const handleSubmit = async (values, { resetForm }) => {
 const onSubmit = (values, { resetForm }) => {
   handleSubmit(values, { resetForm });
 };
-
+const HandleCancel=()=>{
+  onClose();
+}
 
   return (
     <>
@@ -274,8 +277,8 @@ const onSubmit = (values, { resetForm }) => {
           </div>
           </div>
           <div className={styles.BtnContainer}>
-            <button type="submit" className={styles.submitButton}>UPDATE</button>
-            <button  className={styles.submitButton}>Cancel</button>
+            <button type="submit" className={styles.submitButton}>Submit</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
           </div>
         </Form>
         )}
