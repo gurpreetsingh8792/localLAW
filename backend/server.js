@@ -7,13 +7,50 @@ const bcrypt = require('bcrypt');
 const secretKey = 'your_secret_key';
 const ejs = require('ejs');
 const pdf = require('html-pdf');
+const fetch = require('node-fetch');
 const fs = require('fs');
+const port = 8052;
 
-
+// const FormData = require('form-data');
+// const axios = require('axios');
 
 
 // const { Storage } = require('@google-cloud/storage');
-const port = 8052;
+
+// const url = "http://34.105.29.122:8000/law_sections/";
+// const filePath = "SS_NIAPOLICYSCHEDULECIRTIFICATESS_44081908.pdf";
+
+const files = {
+  // pdf_file: fs.createReadStream(filePath)
+};
+
+// const params = {
+//   state: "Uttarakhand",
+//   case_no: "your_case_no",
+//   description: "eating pizza cancer lung vape",
+//   history: "None",
+//   District: "Dehradun",
+//   town: "Rishikesh",
+//   case_type: "None",
+//   full_name: "Mr ROSHAN LAL",
+//   address: "LANE 6, CANAL ROAD GHUMANIWALA, RISHIKESH DEHRADUN UTTARAKHAND - 249204 Tel. 9756877006"
+// };
+
+// const formData = new FormData();
+// for (const key in params) {
+//   formData.append(key, params[key]);
+// }
+// formData.append("pdf_file", files.pdf_file);
+
+// fetch(url, {
+//   method: 'GET',
+//   body: formData
+// })
+//   .then(response => response.json())
+//   .then(data => console.log(data))
+//   .catch(error => console.error(error));
+
+
 
 
 
@@ -2267,7 +2304,6 @@ app.get("/dashboard/user/proxy-notifications", authenticateJWT, (req, res) => {
   );
 });
 
-
 app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   const proxyId = req.params.proxyId;
@@ -2280,7 +2316,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
   });
 
   db.get(
-    'SELECT dateOfHearing, zipStateProvince, type FROM ProxyForm WHERE id = ? AND user_id != ? AND status = "pending"',
+    'SELECT dateOfHearing, zipStateProvince, type, user_id AS creator_user_id FROM ProxyForm WHERE id = ? AND user_id != ? AND status = "pending"',
     [proxyId, userId],
     (err, proxyData) => {
       if (err) {
@@ -2293,7 +2329,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
         return res.status(404).json({ error: 'Proxy not found or not pending' });
       }
 
-      const { dateOfHearing, zipStateProvince, type } = proxyData;
+      const { dateOfHearing, zipStateProvince, type, creator_user_id } = proxyData;
 
       // Update the status and acceptance date in ProxyForm table
       db.run(
@@ -2308,7 +2344,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
           // Record proxy activity in ProxyActivity table
           db.run(
             'INSERT INTO ProxyActivity (creator_user_id, acceptor_user_id, proxy_id, acceptanceDate, hearingDate, zipStateProvince, type) VALUES ( ?, ?, ?, ?, ?, ?, ?)',
-            [userId, req.user.id, proxyId, acceptanceDate, dateOfHearing, zipStateProvince, type ], // Include hearing date here
+            [creator_user_id, userId, proxyId, acceptanceDate, dateOfHearing, zipStateProvince, type ], // Include hearing date here
             (err) => {
               if (err) {
                 console.error('Database error:', err);
@@ -2348,6 +2384,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
     }
   );
 });
+
 
 app.get('/dashboard/user/accepted-proxy-notifications', authenticateJWT, (req, res) => {
   const userId = req.user.id;
@@ -2416,8 +2453,8 @@ app.delete('/dashboard/user/notifications/:notificationId', authenticateJWT, (re
     }
   );
 });
-// show proxy
-// Endpoint for retrieving proxy activity for the logged-in user
+
+
 app.get('/dashboard/user/proxy-activity', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   const currentDate = new Date().toISOString();

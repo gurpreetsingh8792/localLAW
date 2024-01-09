@@ -9,7 +9,7 @@ import Modal from '../../Client/People/ModelPop/Modal'
 
 
 
-const EditPeopleForm = ({ clientData }) => {
+const EditPeopleForm = ({ clientData, onClose }) => {
   const [alertTitles, setAlertTitles] = useState([]); // State to store alert titles
   const [formData, setFormData] = useState({});
   const [caseTitles, setCaseTitles] = useState([]);
@@ -17,6 +17,11 @@ const EditPeopleForm = ({ clientData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+
+  const HandleCancel=()=>{
+    onClose();
+  }
 
   useEffect(() => {
     // Fetch alert titles and populate the select options
@@ -235,6 +240,47 @@ const EditPeopleForm = ({ clientData }) => {
             </div>
           </div>
 
+
+          {formik.values.type === "Lawyers" && (
+      <div className={styles.formSection}>
+        <div className={styles.formGroup}>
+            <label className={styles.label} htmlFor="lawyerType">
+                Lawyer
+            </label>
+            <select
+                id="lawyerType"
+                name="lawyerType"
+                className={styles.inputField}
+                {...formik.getFieldProps("lawyerType")}
+            >
+                <option value="">Select Lawyer Type</option>
+                <option value="CorporateLawyer">Corporate Lawyer</option>
+                <option value="CriminalDefenseLawyer">Criminal Defense Lawyer</option>
+                <option value="FamilyLawyer">Family Lawyer</option>
+                <option value="TaxLawyer">Tax Lawyer</option>
+                <option value="IntellectualPropertyLawyer">Intellectual Property Lawyer</option>
+                <option value="EmploymentLawyer">Employment Lawyer</option>
+                <option value="EnvironmentalLawyer">Environmental Lawyer</option>
+                <option value="EstatePlanningLawyer">Estate Planning Lawyer</option>
+                <option value="PersonalInjuryLawyer">Personal Injury Lawyer</option>
+                <option value="ImmigrationLawyer">Immigration Lawyer</option>
+                <option value="BankruptcyLawyer">Bankruptcy Lawyer</option>
+                <option value="CivilLitigation Lawyer">Civil Litigation Lawyer</option>
+                <option value="RealEstateLawyer">Real Estate Lawyer</option>
+                <option value="ConstitutionalLawyer">Constitutional Lawyer</option>
+                <option value="EntertainmentLawyer">Entertainment Lawyer</option>
+                {/* Add more lawyer types as needed */}
+            </select>
+
+            {formik.touched.lawyerType && formik.errors.lawyerType && (
+                <div className={styles.error}>{formik.errors.lawyerType}</div>
+            )}
+        </div>
+</div>
+    )}
+
+
+
         <div className={styles.formSection}>
           <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="email">Email</label>
@@ -413,8 +459,19 @@ const EditPeopleForm = ({ clientData }) => {
         </option>
       ))}
     </select>
-
   </div>
+  <div className={styles.formGroup}>
+          
+          <NavLink
+            to={"/dashboard/appointment"}
+            id="addNewAlert"
+            name="addNewAlert"
+            className={styles.link}
+            // onClick={handleAddNewAlertClick}
+          >
+            Add New Appointment
+          </NavLink>
+        </div>
 
   {/* <NavLink to="#" onClick={openModal}>Book an Appointment</NavLink>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -425,11 +482,12 @@ const EditPeopleForm = ({ clientData }) => {
 
        
 
-        <div className={styles.formSection}>
-          <button type="submit" className={styles.submitButton}>
-            UPDATE
-          </button>
-        </div>
+          <div className={styles.BtnContainer}>
+            <button type="submit" className={styles.submitButton}>Update</button>
+            <button type="submit" onClick={HandleCancel} className={`${styles.submitButton} ${styles.cancelButton}`}>Cancel</button>
+          </div>
+        
+
       </form>
     </div>
 </>

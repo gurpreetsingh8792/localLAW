@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DashboardNavbar from "../DashboardNavbar/DashboardNavbar";
 import style from './Notifications.module.css'
+import { IoSettings } from "react-icons/io5";
+import { NavLink, useNavigate } from "react-router-dom";
+
 
 
 const Notifications = () => {
@@ -11,7 +14,34 @@ const Notifications = () => {
   const [proxyLoading, setProxyLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState({});
-  
+  const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
+  const [notificationMethod, setNotificationMethod] = useState('email');
+
+  const navigate = useNavigate();
+
+  const toggleSettingsDropdown = () => {
+    console.log("Toggle Dropdown");
+    setShowSettingsDropdown(!showSettingsDropdown);
+  };
+
+  const handleOptionChange = (e) => {
+    setNotificationMethod(e.target.value);
+  };
+
+
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showSettingsDropdown && !event.target.closest(`.${style.settingIconContainer}`)) {
+        setShowSettingsDropdown(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showSettingsDropdown]);
+
+
 
   useEffect(() => {
     axios.get('http://localhost:8052/dashboard/user/notifications', {
@@ -115,7 +145,8 @@ const Notifications = () => {
       });
   
       console.log('Proxy accepted successfully:', response.data);
-  
+      navigate(0);
+
       // You might want to update your local state to reflect the change
       // For example, removing the accepted proxy from the list
       if (type === 'proxy') {
@@ -142,7 +173,7 @@ const Notifications = () => {
 
   return (
     <>
-    <DashboardNavbar/>
+  <DashboardNavbar tasks={tasks} proxy={proxy} />
 
     {/* <div className={style.MenuItem} onClick={() => { 
   console.log('Accepting proxy with ID:', proxyItem.id); 
@@ -150,6 +181,9 @@ const Notifications = () => {
 }}>Accept</div> */}
 
     <div className={style.notificationsContainer}>
+
+    
+
     <div className={style.tasksProxiesContainer}>
           {/* ... (header and loading indicators remain the same) */}
 
@@ -165,13 +199,16 @@ const Notifications = () => {
                 {/* {showDropdown[`alert-${index}`] && (
                   <div className={`${style.dropdownMenu} ${showDropdown[`alert-${index}`] ? style.dropdownMenuVisible : ''}`}>                  
                     <div className={style.MenuItem} onClick={() => handleDelete(alert.id, 'alert')}>Delete</div>
+                 
                   </div>
-                )} */}
+                )} */
+                }
               </li>
             ))}
           </ul>
         )}
       </div>
+      
 
       {/* Proxies Section */}
       <div className={style.proxiesSection}>
@@ -194,8 +231,53 @@ const Notifications = () => {
           
         )}
       </div>
-    </div>
-    </div>
+
+      <div className={style.settingIconContainer} >
+      <div className={`${style.dropdownMenu} ${showSettingsDropdown ? 'active' : ''}`}>         
+     
+       <div className={style.SettingIcon} onClick={toggleSettingsDropdown}>
+        <h2 className={style.Heading}> How would you like your Notifications ? <IoSettings className={style.SettingIcon} /> </h2>
+
+      </div>
+
+      {showSettingsDropdown && 
+        <div> 
+                 <label>
+            <input
+              type="radio"
+              value="email"
+              checked={notificationMethod === "email"}
+              onChange={handleOptionChange}
+            /> Email
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="whatsapp"
+              checked={notificationMethod === "whatsapp"}
+              onChange={handleOptionChange}
+            /> WhatsApp
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="both"
+              checked={notificationMethod === "both"}
+              onChange={handleOptionChange}
+            /> Both
+          </label>
+</div>
+      }
+        </div>
+        </div>
+      </div>
+
+      {/* {showSettingsDropdown && (
+       
+      )} */}
+  
+
+    </div>  
 
   </>
   );

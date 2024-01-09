@@ -101,7 +101,7 @@ const GenrateDocs = () => {
 
     try {
       // Replace this with your actual API call
-      const response = await axios.get('http://34.105.95.235:8052/dashboard/teammemberform', {
+      const response = await axios.get('http://34.105.29.122:8000/law_sections/', {
         headers: {
           'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
         },

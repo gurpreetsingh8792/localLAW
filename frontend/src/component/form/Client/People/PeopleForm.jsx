@@ -5,9 +5,8 @@ import axios from "axios";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import DashboardNavbar from "../../../utilities/DashboardNavbar/DashboardNavbar";
-import AlertsForm from "../../Alerts/AlertsForm";
 import Modal from './ModelPop/Modal'
-import TaskForm from "./ModelPop/AppointmentForm";
+import TaskForm from "./ModelPop/TaskForm";
 import AppointmentForm from "./ModelPop/AppointmentForm";
 
 const PeopleForm = () => {
@@ -16,8 +15,11 @@ const PeopleForm = () => {
   const [appointmentTitles, setAppointmentTitles] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
   const openModal = () => setIsModalOpen(true);
+  const openModalTwo = () => setIsModalOpenTwo(true);
   const closeModal = () => setIsModalOpen(false);
+  const closeModalTwo = () => setIsModalOpenTwo(false);
 
   useEffect(() => {
     // Fetch alert titles and populate the select options
@@ -484,7 +486,8 @@ const PeopleForm = () => {
 
             <div className={styles.formGroup}>
               <NavLink
-                to={"/dashboard/alertsform"}
+              onClick={openModalTwo}
+                to={"#"}
                 id="addNewAlert"
                 name="addNewAlert"
                 className={styles.link}
@@ -532,6 +535,10 @@ const PeopleForm = () => {
       </div>
           <Modal isOpen={isModalOpen} onClose={closeModal}>
              <AppointmentForm onClose={closeModal}/>
+          </Modal>
+
+          <Modal isOpen={isModalOpenTwo} onClose={closeModalTwo}>
+             <TaskForm onClose={closeModalTwo}/>
           </Modal>
     </>
   );

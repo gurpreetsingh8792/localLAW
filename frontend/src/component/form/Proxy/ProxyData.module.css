@@ -1,0 +1,91 @@
+/* ClientForm.module.css */
+
+.container {
+    padding: 20px;
+    height: 100vh;
+    /* background-color: white;  */
+    border-radius: 8px;
+    /* box-shadow: 0 20px 40px 10px rgba(0, 0, 0, 0.1); */
+    margin: 20px;
+  }
+  .DataColume{
+    color: var(--color-fifth);
+  }
+  
+  .heading {
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tableHead {
+    background-color: var(--color-fourth);
+    color: white;
+    margin-bottom: 1rem;
+  }
+  
+  .tableHead th {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .tableBody {
+    /* background-color: #fff; */
+    padding-top: 1rem;
+    color: var(--color-fifth);
+  }
+  
+  .tableBody tr:nth-child(odd) {
+    /* background-color: #f2f2f2; */
+  }
+  .tableBody tr {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .tableBody tr:hover {
+    transform: scale(1.03); 
+  }
+  
+  .tableBody td {
+    padding: 10px;
+    text-align: left;
+    /* border-bottom: 1px solid #ddd; */
+  }
+  
+  
+  .btn {
+    background-color: var(--primary-color); /* Replace with your primary color variable */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  
+    /* Add a slight shadow for depth (optional) */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+    /* Hover effect */
+    &:hover {
+      background-color: var(--hover-color); /* Replace with your hover color variable */
+    }
+  
+    /* Active/Focus state */
+    &:active, &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* This is an example, adjust as needed */
+    }
+  
+    /* Add a margin if necessary */
+    margin-right: 10px; /* Adjust or remove based on your layout */
+  }
+  

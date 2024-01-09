@@ -108,6 +108,7 @@ const CaseFormData = () => {
             <th>Actions</th>
           </tr>
         </thead>
+        
         <tbody className={style.tableBody}>
 
           {casesData.map((caseItem) => (
@@ -134,6 +135,7 @@ const CaseFormData = () => {
             <EditCaseForm
               caseData={casesData.find((caseItem) => caseItem.id === editingCase)}
               onCancel={handleCancelClick}
+              onClose={handleCancelClick}
             />
           )}
           </Modal>

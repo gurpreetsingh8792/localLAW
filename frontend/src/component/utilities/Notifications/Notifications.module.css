@@ -1,5 +1,6 @@
 /* Container for all notifications */
 .notificationsContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,6 +12,75 @@
   color: #c5c6c7; /* Light text color for contrast */
   height: 100%;
 }
+
+
+/* .settingIconContainer {
+  position: absolute;
+  top: 1rem; 
+  right: 1rem;
+  font-size: 1.4rem;  
+}
+.setting{
+  color: var(--color-fourth);
+} */
+
+
+.settingIconContainer {
+  color: var(--color-third);
+  position: absolute;
+  top: 3rem; 
+  right: 1rem;
+  font-size: 1.4rem; 
+}
+
+
+@keyframes rotateAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* .settingIconContainer .SettingIcon:hover {
+  animation: rotateAnimation 1s linear;
+} */
+
+.Heading{
+  font: 100;
+  font-size: 1rem;
+  color: var(--color-third);
+}
+
+.dropdownMenu {
+  background: transparent;
+  position: absolute;
+  width: 21rem;
+  top: -2.5rem;
+  right: 0rem;
+  background-color: var(--color-primary);
+  color: white;
+  border: 1px solid #ddd;
+  border-radius: 1rem;
+  padding: 4px;
+}
+
+.dropdownMenu.active {
+  opacity: 1; /* Fully visible when active */
+  transform: translateY(0); /* Final position */
+  visibility: visible; /* Make the dropdown visible when active */
+}
+
+.dropdownMenu label {
+  color: var(--color-third);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.dropdownMenu input[type="radio"] {
+  margin-right: 5px;
+}
+
 
 .tasksProxiesContainer {
   display: flex;
@@ -80,7 +150,7 @@
 
 /* Dropdown menu styling */
 
-@keyframes dropdownAnimation {
+/* @keyframes dropdownAnimation {
   0% {
     opacity: 0;
     transform: scale(0.95) rotateX(-10deg);
@@ -90,27 +160,12 @@
     opacity: 1;
     transform: scale(1) rotateX(0deg);
   }
-}
-.dropdownMenu {
-  /* display: none;  */
-  flex-direction: column;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: #1f2833;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  z-index: 10;
-  padding: 10px;
-  opacity: 0;
-  visibility: hidden;
-  transition: visibility 0.3s linear;
-  animation: dropdownAnimation 0.5s ease forwards;
-}
+} */
 
-.dropdownMenuVisible {
+
+/* .dropdownMenuVisible {
   visibility: visible;
-}
+} */
 
 /* Menu Items */
 .MenuItem {
