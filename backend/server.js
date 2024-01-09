@@ -88,7 +88,7 @@ const files = {
 // Call the function to upload the file
 // uploadFile();
 // Connect to the SQLite database
-let db = new sqlite3.Database('./Db-data/judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
+let db = new sqlite3.Database('../judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
     console.error(err.message);
     throw err; // Stop further execution in this callback
@@ -2453,8 +2453,10 @@ app.delete('/dashboard/user/notifications/:notificationId', authenticateJWT, (re
     }
   );
 });
-
-
+// show proxy
+// Endpoint for retrieving proxy activity for the logged-in user
+// show proxy
+// Endpoint for retrieving proxy activity for the logged-in user
 app.get('/dashboard/user/proxy-activity', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   const currentDate = new Date().toISOString();
@@ -2492,6 +2494,7 @@ app.get('/dashboard/user/proxy-activity', authenticateJWT, (req, res) => {
     }
   );
 });
+
 
 // Endpoint for deleting proxy activity for the logged-in user
 app.delete('/dashboard/user/proxy-activity/:activityId', authenticateJWT, (req, res) => {

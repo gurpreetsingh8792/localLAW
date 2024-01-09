@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styles from './EditPeopleForm.module.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink , useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import Modal from '../../Client/People/ModelPop/Modal'
 // import TaskForm;
@@ -17,6 +17,7 @@ const EditPeopleForm = ({ clientData, onClose }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const navigate = useNavigate();
 
 
   const HandleCancel=()=>{
@@ -144,6 +145,7 @@ const EditPeopleForm = ({ clientData, onClose }) => {
   
       console.log(response.data);
       alert('Case Updated successfully!');
+      navigate(0);
       resetForm();
     } catch (error) {
       console.error(error);

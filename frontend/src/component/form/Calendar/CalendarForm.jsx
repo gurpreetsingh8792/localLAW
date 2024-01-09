@@ -5,6 +5,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import style from "./CalendarForm.module.css";
 import axios from "axios";
 import DashboardNavBar from "../../utilities/DashboardNavbar/DashboardNavbar";
+import { useNavigate } from "react-router-dom";
 import {
   ChakraProvider,
   Tab,
@@ -26,6 +27,7 @@ const Calendar = () => {
   const showForm3 = () => setVisibleForm("appointment");
 
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [caseTitles, setCaseTitles] = useState([]); // Store fetched case titles
   const [caseTypeMap, setCaseTypeMap] = useState({}); // Store case types based on titles
@@ -337,6 +339,7 @@ const Calendar = () => {
         .then((response) => {
           // Handle success
           console.log("Task saved successfully:", response.data);
+          navigate(0);
           handleClose();
           setCaseTitle("");
           setTitle(""); // Reset the 'title' state
@@ -382,6 +385,7 @@ const Calendar = () => {
         .then((response) => {
           // Handle success
           console.log("Appointment saved successfully:", response.data);
+          
 
           // Create a new appointment event to add to the calendar
           const newAppointmentEvent = {
@@ -396,6 +400,7 @@ const Calendar = () => {
 
           // Add the new appointment event to the events array
           setEvents([...events, newAppointmentEvent]);
+          navigate(0);
 
           // Reset form fields and update the events state if needed
           handleClose();
@@ -454,6 +459,7 @@ const Calendar = () => {
             style: { backgroundColor: "blue" },
           };
           setEvents([...events, newEvent]); // Add the new hearing to the events array
+          navigate(0);
           handleClose();
           setCaseTitle("");
           setTitle(""); // Reset the 'title' state

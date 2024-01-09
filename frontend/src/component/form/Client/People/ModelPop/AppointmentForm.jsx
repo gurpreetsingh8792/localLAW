@@ -15,6 +15,7 @@ const AppointmentForm = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const navigate = useNavigate();
   const [clientNames, setClientNames] = useState([]); // State to store client first names
   // const handleClose = () => {
   //   setOpenEvent(false);
@@ -101,8 +102,9 @@ const AppointmentForm = ({ onClose }) => {
       // Handle the response from the server
       if (response.status === 200) {
         // Appointment was successfully added
-        console.log("Appointment added successfully");
+        alert("Appointment added successfully");
         // You can perform any additional actions or show a success message here.
+        navigate(0);
       } else {
         // Handle errors here
         console.error("Error adding appointment:", response.data.error);

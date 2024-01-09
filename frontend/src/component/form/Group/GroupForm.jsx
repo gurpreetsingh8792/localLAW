@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './Group.module.css';
 import SideNav from '../../utilities/SideNavBar/SideNav';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
 const initialValues = {
@@ -19,6 +20,7 @@ const validationSchema = Yup.object().shape({
 
 const GroupForm = ({onClose, onGroupAdded }) => {
   const [companyNames, setCompanyNames] = useState([]); // State to store client names
+  const navigate = useNavigate();
   const priorityOptions = [
     { value: 'critical', label: 'Critical' },
     { value: 'important', label: 'Important' },
@@ -74,6 +76,7 @@ const GroupForm = ({onClose, onGroupAdded }) => {
       
             console.log(response.data); // Log the response from the backend
             alert('Group Added successfully!');
+            navigate(0);
             resetForm();
           } catch (error) {
             console.error(error);

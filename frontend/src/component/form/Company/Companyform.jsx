@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './Companyform.module.css';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 import Axios from 'axios';
 
@@ -32,6 +32,7 @@ const Companyform = ({onClose}) => {
 
   const [companyNames, setCompanyNames] = useState([]); // State to store group names
   const [clientNames, setClientNames] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch group names and populate the select options
@@ -76,6 +77,7 @@ const Companyform = ({onClose}) => {
       
             console.log(response.data); // Log the response from the backend
             alert('Company Added successfully!');
+            navigate(0);
             resetForm();
           } catch (error) {
             console.error(error);

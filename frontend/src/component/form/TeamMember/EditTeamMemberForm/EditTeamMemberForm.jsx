@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './EditTeamMemberForm.module.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink , useNavigate} from 'react-router-dom';
 import Axios from 'axios';
 import Modal from '../../Client/People/ModelPop/Modal';
 import GroupForm from '../../Group/GroupForm';
@@ -45,7 +45,7 @@ const EditTeamMembersForm = ({teamData, onClose}) => {
   const [isModalOpenOne, setIsModalOpenOne] = useState(false);
   const closeModalTwo = () => setIsModalOpenTwo(false);
   const [companyNames, setCompanyNames] = useState([]);
-
+  const navigate = useNavigate();
 
   const initialValues = {
     // image: '',
@@ -150,6 +150,7 @@ const EditTeamMembersForm = ({teamData, onClose}) => {
         
             console.log(response.data);
             alert('Team Updated successfully!');
+            navigate(0);
             resetForm();
           } catch (error) {
             console.error(error);

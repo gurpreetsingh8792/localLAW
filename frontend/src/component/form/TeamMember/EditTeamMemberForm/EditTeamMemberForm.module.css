@@ -1,10 +1,10 @@
 .MainContainer{
-    height: 50vh;
+    height: 100%;
   }
   
   .formContainer {
       width: 400px;
-      height: 50vh;
+      height: 100%;
       margin: 0 auto;
       padding: 1rem;
       border: 1px solid #ccc;
@@ -80,7 +80,7 @@
     }
     
     .selectField {
-      width: 160%;
+      width: 150%;
       padding: 5px;
       border: 1px solid #ccc;
       border-radius: 4px;

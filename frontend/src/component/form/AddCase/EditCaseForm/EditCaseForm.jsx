@@ -12,6 +12,7 @@ const EditCaseForm = ({onClose, caseData }) => {
   const [clientNames, setClientNames] = useState([]);
   const [teamMembers, setTeamMembers] = useState([]);
   const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClientNames = async () => {
@@ -114,6 +115,7 @@ const handleSubmit = async (values, { resetForm }) => {
 
     console.log(response.data);
     alert('Case Updated successfully!');
+    navigate(0);
     resetForm();
   } catch (error) {
     console.error(error);
