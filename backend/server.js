@@ -87,7 +87,7 @@ fetch(url, {
 // Call the function to upload the file
 // uploadFile();
 // Connect to the SQLite database
-let db = new sqlite3.Database('../judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
+let db = new sqlite3.Database('./Db-data/judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
     console.error(err.message);
     throw err; // Stop further execution in this callback

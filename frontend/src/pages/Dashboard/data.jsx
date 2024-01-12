@@ -24,10 +24,10 @@ export const data = [
     icon: <MdEmojiPeople />,
     plusIcon: <AiOutlinePlusCircle />,
     title: "People",
-    info: "View Clients ",
+    info: "View People ",
     pathAdd: "/dashboard/peopleform",
     pathView: "/dashboard/clientformdata",
-    details: "Click to add a Client",
+    details: "Click to add a Person",
   },
   {
     id: 3,
@@ -86,7 +86,7 @@ export async function fetchAndUpdateCounts() {
     data.forEach((item) => {
       if (item.title === "case") {
         item.caseNo = caseCount;
-      } else if (item.title === "Clients") {
+      } else if (item.title === "People") {
         item.caseNo = clientCount;
       } else if (item.title === "Team Members") {
         item.caseNo = teamMemberCount;
