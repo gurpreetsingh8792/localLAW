@@ -44,60 +44,39 @@ const GenrateDocs = () => {
 
 
   const handleProceedClick = () => {
-    const jsonData = [
-      // {"fullName":"Jaskirath Singh","email":"jaskirathsingh2@gmail.com","designation":"Developer","selectedGroup":""}
-      //You can add more objects in the array if needed
-    ];
+    if (!analysisResult) {
+      console.error("No analysis result to generate the PDF");
+      return;
+    }
+  
     const pdf = new jsPDF();
-
-  // Optionally, set a title for the PDF
-  pdf.setFontSize(16); 
-  pdf.setFont("times", "bold"); 
-  pdf.text("Case Details", 20, 20); 
-
-  let yPosition = 30;
-
-  // Loop through each object in the JSON array
-  jsonData.forEach((user, index) => {
-    pdf.setFontSize(12);
-    pdf.setFont("times", "normal");
-
-    // Add user details to PDF
-    pdf.text(`Full Name: ${user.fullName}`, 20, yPosition);
-    yPosition += 10;
-    pdf.text(`Email: ${user.email}`, 20, yPosition);
-    yPosition += 10;
-    pdf.text(`Designation: ${user.designation}`, 20, yPosition);
-    yPosition += 10;
-    if (user.selectedGroup) {
-      pdf.text(`Selected Group: ${user.selectedGroup}`, 20, yPosition);
-      yPosition += 10;
-    }
-
-    yPosition += 10;
-
-    // Check if the page needs to be added (avoid overflow)
-    if (yPosition > 270) {
-      pdf.addPage();
-      yPosition = 20;
-    }
-  });
-
-  pdf.save("userDetails.pdf");
-
-    // This depends on how your data is  structured and how you want to download it
-    // const fileData = JSON.stringify(analysisResult);
-    // const blob = new Blob([fileData], { type: "application/json" });
-    // const url = URL.createObjectURL(blob);
-    // const link = document.createElement("a");
-    // link.href = url;
-    // link.download = "analysisResult.json";
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-
+    pdf.setFontSize(12); 
+    pdf.setFont("times", "normal"); 
+  
+    // Define the starting positions
+    let yPosition = 20;
+    const leftMargin = 20;
+    const pageWidth = pdf.internal.pageSize.width;
+    const lineHeight = 10; // Adjust line height as needed
+  
+    // Assuming analysisResult is a string. Modify this part based on your actual result structure
+    const lines = pdf.splitTextToSize(analysisResult, pageWidth - 2 * leftMargin);
+  
+    lines.forEach((line) => {
+      pdf.text(line, leftMargin, yPosition);
+      yPosition += lineHeight;
+  
+      // Check if the page needs to be added (avoid overflow)
+      if (yPosition > pdf.internal.pageSize.height - 20) {
+        pdf.addPage();
+        yPosition = 20;
+      }
+    });
+  
+    pdf.save("AnalysisResults.pdf");
   };
-
+  
+  
   
 
 
@@ -142,54 +121,73 @@ const GenrateDocs = () => {
   //     setIsAnalyzing(false);
   //   }
   // };
+  
 
   const handleAnalyzeClick = async (values) => {
     setIsAnalyzing(true);
     setAnalysisResult(null);
     setAnalysisError(null);
-  
-    // Construct the query parameters
-    const queryParams = new URLSearchParams({
-      state: values.state,
-      case_no: values.CaseNo,
-      description: values.description,
-      history: values.History,
-      District: values.district,
-      town: values.Town,
-      case_type: values.casetype,
-      full_name: values.fullName,
-      address: values.address
-    });
-  
-    // Append query parameters to the URL
-    const url = `http://34.105.29.122:8000/law_sections/?${queryParams.toString()}`;
-  
-    // Prepare the form data for the file
-    const formData = new FormData();
+
     if (values.fileUpload) {
-      formData.append('pdf_file', values.fileUpload);
-    }
-    console.log("Form data for debugging:", formData);
-  
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: formData
+      const blob = dataURLtoBlob(values.fileUpload);
+      console.log(blob)
+      const formData = new FormData();
+      formData.append('pdf_file', blob);
+      console.log(formData)
+
+      // Construct the query parameters
+      const queryParams = new URLSearchParams({
+        state: values.state,
+        case_no: values.CaseNo,
+        description: values.description,
+        history: values.History,
+        District: values.district,
+        town: values.Town,
+        case_type: values.casetype,
+        full_name: values.fullName,
+        address: values.address
       });
-  
-      if (response.ok) {
-        const responseData = await response.json();
-        setAnalysisResult(responseData);
-      } else {
-        throw new Error('Failed to analyze data');
+
+      // Append query parameters to the URL
+      const url = `http://34.105.29.122:8000/law_sections/?${queryParams.toString()}`;
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          setAnalysisResult(responseData);
+        } else {
+          throw new Error('Failed to analyze data');
+        }
+      } catch (error) {
+        setAnalysisError(error.message);
+      } finally {
+        setIsAnalyzing(false);
       }
-    } catch (error) {
-      setAnalysisError(error.message);
-    } finally {
+    } else {
+      setAnalysisError("No file uploaded.");
       setIsAnalyzing(false);
     }
   };
+
   
+  
+  const handleFileUpload = (event, setFieldValue) => {
+    const file = event.currentTarget.files[0];
+    if (file) {
+      const reader = new FileReader();
+  
+      reader.onload = (e) => {
+        setFieldValue("fileUpload", e.target.result); // Store the Data URL in Formik's state
+      };
+  
+      reader.readAsDataURL(file); // Convert file to Data URL
+    }
+  };
   
 
 
@@ -210,11 +208,6 @@ const GenrateDocs = () => {
     }, 2000);
   }, []);
 
-  const handleFileUpload = (event, setFieldValue) => {
-    const file = event.currentTarget.files[0];
-    setFieldValue("fileUpload", file); // Update the field name to "fileUpload"
-    console.log("upload file", file);
-  };
   
 
   const navigate = useNavigate();
@@ -434,6 +427,8 @@ const GenrateDocs = () => {
                         className={style.HiddenFileInput}
                         type="file"
                         name="Document"
+                        onChange={(event) => handleFileUpload(event, setFieldValue)}
+
                       />
                       {/* Update this to display errors for the 'Document' field */}
                       {errors.Document && touched.Document ? (
@@ -569,5 +564,17 @@ const GenrateDocs = () => {
     </>
   );
 };
+function dataURLtoBlob(dataurl) {
+  const arr = dataurl.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  
+  while(n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+  }
 
+  return new Blob([u8arr], {type: mime});
+}
 export default GenrateDocs;
