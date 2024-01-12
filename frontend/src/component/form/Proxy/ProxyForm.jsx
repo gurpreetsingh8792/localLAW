@@ -78,7 +78,17 @@ const Proxy = () => {
       courtNumber: Yup.string().required('Court Number is required'),
       // type: Yup.string().required('Type is required'),
       // timeOfHearing: Yup.string().required('Time of Hearing is required'),
-      dateOfHearing: Yup.date().required('Date of Hearing is required'),
+      dateOfHearing: Yup.date()
+        .required('Date of Hearing is required')
+        .test(
+          'is-greater-than-current-date',
+          'Date of Hearing must be greater than the current date',
+          value => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return value && new Date(value) > today;
+          }
+        ),
       comments: Yup.string(),
     }),
     onSubmit: handleSubmit, 

@@ -5,6 +5,13 @@
     padding: 20px;
     height: 600px; 
   }
+  /* Add this style to your CalendarForm.module.css or equivalent file */
+.errorMsg {
+  color: red; /* Red color for the error message */
+  margin-top: 5px; /* Optional: Adjust spacing as needed */
+  font-size: 0.8em; /* Optional: Adjust font size as needed */
+}
+
  
   .modal {
     position: fixed;

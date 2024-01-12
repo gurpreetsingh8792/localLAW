@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const AppointmentForm = ({ onClose }) => {
+  const [appointmentDateError, setAppointmentDateError] = useState("");
   const [caseTitles, setCaseTitles] = useState([]); // Store fetched case titles
   const [caseTypeMap, setCaseTypeMap] = useState({}); // Store case types based on titles
   const [casetitle, setCaseTitle] = useState("");
@@ -14,6 +15,7 @@ const AppointmentForm = ({ onClose }) => {
   const [end, setEnd] = useState("");
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
+  const [titleErrorAppointment, setAppointmentError] = useState("");
   const [desc, setDesc] = useState("");
   const navigate = useNavigate();
   const [clientNames, setClientNames] = useState([]); // State to store client first names
@@ -77,6 +79,17 @@ const AppointmentForm = ({ onClose }) => {
   }, []);
   
   const setNewAppointment = async () => {
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const selectedAppointmentDate = new Date(desc);
+
+    if (selectedAppointmentDate < currentDate) {
+      setAppointmentDateError("Appointment date must be today or in the future");
+      return; // Stop function execution if validation fails
+    } else {
+      setAppointmentDateError(""); // Clear error message if validation passes
+    }
     try {
       const formData = {
         title,
@@ -111,7 +124,11 @@ const AppointmentForm = ({ onClose }) => {
         // You can show an error message to the user if needed.
       }
     } catch (error) {
-      console.error("Error adding appointment:", error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setAppointmentError("An appointment with this title already exists. Please use a different title.");
+      } else {
+        console.error("Error saving task:", error);
+      }
       // Handle any other errors here
     }
   };
@@ -152,6 +169,7 @@ const AppointmentForm = ({ onClose }) => {
           </select>
           </div>
         </div>
+        {titleErrorAppointment && <span className={style.errorMsg}>{titleErrorAppointment}</span>} {/* Display the error message */}
 
         <div className={style.formRow}>
         <div className={style.formGroup}>
@@ -176,6 +194,7 @@ const AppointmentForm = ({ onClose }) => {
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
           />
+           {appointmentDateError && <span className={style.errorMsg}>{appointmentDateError}</span>} {/* Display the error message */}
           </div>
         </div>
         <div className={style.formRow}>

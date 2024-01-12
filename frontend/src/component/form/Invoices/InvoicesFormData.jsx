@@ -101,7 +101,7 @@ const InvoicesFormData = () => {
                 <td className={style.tableBodyCell}>{invoice.invoiceNumber}</td>
                 <td className={style.tableBodyCell}>{invoice.date}</td>
                 <td className={style.tableBodyCell}>{invoice.client}</td>
-                <td className={style.tableBodyCell}>{invoice.expensesCumulativeAmount}</td>
+                <td className={style.tableBodyCell}>{invoice.totalAmount}</td>
                 <td className={style.tableBodyCell}>
                 
                 <button className={style.btn} onClick={() => handleEditClick(invoice)}>

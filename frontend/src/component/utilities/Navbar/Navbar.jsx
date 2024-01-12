@@ -7,15 +7,19 @@ import { links } from "./data";
 import { useState } from "react";
 import { useAuth } from "../../../pages/Login-Logout/AuthContext";
 
+
+
 const Navbar = () => {
   const [isNavShowing, setIsNavShowing] = useState(false);
-
+  
   const { isLoggedIn, logout } = useAuth();
 
   const handleSignOut = () => {
     localStorage.removeItem('token');
     setIsNavShowing(false);
+    
     logout();
+    
   };
 
   return (
@@ -41,7 +45,7 @@ const Navbar = () => {
                 </li>
               ))}
               <li>
-                <NavLink to='/' onClick={handleSignOut}>Sign Out</NavLink>
+                <NavLink onClick={handleSignOut}>Sign Out</NavLink>
               </li>
             </>
 
@@ -53,6 +57,7 @@ const Navbar = () => {
                   Login
                 </NavLink>
               </li>
+             
               <li>
                 <NavLink to="/register" onClick={() => setIsNavShowing(false)}>
                   Register

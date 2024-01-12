@@ -316,6 +316,13 @@
     font-size: 12px;
     margin-top: 5px;
   }
+  .error1 {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: end;
+    margin-right: 8.7rem;
+  }
   
   /* Submit Button */
   .submitButton {

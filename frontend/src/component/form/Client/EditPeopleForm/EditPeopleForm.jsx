@@ -125,9 +125,8 @@ const EditPeopleForm = ({ clientData }) => {
     
   });
 
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (values, { resetForm, setErrors }) => {
     try {
-      // Make an HTTP POST request to update the case
       const response = await axios.put(
         `http://localhost:8052/clients/forms/${clientData.id}`,
         values,
@@ -143,9 +142,15 @@ const EditPeopleForm = ({ clientData }) => {
       navigate(0);
       resetForm();
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 400) {
+        // Handle the unique combination error
+        setErrors({ email: error.response.data.error, mobileNo: error.response.data.error });
+      } else {
+        console.error(error);
+      }
     }
   };
+  
 
   const formik = useFormik({
     initialValues,

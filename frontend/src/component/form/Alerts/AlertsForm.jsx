@@ -10,6 +10,7 @@ const AlertsForm = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [cases, setCases] = useState([]);
   const [selectedCaseTitle, setSelectedCaseTitle] = useState('');
+  const [titleError, setTitleError] = useState('');
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
@@ -54,25 +55,41 @@ const AlertsForm = () => {
     caseTitle: Yup.string().required('Case Title is required'),
     caseType: Yup.string(),
     startDate: Yup.date(),
-    completionDate: Yup.date(),
+  completionDate: Yup.date()
+    .min(
+      Yup.ref('startDate'),
+      "Completion date can't be before the start date"
+    ),
     assignFrom: Yup.string(),
     assignTo: Yup.string(),
   });
 
-  const onSubmit = async (values, { resetForm }) => {
-    try {
-      const response = await axios.post('http://localhost:8052/alerts', values, {
-        headers: { 'x-auth-token': localStorage.getItem('token') },
-      });
-      console.log('Form submission response:', response.data);
-      alert('Alerts Form submitted successfully!');
-      resetForm();
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
-  };
-
-  const formik = useFormik({ initialValues, validationSchema, onSubmit });
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: async (values, { resetForm, setErrors }) => {
+      try {
+        const response = await axios.post('http://localhost:8052/alerts', values, {
+          headers: { 'x-auth-token': localStorage.getItem('token') },
+        });
+        console.log('Form submission response:', response.data);
+        alert('Tasks added successfully!');
+        resetForm();
+        setTitleError(''); // Clear any existing title error
+      } catch (error) {
+        if (error.response && error.response.status === 400 && error.response.data.error) {
+          // Set the title error if it exists
+          if (error.response.data.error.includes('title')) {
+            setTitleError(error.response.data.error);
+          } else {
+            console.error('Error submitting form:', error.response.data.error);
+          }
+        } else {
+          console.error('Error submitting form:', error);
+        }
+      }
+    },
+  });
 
   // Modify the handleCaseTitleChange function
   const handleCaseTitleChange = (event) => {
@@ -115,6 +132,7 @@ const AlertsForm = () => {
           {formik.touched.title && formik.errors.title && (
             <div className={styles.error}>{formik.errors.title}</div>
           )}
+          {titleError && <div className={styles.error}>{titleError}</div>} {/* Display the title error */}
         </div>
           <div className={styles.horizontalFields}>
             <div className={styles.statusPriorityFields}>

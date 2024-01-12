@@ -20,11 +20,21 @@ const localizer = momentLocalizer(moment);
 
 const Calendar = () => {
   const [errors, setErrors] = useState({ title: "", desc: "" });
-
+  const [dateError, setDateError] = useState("");
+  const [hearingDateError, setHearingDateError] = useState("");
+  const [appointmentDateError, setAppointmentDateError] = useState("");
+ 
   const [visibleForm, setVisibleForm] = useState("Tasks");
   const showForm1 = () => setVisibleForm("Tasks");
   const showForm2 = () => setVisibleForm("Hearing Date");
   const showForm3 = () => setVisibleForm("appointment");
+  const [titleError, setTitleError] = useState("");
+  const [titleErrorEdit, setTitleErrorEdit] = useState("");
+  const [titleErrorAppointment, setAppointmentError] = useState("");
+  const [titleErrorAppointmentEdit, setTitleErrorAppointmentEdit] = useState("");
+  const [titleErrorHearing, setHearingError] = useState("");
+  const [titleErrorHearingEdit, setTitleErrorHearingEdit] = useState("");
+  
 
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
@@ -201,14 +211,20 @@ const Calendar = () => {
       isValid = false;
     }
 
-    // if (!desc.trim()) {
-    //   newErrors.desc = "Description is required";
-    //   isValid = false;
-    // }
+    // Check if both start and end dates are set before comparing
+    if (start && end) {
+      if (moment(end).isBefore(moment(start))) {
+        setDateError("End date cannot be before the start date");
+        isValid = false;
+      } else {
+        setDateError(""); // Reset the date error if validation passes
+      }
+    }
 
     setErrors(newErrors);
     return isValid;
   };
+
 
   const handleClose = () => {
     setOpenEvent(false);
@@ -353,7 +369,11 @@ const Calendar = () => {
         })
         .catch((error) => {
           // Handle error
-          console.error("Error saving task:", error);
+          if (error.response && error.response.data && error.response.data.error) {
+            setTitleError("A task with this title already exists. Please add a different title.");
+          } else {
+            console.error("Error saving task:", error);
+          }
         });
     } else {
       console.error("Validation failed:", errors);
@@ -362,6 +382,17 @@ const Calendar = () => {
 
   const setNewAppointment = () => {
     if (handleValidation()) {
+
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); // Reset the time part for comparison
+      const selectedAppointmentDate = new Date(desc);
+  
+      if (selectedAppointmentDate < currentDate) {
+        setAppointmentDateError("Appointment date must be today or in the future");
+        return; // Exit the function if date validation fails
+      } else {
+        setAppointmentDateError(""); // Clear the error message if date validation passes
+      }
       let newEvent = {
         title,
         caseTitle: casetitle,
@@ -421,7 +452,11 @@ const Calendar = () => {
         })
         .catch((error) => {
           // Handle error
-          console.error("Error saving appointment:", error);
+          if (error.response && error.response.data && error.response.data.error) {
+            setAppointmentError("An appointment with this title already exists. Please use a different title.");
+          } else {
+            console.error("Error saving task:", error);
+          }
         });
     } else {
       console.error("Validation failed:", errors);
@@ -430,6 +465,16 @@ const Calendar = () => {
 
   const setNewHearing = () => {
     if (handleValidation()) {
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); // Reset the time part for comparison
+      const selectedHearingDate = new Date(desc);
+  
+      if (selectedHearingDate < currentDate) {
+        setHearingDateError("Hearing date must be today or in the future");
+        return; // Exit the function if date validation fails
+      } else {
+        setHearingDateError(""); // Clear the error message if date validation passes
+      }
       const newHearingData = {
         title: title, // Use the state variable 'title' here for the new "title" field
         caseTitle: casetitle,
@@ -471,7 +516,11 @@ const Calendar = () => {
         })
         .catch((error) => {
           // Handle error
-          console.error("Error saving hearing:", error);
+          if (error.response && error.response.data && error.response.data.error) {
+            setHearingError("A hearing with this title already exists. Please use a different title.");
+          } else {
+            console.error("Error saving task:", error);
+          }
         });
     } else {
       console.error("Validation failed:", errors);
@@ -480,6 +529,7 @@ const Calendar = () => {
 
   // Function to update a Task event
   const updateTaskEvent = () => {
+    if (handleValidation()) { 
     if (clickedEvent && clickedEvent.type === "Tasks") {
       const taskIdToUpdate = clickedEvent.id;
 
@@ -506,6 +556,7 @@ const Calendar = () => {
         .then((response) => {
           // Handle success
           console.log("Task updated successfully:", response.data);
+          navigate(0);
           handleClose();
 
           // Update the event in the events state with the new data
@@ -518,15 +569,33 @@ const Calendar = () => {
         })
         .catch((error) => {
           // Handle error
-          console.error("Error updating task:", error);
+          if (error.response && error.response.data && error.response.data.error) {
+            setTitleErrorEdit("A task with this title already exists. Please add a different title.");
+          } else {
+            console.error("Error saving task:", error);
+          }
         });
     } else {
       console.error("No task selected to update");
     }
+  } else {
+    console.error("Validation failed:", errors);
+  }
   };
 
   // Function to update a Hearing event
   const updateHearingEvent = () => {
+    if (handleValidation()) {
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); // Reset the time part for comparison
+      const selectedHearingDate = new Date(desc);
+  
+      if (selectedHearingDate < currentDate) {
+        setHearingDateError("Hearing date must be today or in the future");
+        return; // Exit the function if date validation fails
+      } else {
+        setHearingDateError(""); // Clear the error message if date validation passes
+      }
     if (clickedEvent && clickedEvent.type === "hearing") {
       const hearingIdToUpdate = clickedEvent.id;
 
@@ -553,6 +622,7 @@ const Calendar = () => {
         .then((response) => {
           // Handle success
           console.log("Hearing updated successfully:", response.data);
+          navigate(0);
           handleClose();
 
           // Update the event in the events state with the new data
@@ -565,14 +635,30 @@ const Calendar = () => {
         })
         .catch((error) => {
           // Handle error
-          console.error("Error updating hearing:", error);
+          if (error.response && error.response.data && error.response.data.error) {
+            setTitleErrorHearingEdit("A hearing with this title already exists. Please use a different title.");
+          } else {
+            console.error("Error saving task:", error);
+          }
         });
     } else {
       console.error("No hearing selected to update");
     }
+  }
   };
 
   const updateAppointmentEvent = () => {
+    if (handleValidation()) {
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); // Reset the time part for comparison
+      const selectedAppointmentDate = new Date(desc);
+  
+      if (selectedAppointmentDate < currentDate) {
+        setAppointmentDateError("Appointment date must be today or in the future");
+        return; // Exit the function if date validation fails
+      } else {
+        setAppointmentDateError(""); // Clear the error message if date validation passes
+      }
     if (clickedEvent && clickedEvent.type === "appointment") {
       const appointmentIdToUpdate = clickedEvent.id;
   
@@ -601,6 +687,7 @@ const Calendar = () => {
         .then((response) => {
           // Handle success
           console.log("Appointment updated successfully:", response.data);
+          navigate(0);
           handleClose();
   
           // Update the event in the events state with the new data
@@ -613,11 +700,16 @@ const Calendar = () => {
         })
         .catch((error) => {
           // Handle error
-          console.error("Error updating appointment:", error);
+          if (error.response && error.response.data && error.response.data.error) {
+            setTitleErrorAppointmentEdit("An appointment with this title already exists. Please use a different title.");
+          } else {
+            console.error("Error saving task:", error);
+          }
         });
     } else {
       console.error("No appointment selected to update");
     }
+  }
   };
 
 
@@ -780,6 +872,7 @@ const Calendar = () => {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                       />
+                       {titleError && <span className={style.errorMsg}>{titleError}</span>} {/* Display the error message */}
                     </div>
 
                     <div className={style.formRow}>
@@ -883,6 +976,7 @@ const Calendar = () => {
                           value={moment(end).format("YYYY-MM-DD")}
                           onChange={(e) => setEnd(e.target.value)}
                         />
+                          {dateError && <span className={style.errorMsg}>{dateError}</span>} {/* Display the error message */}
                       </div>
                     </div>
                     <div className={style.BtnContainerTask}>
@@ -910,7 +1004,9 @@ const Calendar = () => {
                           placeholder="Enter Title"
                           onChange={(e) => setTitle(e.target.value)}
                         />
+                         {titleErrorHearing && <span className={style.errorMsg}>{titleErrorHearing}</span>} {/* Display the error message */}
                       </div>
+
 
                       <div className={style.formRow}>
                         <div className={style.formGroup}>
@@ -985,6 +1081,7 @@ const Calendar = () => {
                             value={desc}
                             onChange={(e) => setDesc(e.target.value)}
                           />
+                           {hearingDateError && <span className={style.errorMsg}>{hearingDateError}</span>} {/* Display the error message */}
                         </div>
 
                         <div className={style.formGroup}>
@@ -1048,6 +1145,7 @@ const Calendar = () => {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                           />
+                          {titleErrorAppointment && <span className={style.errorMsg}>{titleErrorAppointment}</span>} {/* Display the error message */}
                         </div>
 
                         <div className={style.formGroup}>
@@ -1105,17 +1203,23 @@ const Calendar = () => {
                             Contact Person
                           </label>
                           <select
-                            className={style.TasksVisibleInput}
-                            value={contactperson}
-                            onChange={(e) => setContactPerson(e.target.value)}
-                          >
-                            <option value="" disabled selected>
-                              Contact Person
-                            </option>
-                            <option value="Person 1">Person 1</option>
-                            <option value="Person 2">Person 2</option>
-                            {/* Add more options as needed */}
-                          </select>
+            className={style.TasksVisibleInput}
+            value={contactperson}
+            onChange={(e) => setContactPerson(e.target.value)}
+          >
+            {/* <option value="" disabled selected>
+              Contact Person
+            </option>
+            <option value="Person 1">Person 1</option>
+            <option value="Person 2">Person 2</option>
+            Add more options as needed */}
+            <option value=""  disabled selected>Select contact person</option>
+                    {clientNames.map((firstName) => (
+                      <option key={firstName} value={firstName}>
+                        {firstName}
+                      </option>
+                    ))}
+          </select>
                         </div>
 
                         <div className={style.formGroup}>
@@ -1143,6 +1247,7 @@ const Calendar = () => {
                             value={desc}
                             onChange={(e) => setDesc(e.target.value)}
                           />
+                          {appointmentDateError && <span className={style.errorMsg}>{appointmentDateError}</span>} {/* Display the error message */}
                         </div>
 
                         <div className={style.formGroup}>
@@ -1209,6 +1314,7 @@ const Calendar = () => {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                     />
+                    {titleErrorEdit && <span className={style.errorMsg}>{titleErrorEdit}</span>} {/* Display the error message */}
                   </div>
 
                   <div className={style.formRow}>
@@ -1320,6 +1426,7 @@ const Calendar = () => {
                         value={moment(end).format("YYYY-MM-DD")}
                         onChange={(e) => setEnd(e.target.value)}
                       />
+                       {dateError && <span className={style.errorMsg}>{dateError}</span>} {/* Display the error message */}
                     </div>
                   </div>
 
@@ -1351,6 +1458,7 @@ const Calendar = () => {
                           placeholder="Enter Title"
                           onChange={(e) => setTitle(e.target.value)}
                         />
+                        {titleErrorHearingEdit && <span className={style.errorMsg}>{titleErrorHearingEdit}</span>} {/* Display the error message */}
                       </div>
 
                       <div className={style.formRow}>
@@ -1426,6 +1534,7 @@ const Calendar = () => {
                             value={desc}
                             onChange={(e) => setDesc(e.target.value)}
                           />
+                           {hearingDateError && <span className={style.errorMsg}>{hearingDateError}</span>} {/* Display the error message */}
                         </div>
 
                         <div className={style.formGroup}>
@@ -1494,6 +1603,7 @@ const Calendar = () => {
                           value={title}
                           onChange={(e) => setTitle(e.target.value)}
                         />
+                        {titleErrorAppointmentEdit && <span className={style.errorMsg}>{titleErrorAppointmentEdit}</span>} {/* Display the error message */}
                       </div>
 
                       <div className={style.formGroup}>
@@ -1551,17 +1661,23 @@ const Calendar = () => {
                           Contact Person
                         </label>
                         <select
-                          className={style.TasksVisibleInput}
-                          value={contactperson}
-                          onChange={(e) => setContactPerson(e.target.value)}
-                        >
-                          <option value="" disabled selected>
-                            Contact Person
-                          </option>
-                          <option value="Person 1">Person 1</option>
-                          <option value="Person 2">Person 2</option>
-                          {/* Add more options as needed */}
-                        </select>
+            className={style.TasksVisibleInput}
+            value={contactperson}
+            onChange={(e) => setContactPerson(e.target.value)}
+          >
+            {/* <option value="" disabled selected>
+              Contact Person
+            </option>
+            <option value="Person 1">Person 1</option>
+            <option value="Person 2">Person 2</option>
+            Add more options as needed */}
+            <option value=""  disabled selected>Select contact person</option>
+                    {clientNames.map((firstName) => (
+                      <option key={firstName} value={firstName}>
+                        {firstName}
+                      </option>
+                    ))}
+          </select>
                       </div>
 
                       <div className={style.formGroup}>
@@ -1589,6 +1705,7 @@ const Calendar = () => {
                           value={desc}
                           onChange={(e) => setDesc(e.target.value)}
                         />
+                         {appointmentDateError && <span className={style.errorMsg}>{appointmentDateError}</span>} {/* Display the error message */}
                       </div>
 
                       <div className={style.formGroup}>
@@ -1628,13 +1745,13 @@ const Calendar = () => {
                       </button>
                       <button
                         className={style.btn}
-                        onClick={updateHearingEvent}
+                        onClick={updateAppointmentEvent}
                       >
                         Update
                       </button>
                       <button
                         className={style.btn}
-                        onClick={deleteHearingEvent}
+                        onClick={deleteAppointmentEvent}
                       >
                         Delete
                       </button>

@@ -57,7 +57,7 @@ export const data = [
     icon: <BsFillBellFill />,
     plusIcon: <AiOutlinePlusCircle />,
     title: "Tasks to do",
-    info: "View Alerts ",
+    info: "View Tasks ",
     pathAdd: "/dashboard/alertsform",
     pathView: "/dashboard/alertsformdata",
     details: "Click to add a Task",

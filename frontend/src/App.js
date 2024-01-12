@@ -1,7 +1,8 @@
 import "./App.css";
 import { NotificationProvider } from './component/utilities/Notifications/NotificationsContext.jsx'; // adjust path as needed
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route} from "react-router-dom";
 import { AuthProvider } from "./pages/Login-Logout/AuthContext";
+
 // UI Library Chakra ui
 import { ChakraProvider } from '@chakra-ui/react'
 
@@ -10,6 +11,7 @@ import About from "./pages/About/About";
 import Home from "./pages/Home/Home";
 import DashBoard from "./pages/Dashboard/DashBoard";
 import Services from "./pages/Services/Services";
+
 import LogIn from "./pages/Login-Logout/LogIn";
 import Register from "./pages/Login-Logout/Register";
 import Contact from "./pages/Contact/Contact";
@@ -54,6 +56,8 @@ import ConvertDocument from "./component/form/ConvertDocument/ConvertDocument.js
 import CaseHistory from "./component/form/AddCase/CaseHistory/CaseHistory.jsx";
 
 function App() {
+ 
+ 
   return (
     <>
     <AuthProvider>

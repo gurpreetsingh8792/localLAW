@@ -55,6 +55,18 @@
 .link:hover {
   text-decoration: underline;
 }
+.input0Field {
+  flex: 1;
+  padding: 5px;
+  width: 50%;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-right: 10px;
+  margin-bottom: 5%;
+}
 .selectFieldType {
   flex: 1;
   padding: 5px;
@@ -114,6 +126,7 @@
   border-radius: 4px;
   margin-bottom: 20px;
   box-shadow: inset 0px 0px 4px 0px var(--color-Third);
+  margin-top: 5%;
 }
 .inputFieldHearingDate {
   width: 47.5%;

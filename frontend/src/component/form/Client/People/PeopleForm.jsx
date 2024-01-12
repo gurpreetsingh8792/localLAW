@@ -124,26 +124,31 @@ const PeopleForm = () => {
     assignAppointments: Yup.string(),
   });
 
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (values, { resetForm, setErrors }) => {
     try {
-      // Make an HTTP POST request to the backend with the full server URL
       const response = await axios.post(
         "http://localhost:8052/dashboard/clientform",
         values,
         {
           headers: {
-            "x-auth-token": localStorage.getItem("token"), // Get the token from localStorage or your authentication mechanism
+            "x-auth-token": localStorage.getItem("token"),
           },
         }
       );
-
-      console.log(response.data); // Log the response from the backend
+  
+      console.log(response.data);
       alert("People Added successfully!");
       resetForm();
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 400) {
+        // Handle the unique combination error
+        setErrors({ email: error.response.data.error, mobileNo: error.response.data.error, caseTitle: error.response.data.error });
+      } else {
+        console.error(error);
+      }
     }
   };
+  
 
   const formik = useFormik({
     initialValues,
@@ -216,9 +221,7 @@ const PeopleForm = () => {
     ))}
   </select>
 
-  {formik.touched.case && formik.errors.case && (
-    <div className={styles.error}>{formik.errors.case}</div>
-  )}
+  
 </div>
 
 <div className={styles.formGroup}>
@@ -244,6 +247,9 @@ const PeopleForm = () => {
 
 </div>
 </div>
+{formik.touched.caseTitle && formik.errors.caseTitle && (
+    <div className={styles.error}>{formik.errors.caseTitle}</div>
+  )}
     {/* Conditional rendering for 'Lawyer Types' dropdown */}
 
     {formik.values.type === "Lawyers" && (
@@ -298,11 +304,12 @@ const PeopleForm = () => {
                 className={styles.inputFieldEmail}
                 {...formik.getFieldProps("email")}
               />
-              {formik.touched.email && formik.errors.email && (
-                <div className={styles.error}>{formik.errors.email}</div>
-              )}
+              
             </div>
           </div>
+          {formik.touched.email && formik.errors.email && (
+                <div className={styles.error}>{formik.errors.email}</div>
+              )}
 
           <div className={styles.formSection}>
             <div className={styles.formGroup}>
@@ -318,9 +325,7 @@ const PeopleForm = () => {
                 pattern="[0-9]{10}"
                 title="Please enter a 10-digit mobile number"
               />
-              {formik.touched.mobileNo && formik.errors.mobileNo && (
-                <div className={styles.error}>{formik.errors.mobileNo}</div>
-              )}
+             
             </div>
 
             <div className={styles.formGroup}>
@@ -342,6 +347,9 @@ const PeopleForm = () => {
                 )}
             </div>
           </div>
+          {formik.touched.mobileNo && formik.errors.mobileNo && (
+                <div className={styles.error}>{formik.errors.mobileNo}</div>
+              )}
 
           <div className={styles.formSection}>
             <div className={styles.formGroup3}>

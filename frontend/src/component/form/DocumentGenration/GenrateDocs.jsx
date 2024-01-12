@@ -10,6 +10,7 @@ import jsPDF from 'jspdf';
 import { useNavigate } from "react-router-dom";
 
 
+
 // District
 
 // Define a validation schema
@@ -21,12 +22,14 @@ const validationSchema = Yup.object().shape({
   // propertyType: Yup.string().required("Property type is required"),
   // PreviousCase: Yup.string().required("Previous case type is required"),
   casetype: Yup.string().required("Case type is required"),
-  History: Yup.string().required("History is required"),
+  History: Yup.string(),
   fullName: Yup.string().required("Full name is required"),
   address: Yup.string().required("Address is required"),
+  
 });
 
 const GenrateDocs = () => {
+ 
   const [selectedState, setSelectedState] = useState("");
   const [districts, setDistricts] = useState([]);
   const [sectionData, setSectionData] = useState("");
@@ -41,7 +44,7 @@ const GenrateDocs = () => {
 
   const handleProceedClick = () => {
     const jsonData = [
-      {"fullName":"Jaskirath Singh","email":"jaskirathsingh2@gmail.com","designation":"Developer","selectedGroup":""}
+      // {"fullName":"Jaskirath Singh","email":"jaskirathsingh2@gmail.com","designation":"Developer","selectedGroup":""}
       //You can add more objects in the array if needed
     ];
     const pdf = new jsPDF();
@@ -98,22 +101,50 @@ const GenrateDocs = () => {
     setIsAnalyzing(true);
     setAnalysisResult(null);
     setAnalysisError(null);
-
+  
+    // Construct the query parameters
+    const queryParams = new URLSearchParams({
+      state: values.state,
+      case_no: values.CaseNo,
+      description: values.description,
+      history: values.History,
+      District: values.district,
+      town: values.Town,
+      case_type: values.casetype,
+      full_name: values.fullName,
+      address: values.address
+    });
+  
+    // Append query parameters to the URL
+    const url = `http://34.105.29.122:8000/law_sections/?${queryParams.toString()}`;
+  
+    // Prepare the form data for the file
+    const formData = new FormData();
+    if (values.fileUpload) {
+      formData.append('pdf_file', values.fileUpload);
+    }
+    console.log("Form data for debugging:", formData);
+  
     try {
-      // Replace this with your actual API call
-      const response = await axios.get('http://34.105.95.235:8052/dashboard/teammemberform', {
-        headers: {
-          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
-        },
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
       });
-
-       setAnalysisResult(response.data); // Adjust according to your API response
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        setAnalysisResult(responseData);
+      } else {
+        throw new Error('Failed to analyze data');
+      }
     } catch (error) {
       setAnalysisError(error.message);
     } finally {
       setIsAnalyzing(false);
     }
   };
+  
+  
 
   const handleStateChange = (event, setFieldValue) => {
     const state = event.target.value;

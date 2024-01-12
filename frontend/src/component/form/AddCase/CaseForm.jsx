@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './AddCase.module.css';
 import axios from 'axios';
 import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
@@ -10,6 +10,12 @@ import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 const CaseForm = () => {
   const [clientNames, setClientNames] = useState([]); // State to store client first names
   const [teamMembers, setTeamMembers] = useState([]); // State to store team member full names
+  const [isForm1Submitted, setIsForm1Submitted] = useState(false);
+  const [isForm2Submitted, setIsForm2Submitted] = useState(false);
+  const [titleError, setTitleError] = useState('');
+
+  const [caseId, setCaseId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch client first names and populate the select options
@@ -49,6 +55,7 @@ const CaseForm = () => {
     fetchClientNames(); // Call the fetchClientNames function when the component mounts
     fetchTeamMembers(); // Call the fetchTeamMembers function when the component mounts
   }, []);
+
 const initialValues = {
   title: '',
   caseType: '',
@@ -64,44 +71,97 @@ const initialValues = {
   batchNo: '',
   dateOfFiling: '',
   practiceArea: '',
+
+  
+};
+
+
+const concernedPersonFormInitialValues = { 
   manage: '',
   client: '',
   addNewClient: '',
   team: '',
   addNewMember: '',
-  type: '', // New field for Type
+  type: '', 
   lawyerType: '',
   clientDesignation: '',
   opponentPartyName: '',
   lawyerName: '',
   mobileNo: '',
   emailId: '',
-};
+ };
+
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
   caseType: Yup.string().required('Case type is required'),
   cnrNo: Yup.string().required('CNR No. is required'),
   // Add validation for other fields as needed
+  dateOfFiling: Yup.date().required('Date of Filling is required')
+    .test(
+      'is-not-less-than-current-date',
+      'Invalid Date',
+      value => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset hours to start of the day for comparison
+        return value && new Date(value) >= today;
+      }
+    ),
 });
 
+const concernedPersonFormValidationSchema = Yup.object().shape({ 
+  opponentPartyName: Yup.string().required('Opponent Party Name is required'),
 
-  const handleSubmit = async (values, { resetForm }) => {
+ });
+
+// const concernedPersonFormValidationSchema = Yup.object().shape({ 
+
+// });
+
+
+const handleSubmit = async (values, { resetForm, setErrors }) => {
+  try {
+    const response = await axios.post('http://localhost:8052/caseform', values, {
+      headers: {
+        'x-auth-token': localStorage.getItem('token'),
+      },
+    });
+    alert('Case Added successfully!');
+    setCaseId(response.data.caseId);
+    setIsForm1Submitted(true);
+    resetForm();
+  } catch (error) {
+    if (error.response && error.response.status === 400) {
+      setTitleError(error.response.data.error);
+      setErrors({ title: ' ' }); // Trigger field error
+    } else {
+      console.error(error);
+    }
+  }
+};
+
+const handleConcernedPersonSubmit = async (values, { resetForm }) => {
+  if (caseId) {
     try {
-      // Make an HTTP POST request to the backend with the full server URL
-      const response = await axios.post('http://localhost:8052/caseform', values, {
+      values.caseId = caseId; // Attach the caseId to the form data
+      const response = await axios.post('http://localhost:8052/concernedperson', values, {
         headers: {
-          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
+          'x-auth-token': localStorage.getItem('token'),
         },
       });
-
-      console.log(response.data); // Log the response from the backend
-      alert('Case Added successfully!');
+      alert('Concerned Person and Opponent Added successfully!');
+      setIsForm2Submitted(true);
+      navigate(-1);
       resetForm();
     } catch (error) {
       console.error(error);
     }
-  };
+  } else {
+    alert('Error: No associated case found.');
+  }
+};
+
+
 
   return (
     <>
@@ -110,7 +170,7 @@ const validationSchema = Yup.object().shape({
       <h2 style={{textAlign:'center'}}>Add Case</h2>
 
 
-      
+      {!isForm1Submitted && ( // Conditional rendering based on isForm1Submitted
       <Formik
         initialValues={{ initialValues}}
         validationSchema={validationSchema}
@@ -124,6 +184,7 @@ const validationSchema = Yup.object().shape({
             <label className={styles.label}>Title:</label>
               <Field type="text" name="title" className={styles.inputTitle} />
               <ErrorMessage name="title" component="div" className={styles.error} />
+              {titleError && <div className={styles.error}>{titleError}</div>}
               </div>
             </div>
 
@@ -263,12 +324,16 @@ const validationSchema = Yup.object().shape({
             </div>
 
             {/* Date of Filing (Date Picker) */}
-            
+           
             <div className={styles.column}>
             <label className={styles.label}>Date of Filing:</label>
               <Field type="date" name="dateOfFiling" className={styles.inputDate} />
+              
             </div>
+            
+            
             </div>
+            <ErrorMessage name="dateOfFiling" component="div" className={styles.error1} />
 
             {/* Practice Area (Select Options) */}
             
@@ -314,7 +379,7 @@ const validationSchema = Yup.object().shape({
 
 
             <div className={styles.BtnContainer}>
-              <button type="submit" className={styles.submitButton}>Submit Form 1</button>
+              <button type="submit" className={styles.submitButton}>Submit</button>
               <NavLink to={"/dashboard/Importcase"}>
               <button type="submit" className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
               </NavLink>
@@ -322,19 +387,22 @@ const validationSchema = Yup.object().shape({
           </Form>
         )}
       </Formik>
+      )}
 
 
-
-      <Formik
-        initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-        {({ values }) => (
           
 
+
+
+  {isForm1Submitted && (
+          <>
+      <Formik
+        initialValues={concernedPersonFormInitialValues}
+          validationSchema={concernedPersonFormValidationSchema}
+          onSubmit={handleConcernedPersonSubmit}
+        >
+        {({ values }) => (
   <Form>
-  
 
   <div className={styles.heading}>Concerned Person</div>
             {/* Client (Select Options) */}
@@ -366,13 +434,7 @@ const validationSchema = Yup.object().shape({
             </div>
             </div>
 
-            {/* <div className={styles.column}>
-            <label className={styles.label}>Client Designation:</label>
-              <Field as="select" name="clientDesignation" className={styles.selectCd}>
-                <option value="">Select</option>
-              </Field>
-            </div> */}
-         {/* Type Dropdown */}
+           
 <div className={styles.formGroup}>
 
 <div className={styles.column}>
@@ -417,25 +479,8 @@ const validationSchema = Yup.object().shape({
   </div>
 )}   
 
- <div className={styles.BtnContainer}>
-              <button type="submit" className={styles.submitButton}>Submit Form 2</button>
-              <NavLink to={"/dashboard/Importcase"}>
-              <button type="submit" className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
-              </NavLink>
-              </div>
-  </Form>
-  )}
-</Formik>
 
 
-
-<Formik
- initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-        {({ values }) => (
-  <Form>
 
  {/* Opponent (Heading) */}
  <div className={styles.heading}>Opponent</div>
@@ -445,6 +490,7 @@ const validationSchema = Yup.object().shape({
 <div className={styles.column}>
 <label className={styles.label}>Party:</label>
   <Field type="text" name="opponentPartyName" className={styles.inputopn} />
+  <ErrorMessage name="opponentPartyName" component="div" className={styles.error} />
 </div>
 
 {/* Lawyer Name */}
@@ -469,7 +515,7 @@ const validationSchema = Yup.object().shape({
 </div>
 </div>
     <div className={styles.BtnContainer}>
-              <button type="submit" className={styles.submitButton}>Submit Form 3</button>
+              <button type="submit" className={styles.submitButton}>Submit</button>
               <NavLink to={"/dashboard/Importcase"}>
               <button type="submit" className={`${styles.submitButton}, ${styles.CancelButton}`}>Cancel</button>
               </NavLink>
@@ -478,6 +524,8 @@ const validationSchema = Yup.object().shape({
               )}
 
 </Formik>
+    </>
+        )}
 
 
 

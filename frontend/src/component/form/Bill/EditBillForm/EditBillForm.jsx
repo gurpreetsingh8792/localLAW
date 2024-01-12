@@ -58,7 +58,11 @@ try {
     title: Yup.string().required('Title is required'),
     currentDate: Yup.date(),
     dateFrom: Yup.date(),
-    dateTo: Yup.date(),
+    dateTo: Yup.date()
+  .min(
+    Yup.ref('dateFrom'),
+    "Date To can't be before the Date From"
+  ),
     fullAddress: Yup.string(),
     billingType: Yup.string(),
     // totalHours: Yup.string().when('billingType', {

@@ -18,6 +18,7 @@ const initialValues = {
   city: '',
   zipCode: '',
   selectedGroup: '',
+  mobileno: '',
 };
 
 const validationSchema = Yup.object().shape({
@@ -29,6 +30,8 @@ const validationSchema = Yup.object().shape({
   city: Yup.string(),
   zipCode: Yup.string(),
   selectedGroup: Yup.string(),
+  mobileno : Yup.string()
+  .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits'),
 });
 
 
@@ -58,6 +61,7 @@ const EditTeamMembersForm = ({teamData, onClose}) => {
     zipCode: teamData.zipCode || '',
     selectedGroup: teamData.selectedGroup || '',
     selectedCompany: teamData.selectedCompany || '',
+    mobileno: teamData.mobileno || '',
   };
   
   const validationSchema = Yup.object().shape({
@@ -70,6 +74,8 @@ const EditTeamMembersForm = ({teamData, onClose}) => {
     zipCode: Yup.string(),
     selectedGroup: Yup.string(),
     selectedCompany: Yup.string(),
+    mobileno : Yup.string()
+  .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits'),
   });
 
   useEffect(() => {
@@ -147,14 +153,20 @@ const EditTeamMembersForm = ({teamData, onClose}) => {
                 },
               }
             );
-        
+          
             console.log(response.data);
             alert('Team Updated successfully!');
             navigate(0);
             resetForm();
           } catch (error) {
-            console.error(error);
+            if (error.response && error.response.status === 400) {
+              // Display error message from server
+              alert(error.response.data.error);
+            } else {
+              console.error(error);
+            }
           }
+          
         }}
       >
         {({ values, setFieldValue }) => (
@@ -198,6 +210,10 @@ const EditTeamMembersForm = ({teamData, onClose}) => {
             <div className={styles.fieldGroup}>
               <Field type="email" name="email" placeholder="Email" className={styles.inputField} />
               <ErrorMessage name="email" component="div" className={styles.error} />
+            </div>
+            <div className={styles.fieldGroup}>
+              <Field type="text" name="mobileno" placeholder="Mobile Number" className={styles.inputField} />
+              <ErrorMessage name="mobileno" component="div" className={styles.error} />
             </div>
 
             <div className={styles.fieldGroup}>

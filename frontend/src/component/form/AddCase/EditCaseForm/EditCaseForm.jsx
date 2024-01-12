@@ -12,6 +12,7 @@ const EditCaseForm = ({onClose, caseData }) => {
   const [clientNames, setClientNames] = useState([]);
   const [teamMembers, setTeamMembers] = useState([]);
   const [formData, setFormData] = useState({});
+  const [titleError, setTitleError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -97,12 +98,22 @@ const validationSchema = Yup.object().shape({
   caseType: Yup.string().required('Case type is required'),
   cnrNo: Yup.string().required('CNR No. is required'),
   // Add validation for other fields as needed
+  dateOfFiling: Yup.date()
+    .test(
+      'is-not-less-than-current-date',
+      'Date of Filing cannot be before the current date',
+      value => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset hours to start of the day for comparison
+        return value && new Date(value) >= today;
+      }
+    ),
 });
 
 
-const handleSubmit = async (values, { resetForm }) => {
+const handleSubmit = async (values, { resetForm, setErrors }) => {
   try {
-    // Make an HTTP POST request to update the case
+    // Make an HTTP PUT request to update the case
     const response = await axios.put(
       `http://localhost:8052/edit/caseform/update/${caseData.id}`,
       values,
@@ -118,9 +129,19 @@ const handleSubmit = async (values, { resetForm }) => {
     navigate(0);
     resetForm();
   } catch (error) {
-    console.error(error);
+    if (error.response && error.response.data.error) {
+      // Check for specific error message related to title uniqueness
+      if (error.response.data.error.includes('title is already in use')) {
+        setErrors({ title: error.response.data.error });
+      } else {
+        console.error(error);
+      }
+    } else {
+      console.error(error);
+    }
   }
 };
+
 
 
   const handleCancel = () => {
@@ -144,6 +165,7 @@ const handleSubmit = async (values, { resetForm }) => {
                   <label className={styles.label}>Title:</label>
                   <Field type="text" name="title" className={styles.inputTitle} />
                   <ErrorMessage name="title" component="div" className={styles.error} />
+                 
                 </div>
               </div>
 
@@ -287,6 +309,7 @@ const handleSubmit = async (values, { resetForm }) => {
             <div className={styles.column}>
             <label className={styles.label}>Date of Filing:</label>
               <Field type="date" name="dateOfFiling" className={styles.inputDate} />
+              <ErrorMessage name="dateOfFiling" component="div" className={styles.error} />
             </div>
             </div>
 

@@ -13,6 +13,7 @@ const initialValues = {
   image: '',
   fullName: '',
   email: '',
+  mobileno: '',
   designation: '',
   address: '',
   state: '',
@@ -25,6 +26,8 @@ const initialValues = {
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required('Full Name is required'),
   email: Yup.string().email('Invalid email format').required('Email is required'),
+  mobileno : Yup.string()
+  .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits'),
   designation: Yup.string(),
   address: Yup.string(),
   state: Yup.string(),
@@ -100,20 +103,27 @@ const TeamMembers = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm }) => {
-          try {
-            // Make an HTTP POST request to the backend with the full server URL
-            const response = await Axios.post('http://localhost:8052/dashboard/teammemberform', values, {
-              headers: {
-                'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
-              },
-            });
-      
-            console.log(response.data); // Log the response from the backend
-            alert('Team Member Added successfully!');
-            resetForm();
-          } catch (error) {
-            console.error(error);
-          }
+          // ... inside your Formik onSubmit function ...
+
+try {
+  const response = await Axios.post('http://localhost:8052/dashboard/teammemberform', values, {
+    headers: {
+      'x-auth-token': localStorage.getItem('token'),
+    },
+  });
+
+  console.log(response.data); 
+  alert('Team Member Added successfully!');
+  resetForm();
+} catch (error) {
+  if (error.response && error.response.status === 400) {
+    // Display error message from server
+    alert(error.response.data.error);
+  } else {
+    console.error(error);
+  }
+}
+
         }}
       >
         {({ values, setFieldValue }) => (
@@ -157,6 +167,11 @@ const TeamMembers = () => {
             <div className={styles.fieldGroup}>
               <Field type="email" name="email" placeholder="Email" className={styles.inputField} />
               <ErrorMessage name="email" component="div" className={styles.error} />
+            </div>
+
+            <div className={styles.fieldGroup}>
+              <Field type="text" name="mobileno" placeholder="Mobile Number" className={styles.inputField} />
+              <ErrorMessage name="mobileno" component="div" className={styles.error} />
             </div>
 
             <div className={styles.fieldGroup}>

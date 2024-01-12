@@ -9,6 +9,11 @@
   .formRow {
     margin-bottom: 15px;
   }
+  .errorMsg {
+    color: red; /* Red color for the error message */
+    margin-top: 5px; /* Optional: Adjust spacing as needed */
+    font-size: 0.8em; /* Optional: Adjust font size as needed */
+  }
   
   .AppointmentFormTitle,
   .TasksVisibleTitle,

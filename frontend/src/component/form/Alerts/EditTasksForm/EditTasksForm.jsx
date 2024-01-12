@@ -3,12 +3,17 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styles from './EditTasksForm.module.css';
 import axios from 'axios';
+import { useNavigate} from 'react-router-dom';
 
 const EditTasksForm = ({ alertData }) => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [cases, setCases] = useState([]);
   const [selectedCaseTitle, setSelectedCaseTitle] = useState('');
   const [formData, setFormData] = useState({});
+  const [titleErrorMessage, setTitleErrorMessage] = useState('');
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
@@ -64,14 +69,17 @@ const EditTasksForm = ({ alertData }) => {
     caseTitle: Yup.string().required('Case Title is required'),
     caseType: Yup.string(),
     startDate: Yup.date(),
-    completionDate: Yup.date(),
+  completionDate: Yup.date()
+    .min(
+      Yup.ref('startDate'),
+      "Completion date can't be before the start date"
+    ),
     assignFrom: Yup.string(),
     assignTo: Yup.string(),
   });
 
   const onSubmit = async (values, { resetForm }) => {
     try {
-      // Make an HTTP POST request to update the case
       const response = await axios.put(
         `http://localhost:8052/alerts/edit/update/${alertData.id}`,
         values,
@@ -81,15 +89,23 @@ const EditTasksForm = ({ alertData }) => {
           },
         }
       );
-  
+    
       console.log(response.data);
       alert('Tasks Updated successfully!');
+      navigate(0);
       resetForm();
+      setTitleErrorMessage(''); // Reset title error message
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 400) {
+        if (error.response.data.error.includes("Title already exists, please change your Title")) {
+          setTitleErrorMessage("Title already exists, please change your Title");
+        } else {
+          console.error(error);
+        }
+      }
     }
   };
-
+  
   const formik = useFormik({ initialValues, validationSchema, onSubmit });
 
   // Modify the handleCaseTitleChange function
@@ -127,6 +143,9 @@ const EditTasksForm = ({ alertData }) => {
           {formik.touched.title && formik.errors.title && (
             <div className={styles.error}>{formik.errors.title}</div>
           )}
+          {titleErrorMessage && (
+    <div className={styles.error}>{titleErrorMessage}</div>
+  )}
         </div>
           <div className={styles.horizontalFields}>
             <div className={styles.statusPriorityFields}>

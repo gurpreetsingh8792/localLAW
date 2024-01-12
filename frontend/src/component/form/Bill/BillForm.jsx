@@ -37,7 +37,7 @@ const BillForm = () => {
     taxPercentage: '',
     totalAmountWithTax: '',
     description: '',
-    addDoc: null,
+    // addDoc: null,
   };
 
   let validationSchema;
@@ -47,7 +47,11 @@ try {
     title: Yup.string().required('Title is required'),
     currentDate: Yup.date(),
     dateFrom: Yup.date(),
-    dateTo: Yup.date(),
+    dateTo: Yup.date()
+       .min(
+        Yup.ref('dateFrom'),
+        "Date To can't be before the Date From"
+         ),
     fullAddress: Yup.string(),
     billingType: Yup.string(),
     // totalHours: Yup.string().when('billingType', {
@@ -70,7 +74,7 @@ try {
     taxPercentage: Yup.string(),
     totalAmountWithTax: Yup.string(),
     description: Yup.string(),
-    addDoc: Yup.mixed(),
+    // addDoc: Yup.mixed(),
   });
 } catch (error) {
   console.error('An error occurred while creating the validation schema:', error);

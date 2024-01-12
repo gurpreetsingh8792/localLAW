@@ -25,6 +25,7 @@ const initialValues = {
   amount: '',
   taxType: '',
   taxPercentage: '',
+  CumulativeAmount: '',
   fullAddress: '',
   hearingDate: '',
   title: '',
@@ -35,6 +36,7 @@ const initialValues = {
   expensesTaxPercentage: '',
   expensesCumulativeAmount: '',
   addDoc: '',
+  totalAmount: '',
   invoiceNumber: generateInvoiceNo(),
 };
 
@@ -47,15 +49,21 @@ const validationSchema = Yup.object().shape({
   amount: Yup.number().min(0, 'Amount must be greater than or equal to 0'),
   taxType: Yup.string(),
   taxPercentage: Yup.number().min(0, 'Tax Percentage must be greater than or equal to 0'),
+  CumulativeAmount: Yup.number().min(0),
   fullAddress: Yup.string(),
   hearingDate: Yup.date(),
-  title: Yup.string().required('title is required'),
+  title: Yup.string(),
   dateFrom: Yup.date(),
-  dateTo: Yup.date(),
+  dateTo: Yup.date()
+  .min(
+    Yup.ref('dateFrom'),
+    "Date To can't be before the Date From"
+  ),
   expensesAmount: Yup.number().min(0, 'Amount must be greater than or equal to 0'),
   expensesTaxType: Yup.string(),
   expensesTaxPercentage: Yup.number().min(0, 'Tax Percentage must be greater than or equal to 0'),
   expensesCumulativeAmount: Yup.number().min(0, 'Cumulative Amount must be greater than or equal to 0'),
+  totalAmount: Yup.number().min(0),
   addDoc: Yup.mixed(),
 });
 
@@ -125,22 +133,45 @@ const InvoicesForm = () => {
   const HandleCancel=()=>{
     navigate('/dashboard')
   }
-  
-  const calculateExpensesTotalWithTax = (expensesAmount, expensesTaxPercentage) => {
+
+
+  const calculateNormalTotalWithTax = (amount, taxPercentage) => {
+    return amount + (amount * (taxPercentage / 100));
+};
+
+const calculateExpensesTotalWithTax = (expensesAmount, expensesTaxPercentage) => {
     return expensesAmount + (expensesAmount * (expensesTaxPercentage / 100));
-  };
-  
-  const handleExpensesChange = (e, setFieldValue, values) => {
+};
+
+const calculateTotalAmount = (cumulativeAmount, expensesCumulativeAmount) => {
+    return (parseFloat(cumulativeAmount) || 0) + (parseFloat(expensesCumulativeAmount) || 0);
+};
+
+const handleNormalChange = (e, setFieldValue, values) => {
     const { name, value } = e.target;
-    let expensesAmount = name === 'expensesAmount' ? parseFloat(value) || 0 : parseFloat(values.expensesAmount) || 0;
-    let expensesTaxPercentage = name === 'expensesTaxPercentage' ? parseFloat(value) || 0 : parseFloat(values.expensesTaxPercentage) || 0;
-    
     setFieldValue(name, value);
-  
-    const totalWithTax = calculateExpensesTotalWithTax(expensesAmount, expensesTaxPercentage);
-     setFieldValue('expensesCumulativeAmount', totalWithTax.toFixed(2)); // Update the total amount with tax
-    }
-  
+
+    const amount = name === 'amount' ? parseFloat(value) || 0 : parseFloat(values.amount) || 0;
+    const taxPercentage = name === 'taxPercentage' ? parseFloat(value) || 0 : parseFloat(values.taxPercentage) || 0;
+    const cumulativeAmount = calculateNormalTotalWithTax(amount, taxPercentage);
+
+    setFieldValue('CumulativeAmount', cumulativeAmount.toFixed(2));
+    const totalAmount = calculateTotalAmount(cumulativeAmount, values.expensesCumulativeAmount);
+    setFieldValue('totalAmount', totalAmount.toFixed(2));
+};
+
+const handleExpensesChange = (e, setFieldValue, values) => {
+    const { name, value } = e.target;
+    setFieldValue(name, value);
+
+    const expensesAmount = name === 'expensesAmount' ? parseFloat(value) || 0 : parseFloat(values.expensesAmount) || 0;
+    const expensesTaxPercentage = name === 'expensesTaxPercentage' ? parseFloat(value) || 0 : parseFloat(values.expensesTaxPercentage) || 0;
+    const expensesCumulativeAmount = calculateExpensesTotalWithTax(expensesAmount, expensesTaxPercentage);
+
+    setFieldValue('expensesCumulativeAmount', expensesCumulativeAmount.toFixed(2));
+    const totalAmount = calculateTotalAmount(values.CumulativeAmount, expensesCumulativeAmount);
+    setFieldValue('totalAmount', totalAmount.toFixed(2));
+};
 
   
 
@@ -160,6 +191,13 @@ const InvoicesForm = () => {
           <Form>
             <div className={styles.invoiceNo}><span style={{ color: 'var(--color-primary)'}}>INV</span>
   {generateInvoiceNo()}</div>
+  
+  <label className={styles.label} htmlFor="title">Title</label>
+            <Field type="text" name="title" className={styles.inputFieldTitle} />
+            <ErrorMessage name="title" component="div" className={styles.errorMessage} />
+            
+
+
             <div className={styles.clientContainer}>
             <Field as="select" name="client" className={styles.selectFieldClient}>
                   <option value="">Select People</option>
@@ -190,7 +228,7 @@ const InvoicesForm = () => {
             <ErrorMessage name="date" component="div" className={styles.errorMessage} />
 
             <div className={styles.fieldContainer}>
-              <Field type="number" name="amount" className={styles.inputField} placeholder="Amount" />
+              <Field type="number" name="amount" className={styles.inputField} placeholder="Amount"  onChange={(e) => handleNormalChange(e, setFieldValue, values)}/>
               <Field as="select" name="taxType" className={styles.selectFieldTaxType}>
                 <option value="">Select Tax Type</option>
                 <option value="SGST">SGST</option>
@@ -198,11 +236,23 @@ const InvoicesForm = () => {
                 <option value="IGST">IGST</option>
                 <option value="ST">ST</option>
               </Field>
-              <Field type="number" name="taxPercentage" className={styles.inputField} placeholder="Tax Percentage" />
+              <Field type="number" name="taxPercentage" className={styles.inputField} placeholder="Tax Percentage" onChange={(e) => handleNormalChange(e, setFieldValue, values)}/>
+              
             </div>
             <ErrorMessage name="amount" component="div" className={styles.errorMessage} />
             <ErrorMessage name="taxType" component="div" className={styles.errorMessage} />
             <ErrorMessage name="taxPercentage" component="div" className={styles.errorMessage} />
+
+            <Field 
+  type="number" 
+  name="CumulativeAmount" 
+  className={styles.inputField} 
+  placeholder="Cumulative Amount"
+
+  readOnly
+  
+/>
+<ErrorMessage name="CumulativeAmount" component="div" className={styles.errorMessage} />
 
             <Field as="textarea" name="fullAddress" className={styles.textareaField} placeholder="Full Address" />
             <ErrorMessage name="fullAddress" component="div" className={styles.errorMessage} />
@@ -212,9 +262,7 @@ const InvoicesForm = () => {
             <ErrorMessage name="hearingDate" component="div" className={styles.errorMessage} /> */}
 
             <div className={styles.expensesTitle}>EXPENSES</div>
-            <label className={styles.label} htmlFor="title">Title</label>
-            <Field type="text" name="title" className={styles.inputFieldTitle} />
-            <ErrorMessage name="title" component="div" className={styles.errorMessage} />
+            
 
             <div className={styles.fieldContainer}>
               <div className={styles.fieldGroup}>
@@ -240,6 +288,7 @@ const InvoicesForm = () => {
   placeholder="Amount"
   onChange={(e) => handleExpensesChange(e, setFieldValue, values)}
 />
+
               </div>
             </div>
             <ErrorMessage name="dateFrom" component="div" className={styles.errorMessage} />
@@ -266,6 +315,7 @@ const InvoicesForm = () => {
   name="expensesCumulativeAmount" 
   className={styles.inputField} 
   placeholder="Cumulative Amount"
+ 
   readOnly
 />
             </div>
@@ -273,6 +323,14 @@ const InvoicesForm = () => {
             <ErrorMessage name="expensesTaxPercentage" component="div" className={styles.errorMessage} />
             <ErrorMessage name="expensesCumulativeAmount" component="div" className={styles.errorMessage} />
 
+            <Field 
+  type="number" 
+  name="totalAmount" 
+  className={styles.input0Field} 
+  placeholder="Total Amount Including Expenses"
+  readOnly
+/>
+<ErrorMessage name="totalAmount" component="div" className={styles.errorMessage} />
             <Field type="file" name="addDoc" accept=".pdf" className={styles.fileField} />
             <ErrorMessage name="addDoc" component="div" className={styles.errorMessage} />
          

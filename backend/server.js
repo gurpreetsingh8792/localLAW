@@ -7,7 +7,12 @@ const bcrypt = require('bcrypt');
 const secretKey = 'your_secret_key';
 const ejs = require('ejs');
 const pdf = require('html-pdf');
+const fetch = require('node-fetch');
+const FormData = require('form-data');
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json()); // Parse JSON bodies
 const fs = require('fs');
+app.use(express.json());
 
 
 
@@ -15,8 +20,38 @@ const fs = require('fs');
 // const { Storage } = require('@google-cloud/storage');
 const port = 8052;
 
+const queryParams = new URLSearchParams({
+  state: "Punjab",
+  case_no: "your_case_no",
+  description: "not able to claim my insurance",
+  history: "None",
+  District: "Bathinda",
+  town: "Bathinda",
+  case_type: "Insurance",
+  full_name: "ENGINEER CONSTRUCTIONS PVT LTD",
+  address: "LANE 6, CANAL ROAD GHUMANIWALA, Bathinda - 249204 Tel. 9756877006"
+});
 
+const url = `http://34.105.29.122:8000/law_sections/?${queryParams.toString()}`;
+const filePath = "./Db-data/SS_NIAPOLICYSCHEDULECIRTIFICATESS_44081908.pdf";
 
+const formData = new FormData();
+formData.append('pdf_file', fs.createReadStream(filePath));
+
+fetch(url, {
+  method: 'POST',
+  body: formData
+})
+.then(response => {
+    console.log('Status Code:', response.status); // Log the response status code
+    return response.json();
+})
+.then(data => {
+    console.log('Response Data:', data); // Log the response data
+})
+.catch(error => {
+    console.error('Error:', error); // Log any errors
+});
 
 
 
@@ -191,6 +226,8 @@ app.get('/search', (req, res) => {
   });
 });
 
+
+
 app.get('/suggestions', (req, res, next) => {
   const { searchTerm, category } = req.query;
   if (!searchTerm || !category) {
@@ -302,22 +339,29 @@ app.get('/alerts/edit', authenticateJWT, (req, res) => {
 app.put('/alerts/edit/update/:alertId', authenticateJWT, (req, res) => {
   const alertId = req.params.alertId;
   const userId = req.user.id;
-  const {
-    title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo
-  } = req.body;
+  const { title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo } = req.body;
 
-  db.run(
-    'UPDATE AlertsForm SET title = ?, startDate = ?, completionDate = ?, caseTitle = ?, caseType = ?, assignFrom = ?, assignTo = ? WHERE id = ? AND user_id = ?',
-    [title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo, alertId, userId],
-    (err) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-
-      res.json({ message: 'Alert form updated successfully' });
+  const checkQuery = 'SELECT * FROM AlertsForm WHERE title = ? AND id != ? AND user_id = ?';
+  
+  db.get(checkQuery, [title, alertId, userId], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
     }
-  );
+    if (row) {
+      return res.status(400).json({ error: 'Title already exists, please change your Title' });
+    }
+
+    const updateQuery = 'UPDATE AlertsForm SET title = ?, startDate = ?, completionDate = ?, caseTitle = ?, caseType = ?, assignFrom = ?, assignTo = ? WHERE id = ? AND user_id = ?';
+    
+    db.run(updateQuery, [title, startDate, completionDate, caseTitle, caseType, assignFrom, assignTo, alertId, userId], (updateErr) => {
+      if (updateErr) {
+        return res.status(500).json({ error: updateErr.message });
+      }
+      res.json({ message: 'Alert form updated successfully' });
+    });
+  });
 });
+
 
 
 // alerts forms
@@ -330,72 +374,113 @@ app.post('/alerts', authenticateJWT, async (req, res) => {
       return res.status(400).json({ error: 'Title is required' });
     }
 
-    db.run(
-      'INSERT INTO AlertsForm (title, startDate, completionDate, assignFrom, assignTo, caseTitle, caseType, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, startDate, completionDate, assignFrom, assignTo, caseTitle, caseType, userId],
-      function (err) {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-        return res.json({ message: 'Alerts form submitted successfully' });
+    // Check if title is already in use
+    db.get('SELECT * FROM AlertsForm WHERE title = ?', [title], (err, row) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
       }
-    );
+
+      if (row) {
+        return res.status(400).json({ error: 'Task with this title already exists, Please change the Title' });
+      }
+
+      // Proceed to insert the new record
+      db.run(
+        'INSERT INTO AlertsForm (title, startDate, completionDate, assignFrom, assignTo, caseTitle, caseType, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [title, startDate, completionDate, assignFrom, assignTo, caseTitle, caseType, userId],
+        function (insertErr) {
+          if (insertErr) {
+            return res.status(500).json({ error: insertErr.message });
+          }
+          return res.json({ message: 'Alerts form submitted successfully' });
+        }
+      );
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+
 app.post('/hearings', authenticateJWT, (req, res) => {
   try {
     const { title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime } = req.body;
-    const userId = req.user.id; // Assuming you have user information attached to the request
+    const userId = req.user.id;
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
     }
 
-    db.run(
-      'INSERT INTO CourtHearing (title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime, userId],
-      function (err) {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-        return res.json({ message: 'Hearing form submitted successfully' });
+    // Check if title is already in use
+    db.get('SELECT * FROM CourtHearing WHERE title = ?', [title], (findErr, row) => {
+      if (findErr) {
+        console.error(findErr);
+        return res.status(500).json({ error: 'Internal Server Error' });
       }
-    );
+
+      if (row) {
+        return res.status(400).json({ error: 'A hearing with this title already exists. Please use a different title.' });
+      }
+
+      // Proceed to insert the new record
+      db.run(
+        'INSERT INTO CourtHearing (title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime, userId],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          return res.json({ message: 'Hearing form submitted successfully' });
+        }
+      );
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.post('/appointments', authenticateJWT, (req, res) => {
   try {
-    const {title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email} = req.body;
-
-    const userId = req.user.id; // Assuming you have user information attached to the request
+    const {title, caseTitle, caseType, appointmentDate, contactPerson, location, startTime, endTime, email} = req.body;
+    const userId = req.user.id;
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
     }
 
-    db.run(
-      'INSERT INTO Appointments (title, caseTitle, caseType, appointmentDate, contactPerson, location, startTime, endTime, email, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email, userId],
-      function (err) {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-        return res.json({ message: 'Apointment added successfully' });
+    // Check if an appointment with the same title already exists
+    db.get('SELECT * FROM Appointments WHERE title = ?', [title], (err, row) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
       }
-    );
+
+      if (row) {
+        return res.status(400).json({ error: 'An appointment with this title already exists. Please use a different title.' });
+      }
+
+      // Proceed to insert the new appointment
+      db.run(
+        'INSERT INTO Appointments (title, caseTitle, caseType, appointmentDate, contactPerson, location, startTime, endTime, email, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [title, caseTitle, caseType, appointmentDate, contactPerson, location, startTime, endTime, email, userId],
+        function (insertErr) {
+          if (insertErr) {
+            return res.status(500).json({ error: insertErr.message });
+          }
+          return res.json({ message: 'Appointment added successfully' });
+        }
+      );
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.get("/calendar/alerts", authenticateJWT, (req, res) => {
   const userId = req.user.id;
@@ -529,37 +614,65 @@ app.put('/calendar/alerts/:taskId', authenticateJWT, (req, res) => {
 app.put('/calendar/hearings/:taskId', authenticateJWT, (req, res) => {
   const taskId = req.params.taskId;
   const userId = req.user.id;
-  const { title, assignedLawyer, status, hearingDate, caseTitle, startTime, endTime } = req.body;
+  const { title, assignedLawyer, status, caseTitle, hearingDate, startTime, endTime } = req.body;
 
-  db.run(
-    'UPDATE CourtHearing SET title = ?, assignedLawyer = ?, status = ?, hearingDate = ?, caseTitle = ?, startTime = ?, endTime = ? WHERE id = ? AND user_id = ?',
-    [title, assignedLawyer, status, hearingDate, caseTitle, startTime, endTime, taskId, userId],
-    (err) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-
-      res.json({ message: 'Event updated successfully' });
+  // First, check if there is any other hearing with the same title
+  db.get('SELECT id FROM CourtHearing WHERE title = ? AND id != ?', [title, taskId], (findErr, row) => {
+    if (findErr) {
+      console.error(findErr);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
-  );
+
+    // If another hearing with the same title exists, prevent update
+    if (row) {
+      return res.status(400).json({ error: 'A hearing with this title already exists. Please use a different title.' });
+    }
+
+    // Proceed with the update if the title is unique
+    db.run(
+      'UPDATE CourtHearing SET title = ?, assignedLawyer = ?, status = ?, hearingDate = ?, caseTitle = ?, startTime = ?, endTime = ? WHERE id = ? AND user_id = ?',
+      [title, assignedLawyer, status, hearingDate, caseTitle, startTime, endTime, taskId, userId],
+      (err) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+
+        res.json({ message: 'Event updated successfully' });
+      }
+    );
+  });
 });
 
 app.put('/calendar/appointments/:taskId', authenticateJWT, (req, res) => {
   const taskId = req.params.taskId;
   const userId = req.user.id;
-  const { title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email } = req.body;
+  const { title, caseTitle, caseType, appointmentDate, contactPerson, location, startTime, endTime, email } = req.body;
 
-  db.run(
-    'UPDATE Appointments SET title = ?, caseTitle = ?, caseType = ?,  appointmentDate = ?, contactPerson = ?, location = ?, startTime = ?, endTime = ?, email = ? WHERE id = ? AND user_id = ?',
-    [title, caseTitle, caseType,  appointmentDate, contactPerson, location, startTime, endTime, email,taskId, userId],
-    (err) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-
-      res.json({ message: 'Event updated successfully' });
+  // First, check if there is any other appointment with the same title
+  db.get('SELECT id FROM Appointments WHERE title = ? AND id != ?', [title, taskId], (findErr, row) => {
+    if (findErr) {
+      console.error(findErr);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
-  );
+
+    // If another appointment with the same title exists, prevent update
+    if (row) {
+      return res.status(400).json({ error: 'An appointment with this title already exists. Please use a different title.' });
+    }
+
+    // Proceed with the update if the title is unique
+    db.run(
+      'UPDATE Appointments SET title = ?, caseTitle = ?, caseType = ?, appointmentDate = ?, contactPerson = ?, location = ?, startTime = ?, endTime = ?, email = ? WHERE id = ? AND user_id = ?',
+      [title, caseTitle, caseType, appointmentDate, contactPerson, location, startTime, endTime, email, taskId, userId],
+      (err) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+
+        res.json({ message: 'Event updated successfully' });
+      }
+    );
+  });
 });
 
 
@@ -736,7 +849,7 @@ app.get('/dashboard/teammemberform/edit', authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
   db.all(
-    'SELECT id, fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany FROM TeamMembers WHERE user_id = ?',
+    'SELECT id, fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, mobileno FROM TeamMembers WHERE user_id = ?',
     [userId],
     (err, teamMembers) => {
       if (err) {
@@ -752,66 +865,89 @@ app.put('/dashboard/teammemberform/edit/update/:memberId', authenticateJWT, (req
   const memberId = req.params.memberId;
   const userId = req.user.id;
   const {
-     fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany
+    fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, mobileno
   } = req.body;
 
-  db.run(
-    'UPDATE TeamMembers SET  fullName = ?, email = ?, designation = ?, address = ?, state = ?, city = ?, zipCode = ?, selectedGroup = ?, selectedCompany = ? WHERE id = ? AND user_id = ?',
-    [ fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, memberId, userId],
-    (err) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-
-      res.json({ message: 'Team member updated successfully' });
+  // Check if email or mobileNo is already in use by another record
+  const checkQuery = `SELECT * FROM TeamMembers WHERE (email = ? OR mobileno = ?) AND id != ?`;
+  db.get(checkQuery, [email, mobileno, memberId], (err, row) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
-  );
+
+    if (row) {
+      if (row.email === email && row.mobileno === mobileno) {
+        return res.status(400).json({ error: 'Please enter a unique email and mobile number' });
+      } else if (row.email === email) {
+        return res.status(400).json({ error: 'Please enter a unique email' });
+      } else if (row.mobileno === mobileno) {
+        return res.status(400).json({ error: 'Please enter a unique mobile number' });
+      }
+    }
+
+    // Proceed to update the record
+    const updateQuery = `
+      UPDATE TeamMembers SET fullName = ?, email = ?, designation = ?, address = ?, state = ?, city = ?, zipCode = ?, selectedGroup = ?, selectedCompany = ?, mobileno = ? 
+      WHERE id = ? AND user_id = ?
+    `;
+    db.run(updateQuery, [fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, mobileno, memberId, userId], (updateErr) => {
+      if (updateErr) {
+        console.error(updateErr);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.json({ message: 'Team member updated successfully' });
+    });
+  });
 });
+
 
 //Team Members form endpoints
 app.post("/dashboard/teammemberform", authenticateJWT, async (req, res) => {
   try {
     const {
-      image,
-      fullName,
-      email,
-      designation,
-      address,
-      state,
-      city,
-      zipCode,
-      selectedGroup,
-      selectedCompany,
+      image, fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, mobileno
     } = req.body;
     const userId = req.user.id;
 
-    db.run(
-      "INSERT INTO TeamMembers (image, fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        image,
-        fullName,
-        email,
-        designation,
-        address,
-        state,
-        city,
-        zipCode,
-        selectedGroup,
-        selectedCompany,
-        userId,
-      ],
-      function (err) {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-        return res.json({ message: "Team member added successfully" });
+    // Check if email or mobileNo is already in use
+    const checkQuery = `SELECT * FROM TeamMembers WHERE email = ? OR mobileno = ?`;
+    db.get(checkQuery, [email, mobileno], (err, row) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
       }
-    );
+
+      if (row) {
+        if (row.email === email && row.mobileno === mobileno) {
+          return res.status(400).json({ error: 'Please enter a unique email and mobile number' });
+        } else if (row.email === email) {
+          return res.status(400).json({ error: 'Please enter a unique email' });
+        } else if (row.mobileno === mobileno) {
+          return res.status(400).json({ error: 'Please enter a unique mobile number' });
+        }
+      }
+
+      // Proceed to insert the new record
+      const insertQuery = `
+        INSERT INTO TeamMembers (image, fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, mobileno, user_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      db.run(insertQuery, [image, fullName, email, designation, address, state, city, zipCode, selectedGroup, selectedCompany, mobileno, userId], function(insertErr) {
+        if (insertErr) {
+          console.error(insertErr);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        return res.json({ message: 'Team member added successfully' });
+      });
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 app.post("/dashboard/teammemberform/companyform", authenticateJWT, async (req, res) => {
@@ -911,6 +1047,7 @@ app.get('/dashboard/teammemberform/download-pdf/:memberId', authenticateJWT, asy
       <h1>Team Member Data</h1>
       <p>Full Name: <%= fullName %></p>
       <p>Email: <%= email %></p>
+      <p>Mobile Number: <%= mobileno %></p>
       <p>Designation: <%= designation %></p>
       <p>Address: <%= address %></p>
       <p>State: <%= state %></p>
@@ -1208,24 +1345,42 @@ app.put('/edit/caseform/update/:caseId', authenticateJWT, (req, res) => {
   const caseId = req.params.caseId;
   const userId = req.user.id;
   const {
-    title, caseType, courtType, courtName, caveatNo, caseCode, caseURL,
+    title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, 
     caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling,
-    practiceArea, manage, client, team,type,lawyerType, clientDesignation, opponentPartyName,
-    lawyerName, mobileNo, emailId
+    practiceArea, manage, client, team, type, lawyerType, 
+    clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId
   } = req.body;
 
-  db.run(
-    'UPDATE CasesForm SET title = ?, caseType = ?, courtType = ?, courtName = ?, caveatNo = ?, caseCode = ?, caseURL = ?, caseStatus = ?, honorableJudge = ?, courtHallNo = ?, cnrNo = ?, batchNo = ?, dateOfFiling = ?, practiceArea = ?, manage = ?, client = ?, team = ?,type = ?,lawyerType = ?, clientDesignation = ?, opponentPartyName = ?, lawyerName = ?, mobileNo = ?, emailId = ? WHERE id = ? AND user_id = ?',
-    [title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, client, team,type,lawyerType, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, caseId, userId],
-    (err) => {
+  // First, check if another case with the same title exists (excluding the current case)
+  db.get(
+    'SELECT id FROM CasesForm WHERE title = ? AND id != ?',
+    [title, caseId],
+    (err, row) => {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      if (row) {
+        // If another case with the same title exists
+        return res.status(400).json({ error: 'This title is already in use, please choose a different title' });
       }
 
-      res.json({ message: 'Case updated successfully' });
+      // If the title is unique, proceed with updating the case
+      db.run(
+        'UPDATE CasesForm SET title = ?, caseType = ?, courtType = ?, courtName = ?, caveatNo = ?, caseCode = ?, caseURL = ?, caseStatus = ?, honorableJudge = ?, courtHallNo = ?, cnrNo = ?, batchNo = ?, dateOfFiling = ?, practiceArea = ?, manage = ?, client = ?, team = ?, type = ?, lawyerType = ?, clientDesignation = ?, opponentPartyName = ?, lawyerName = ?, mobileNo = ?, emailId = ? WHERE id = ? AND user_id = ?',
+        [title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, client, team, type, lawyerType, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, caseId, userId],
+        (updateErr) => {
+          if (updateErr) {
+            console.error(updateErr);
+            return res.status(500).json({ error: updateErr.message });
+          }
+          res.json({ message: 'Case updated successfully' });
+        }
+      );
     }
   );
 });
+
 
 
 
@@ -1234,39 +1389,81 @@ app.put('/edit/caseform/update/:caseId', authenticateJWT, (req, res) => {
 app.post('/caseform', authenticateJWT, async (req, res) => {
   try {
     const {
-      title,caseType,courtType,courtName,caveatNo,caseCode,caseURL,caseStatus,honorableJudge,courtHallNo,cnrNo,batchNo,dateOfFiling,practiceArea,manage,client,team,clientDesignation, opponentPartyName,lawyerName,mobileNo,emailId,type,lawyerType} = req.body;
-    if (!title) {
-      return res.status(400).json({ error: 'Title is a required field' });
-    }
+      title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, 
+      caseStatus, honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage
+    } = req.body;
+
     const userId = req.user.id;
 
-    const query = `
-      INSERT INTO CasesForm (
-        title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus,
-        honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage,
-        client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, user_id,type,lawyerType
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-
-    db.run(
-      query,
-      [
-        title,caseType,courtType,courtName,caveatNo,caseCode,caseURL,caseStatus,honorableJudge,courtHallNo,cnrNo,batchNo,dateOfFiling, practiceArea, manage,client,team,clientDesignation,opponentPartyName,lawyerName,mobileNo,emailId,userId,type,lawyerType
-      ],
-      function (err) {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ error: 'Internal Server Error' });
-        }
-        return res.json({ message: 'CasesForm submitted successfully' });
+    // Check if the title already exists
+    db.get("SELECT id FROM CasesForm WHERE title = ?", [title], (err, row) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
       }
-    );
+      if (row) {
+        return res.status(400).json({ error: 'This title is already in our database, please add some other title' });
+      }
+
+      // Insert query for adding a new case
+      const insertQuery = `
+        INSERT INTO CasesForm (
+          title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus,
+          honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, user_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      db.run(
+        insertQuery,
+        [title, caseType, courtType, courtName, caveatNo, caseCode, caseURL, caseStatus, 
+         honorableJudge, courtHallNo, cnrNo, batchNo, dateOfFiling, practiceArea, manage, userId],
+        function (err) {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+          }
+          return res.json({ message: 'Case added successfully', caseId: this.lastID });
+        }
+      );
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.post('/concernedperson', authenticateJWT, async (req, res) => {
+  const { caseId, client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, type, lawyerType } = req.body;
+
+  if (!caseId) {
+    return res.status(400).json({ error: 'Case ID is required' });
+  }
+
+  const updateQuery = `
+    UPDATE CasesForm SET
+    client = ?, team = ?, clientDesignation = ?, opponentPartyName = ?, lawyerName = ?, 
+    mobileNo = ?, emailId = ?, type = ?, lawyerType = ?
+    WHERE id = ? AND user_id = ?
+  `;
+
+  const userId = req.user.id;
+
+  db.run(
+    updateQuery,
+    [client, team, clientDesignation, opponentPartyName, lawyerName, mobileNo, emailId, type, lawyerType, caseId, userId],
+    function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Case not found' });
+      }
+      return res.json({ message: 'Case updated successfully' });
+    }
+  );
+});
+
 app.get('/caseformdata', authenticateJWT, (req, res) => {
   try {
     const userId = req.user.id;
@@ -1482,15 +1679,31 @@ app.put('/clients/forms/:clientId', authenticateJWT, (req, res) => {
     organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, assignAppointments
   } = req.body;
 
-  db.run(
-    'UPDATE ClientForm SET firstName = ?, lastName = ?, email = ?, mobileNo = ?, alternateMobileNo = ?, organizationName = ?, organizationType = ?, organizationWebsite = ?, caseTitle = ?, type = ?, homeAddress = ?, officeAddress = ?, assignAlerts = ?, assignAppointments = ? WHERE id = ? AND user_id = ?',
-    [firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts,assignAppointments, clientId, userId],
-    (err) => {
+  // Check if a different record with the same email, mobileNo, and caseTitle exists
+  db.get(
+    'SELECT * FROM ClientForm WHERE email = ? AND mobileNo = ? AND caseTitle = ? AND id != ?',
+    [email, mobileNo, caseTitle, clientId],
+    (err, row) => {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: 'Internal Server Error' });
       }
 
-      res.json({ message: 'Client form updated successfully' });
+      if (row) {
+        return res.status(400).json({ error: 'Combination of Case Title, Email, and Mobile No must be unique' });
+      }
+
+      // Proceed to update the record
+      db.run(
+        'UPDATE ClientForm SET firstName = ?, lastName = ?, email = ?, mobileNo = ?, alternateMobileNo = ?, organizationName = ?, organizationType = ?, organizationWebsite = ?, caseTitle = ?, type = ?, homeAddress = ?, officeAddress = ?, assignAlerts = ?, assignAppointments = ? WHERE id = ? AND user_id = ?',
+        [firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, assignAppointments, clientId, userId],
+        (updateErr) => {
+          if (updateErr) {
+            return res.status(500).json({ error: updateErr.message });
+          }
+
+          res.json({ message: 'Client form updated successfully' });
+        }
+      );
     }
   );
 });
@@ -1499,39 +1712,42 @@ app.put('/clients/forms/:clientId', authenticateJWT, (req, res) => {
 // POST endpoint to add a new client form
 app.post('/dashboard/clientform', authenticateJWT, async (req, res) => {
   try {
-    const {
-      firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,caseTitle,type,homeAddress,officeAddress,assignAlerts,assignAppointments} = req.body;
+    const { firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, assignAppointments } = req.body;
+
     if (!firstName || !email) {
       return res.status(400).json({ error: 'First Name and Email are required fields' });
     }
-    const userId = req.user.id;
-    const query = `
-      INSERT INTO ClientForm (
-        firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, 
-        organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, 
-        assignAlerts,assignAppointments, user_id
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
-    `;
 
-    db.run(
-      query,
-      [
-        firstName,lastName,email,mobileNo,alternateMobileNo,organizationName,organizationType,organizationWebsite,caseTitle,type,homeAddress,officeAddress,assignAlerts,assignAppointments,userId,
-      ],
-      function (err) {
+    const userId = req.user.id;
+
+    // Check for existing record with the same caseTitle, email, and mobileNo
+    const uniqueCheckQuery = `SELECT * FROM ClientForm WHERE caseTitle = ? AND email = ? AND mobileNo = ?`;
+    db.get(uniqueCheckQuery, [caseTitle, email, mobileNo], (err, row) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      if (row) {
+        return res.status(400).json({ error: 'Combination of Case Title, Email, and Mobile No must be unique' });
+      }
+
+      // Proceed to insert the new record
+      const query = `INSERT INTO ClientForm (firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, assignAppointments, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+      db.run(query, [firstName, lastName, email, mobileNo, alternateMobileNo, organizationName, organizationType, organizationWebsite, caseTitle, type, homeAddress, officeAddress, assignAlerts, assignAppointments, userId], function (err) {
         if (err) {
           console.error(err);
           return res.status(500).json({ error: 'Internal Server Error' });
         }
         return res.json({ message: 'ClientForm submitted successfully' });
-      }
-    );
+      });
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.get('/clientformdata', authenticateJWT, (req, res) => {
   try {
@@ -1750,7 +1966,7 @@ app.get('/invoiceform/edit', authenticateJWT, (req, res) => {
   const userId = req.user.id;
 
   db.all(
-    'SELECT id, invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount, addDoc FROM InvoicesForm WHERE user_id = ?',
+    'SELECT id, invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount,totalAmount,CumulativeAmount, addDoc FROM InvoicesForm WHERE user_id = ?',
     [userId],
     (err, invoicesForms) => {
       if (err) {
@@ -1766,13 +1982,13 @@ app.put('/invoiceform/edit/update/:invoiceId', authenticateJWT, (req, res) => {
   const invoiceId = req.params.invoiceId;
   const userId = req.user.id;
   const {
-    invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress,
-    hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount, addDoc
+    invoiceNumber,CumulativeAmount, client, caseType, date, amount, taxType, taxPercentage, fullAddress,
+    hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount,totalAmount, addDoc
   } = req.body;
 
   db.run(
-    'UPDATE InvoicesForm SET invoiceNumber = ?, client = ?, caseType = ?, date = ?, amount = ?, taxType = ?, taxPercentage = ?, fullAddress = ?, hearingDate = ?, title = ?, dateFrom = ?, dateTo = ?, expensesAmount = ?, expensesTaxType = ?, expensesTaxPercentage = ?, expensesCumulativeAmount = ?, addDoc = ? WHERE id = ? AND user_id = ?',
-    [invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount, addDoc, invoiceId, userId],
+    'UPDATE InvoicesForm SET invoiceNumber = ?,CumulativeAmount = ?, client = ?, caseType = ?, date = ?, amount = ?, taxType = ?, taxPercentage = ?, fullAddress = ?, hearingDate = ?, title = ?, dateFrom = ?, dateTo = ?, expensesAmount = ?, expensesTaxType = ?, expensesTaxPercentage = ?, expensesCumulativeAmount = ?,totalAmount = ?, addDoc = ? WHERE id = ? AND user_id = ?',
+    [invoiceNumber,CumulativeAmount, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount,totalAmount, addDoc, invoiceId, userId],
     (err) => {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -1787,14 +2003,14 @@ app.put('/invoiceform/edit/update/:invoiceId', authenticateJWT, (req, res) => {
 app.post('/invoiceform', authenticateJWT, async (req, res) => {
   try {
     const {
-      invoiceNumber,client,caseType,date,amount,taxType,taxPercentage,fullAddress,hearingDate,title,dateFrom,dateTo,expensesAmount,expensesTaxType,expensesTaxPercentage,expensesCumulativeAmount,addDoc} = req.body;
+      invoiceNumber,CumulativeAmount,client,caseType,date,amount,taxType,taxPercentage,fullAddress,hearingDate,title,dateFrom,dateTo,expensesAmount,expensesTaxType,expensesTaxPercentage,expensesCumulativeAmount,totalAmount,addDoc} = req.body;
     const userId = req.user.id;
 
     if (!invoiceNumber ||  !title) {
       return res.status(400).json({ error: 'Required fields are missing' });
     }
 
-    db.run('INSERT INTO InvoicesForm (invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount, addDoc, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [invoiceNumber, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount, addDoc, userId], function (err) {
+    db.run('INSERT INTO InvoicesForm (invoiceNumber,CumulativeAmount, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount,totalAmount, addDoc, user_id) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [invoiceNumber,CumulativeAmount, client, caseType, date, amount, taxType, taxPercentage, fullAddress, hearingDate, title, dateFrom, dateTo, expensesAmount, expensesTaxType, expensesTaxPercentage, expensesCumulativeAmount,totalAmount, addDoc, userId], function (err) {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
@@ -1808,7 +2024,7 @@ app.post('/invoiceform', authenticateJWT, async (req, res) => {
 app.get('/invoiceformdata', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   
-  db.all('SELECT id,title, invoiceNumber , date, client,expensesCumulativeAmount FROM InvoicesForm WHERE user_id = ?', [userId], (err, forms) => {
+  db.all('SELECT id,title, invoiceNumber , date, client,totalAmount FROM InvoicesForm WHERE user_id = ?', [userId], (err, forms) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -1879,14 +2095,15 @@ app.get('/invoiceformdata/download-pdf/:invoiceId', authenticateJWT, async (req,
   <p>Amount: <%= amount %></p>
   <p>Tax Type: <%= taxType %></p>
   <p>Tax Percentage: <%= taxPercentage %></p>
+  <p>Cumulative Amount: <%= CumulativeAmount %></p>
   <p>Full Address: <%= fullAddress %></p>
-  <p>Hearing Date: <%= hearingDate %></p>
   <p>Date From: <%= dateFrom %></p>
   <p>Date To: <%= dateTo %></p>
   <p>Expenses Amount: <%= expensesAmount %></p>
   <p>Expenses Tax Type: <%= expensesTaxType %></p>
   <p>Expenses Tax Percentage: <%= expensesTaxPercentage %></p>
   <p>Expenses Cumulative Amount: <%= expensesCumulativeAmount %></p>
+  <p>Total Amount with all Expenses : <%= totalAmount %></p>
   <!-- Add more fields as needed -->
 </body>
 </html>
@@ -2053,20 +2270,19 @@ app.get('/dashboard/user/notifications', authenticateJWT, (req, res) => {
 
         rows.forEach((row) => {
           const eventDate = new Date(row.date);
-
           const daysDifference = Math.floor(
             (eventDate - currentDate) / (24 * 60 * 60 * 1000)
           );
-
+        
           if (daysDifference <= 15 && daysDifference >= 0) {
             let notificationMessage = '';
-
+        
             if (row.type === 'alert') {
-              notificationMessage = `Few days left for Task ${row.title} Completion. Completion Date is ${row.date}`;
+              notificationMessage = `${daysDifference} days left for Task ${row.title} Completion. Completion Date is ${row.date}`;
             } else if (row.type === 'appointment') {
-              notificationMessage = `Few days left for ${row.title} appointment. Appointment Date is ${row.date}`;
+              notificationMessage = `${daysDifference} days left for ${row.title} appointment. Appointment Date is ${row.date}`;
             } else if (row.type === 'hearing') {
-              notificationMessage = `Few days left for ${row.title} Hearing. Hearing Date is ${row.date}`;
+              notificationMessage = `${daysDifference} days left for ${row.title} Hearing. Hearing Date is ${row.date}`;
             }
 
             // Check if a notification with the same message exists and has status 'Visible'
