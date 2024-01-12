@@ -9,6 +9,7 @@ const ejs = require('ejs');
 const pdf = require('html-pdf');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
+
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON bodies
 const fs = require('fs');
@@ -86,7 +87,7 @@ fetch(url, {
 // Call the function to upload the file
 // uploadFile();
 // Connect to the SQLite database
-let db = new sqlite3.Database('./Db-data/judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
+let db = new sqlite3.Database('../judgments5.db', sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
     console.error(err.message);
     throw err; // Stop further execution in this callback
@@ -2483,7 +2484,6 @@ app.get("/dashboard/user/proxy-notifications", authenticateJWT, (req, res) => {
   );
 });
 
-
 app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) => {
   const userId = req.user.id;
   const proxyId = req.params.proxyId;
@@ -2564,6 +2564,7 @@ app.post('/dashboard/user/accept-proxy/:proxyId', authenticateJWT, (req, res) =>
     }
   );
 });
+
 
 app.get('/dashboard/user/accepted-proxy-notifications', authenticateJWT, (req, res) => {
   const userId = req.user.id;

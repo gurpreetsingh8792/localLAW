@@ -252,7 +252,6 @@ const Calendar = () => {
         })
         .then((response) => {
           const taskDetails = response.data;
-
           setTitle(taskDetails.title);
           setCaseTitle(taskDetails.caseTitle);
           setStart(taskDetails.startDate);
@@ -302,7 +301,6 @@ const Calendar = () => {
         })
         .then((response) => {
           const appointmentDetails = response.data;
-
           // Update your state with appointment details as needed
           setTitle(appointmentDetails.title);
           setCaseTitle(appointmentDetails.caseTitle);
@@ -329,12 +327,12 @@ const Calendar = () => {
     }
   };
 
-  const handleStartTime = (date) => {
-    setStart(date);
+  const handleStartTime = (newStartTime) => {
+    setStart(newStartTime);
   };
 
-  const handleEndTime = (date) => {
-    setEnd(date);
+  const handleEndTime = (newEndTime) => {
+    setEnd(newEndTime);
   };
 
   const setNewTasks = () => {
@@ -380,6 +378,7 @@ const Calendar = () => {
     }
   };
 
+
   const setNewAppointment = () => {
     if (handleValidation()) {
 
@@ -394,16 +393,15 @@ const Calendar = () => {
         setAppointmentDateError(""); // Clear the error message if date validation passes
       }
       let newEvent = {
-        title,
+       title,
         caseTitle: casetitle,
         caseType: caseTypeMap[casetitle] || "",
         appointmentDate: desc,
-        contactPerson: contactperson,
+        contactPerson: contactperson, // Use the correct variable name 'contactperson'
         location,
-        
-        startTime: start ? start.toISOString().substring(11, 16) : "", // Start time
-        endTime: end ? end.toISOString().substring(11, 16) : "", 
-        email,
+        startTime: start,
+        endTime: end,
+        email,  
         type: "appointment",
         style: { backgroundColor: "green" },
       };
@@ -476,13 +474,15 @@ const Calendar = () => {
         setHearingDateError(""); // Clear the error message if date validation passes
       }
       const newHearingData = {
-        title: title, // Use the state variable 'title' here for the new "title" field
+        title: title,
         caseTitle: casetitle,
-        assignedLawyer: casetype, // Replace with the correct field name for assigned lawyer
-        status: client, // Replace with the correct field name for status
-        hearingDate: desc, // Replace with the correct field name for hearing date
-        startTime: start ? start.toISOString().substring(11, 16) : "", // Provide a default value if start is null
-        endTime: end ? end.toISOString().substring(11, 16) : "", // Provide a default value if end is null
+        assignedLawyer: casetype,
+        status: client,
+        hearingDate: desc,
+        // startTime: start,
+        startTime: start ,
+        // endTime: end ,
+        endTime: end ,
       };
 
       axios
@@ -605,8 +605,8 @@ const Calendar = () => {
         assignedLawyer: casetype, // Replace with the correct field name for assigned lawyer
         status: client, // Replace with the correct field name for status
         hearingDate: desc, // Replace with the correct field name for hearing date
-        startTime: start ? start.toISOString().substring(11, 16) : "", // Provide a default value if start is null
-        endTime: end ? end.toISOString().substring(11, 16) : "", // Provide a default value if end is null
+        startTime: start, // Provide a default value if start is null
+        endTime: end, // Provide a default value if end is null
       };
 
       axios
@@ -1089,12 +1089,12 @@ const Calendar = () => {
                             Start Time
                           </label>
                           <input
-                            className={style.HearingVisibleFormTime}
+                            className={style.formInput}
                             type="time"
                             value={start || ""}
                             onChange={(e) => {
                               const newStartTime = e.target.value;
-                              console.log(handleStartTime(newStartTime));
+                              handleStartTime(newStartTime);
                             }}
                           />
                         </div>
@@ -1134,6 +1134,7 @@ const Calendar = () => {
                 {visibleForm === "appointment" && (
                   <>
                     <div className={style.AppointmentVisibleForm}>
+                      
                       <div className={style.formRow}>
                         <div className={style.formGroup}>
                           <label className={style.AppointmentFormTitle}>
@@ -1254,15 +1255,17 @@ const Calendar = () => {
                           <label className={style.AppointmentFormTitle}>
                             Start Time
                           </label>
+
                           <input
-                            className={style.HearingVisibleFormTime}
-                            type="time"
-                            value={start || ""}
-                            onChange={(e) => {
-                              const newStartTime = e.target.value;
-                              console.log(handleStartTime(newStartTime));
-                            }}
-                          />
+              className={style.formInput}
+              type="time"
+              value={start || ""}
+              onChange={(e) => {
+                const newStartTime = e.target.value;
+                handleStartTime(newStartTime);
+              }}
+            />
+
                         </div>
 
                         <div className={style.formGroup}>
@@ -1270,14 +1273,14 @@ const Calendar = () => {
                             End Time
                           </label>
                           <input
-                            className={style.HearingVisibleFormTime}
-                            type="time"
-                            value={end || ""}
-                            onChange={(e) => {
-                              const newEndTime = e.target.value;
-                              handleEndTime(newEndTime);
-                            }}
-                          />
+                      className={style.formInput}
+                      type="time"
+                      value={end || ""}
+                      onChange={(e) => {
+                        const newEndTime = e.target.value;
+                        handleEndTime(newEndTime);
+                      }}
+                    />
                         </div>
                       </div>
                     </div>
@@ -1542,14 +1545,14 @@ const Calendar = () => {
                             Start Time
                           </label>
                           <input
-                            className={style.HearingVisibleFormTime}
-                            type="time"
-                            value={start || ""}
-                            onChange={(e) => {
-                              const newStartTime = e.target.value;
-                              console.log(handleStartTime(newStartTime));
-                            }}
-                          />
+              className={style.formInput}
+              type="time"
+              value={start || ""}
+              onChange={(e) => {
+                const newStartTime = e.target.value;
+                handleStartTime(newStartTime);
+              }}
+            />
                         </div>
 
                         <div className={style.formGroup}>
@@ -1557,19 +1560,14 @@ const Calendar = () => {
                             End Time
                           </label>
                           <input
-                            className={style.HearingVisibleFormTime}
-                            type="time"
-                            value={
-                              end ? end.toISOString().substring(11, 16) : ""
-                            }
-                            onChange={(e) =>
-                              handleEndTime(
-                                new Date(
-                                  end.setHours(...e.target.value.split(":"))
-                                )
-                              )
-                            }
-                          />
+              className={style.formInput}
+              type="time"
+              value={end || ""}
+              onChange={(e) => {
+                const newEndTime = e.target.value;
+                handleEndTime(newEndTime);
+              }}
+            />
                         </div>
                       </div>
                     </div>

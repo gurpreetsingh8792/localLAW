@@ -9,14 +9,22 @@ import logo from '../../../assets/MainLogo.png'
 
 const footer = () => {
   return (
-    <footer>
+    <footer className={style.MainContainer}>
+
+    <div className={style.LogoContainer}>
     <Link to={"/"} className={style.logo}>
-      <img src={logo} alt="Logo" />
+      <img className={style.logo1} src={logo} alt="Logo" />
+      <h4>Lawfax</h4>
     </Link>
+    </div>
+
+    <div className={style.FooterCopyContainer}>
     <small className={style.footerCopy}>
       2023 Law<span className={style.footerCopy}>Fax</span> &copy; All
       right reserved
     </small>
+    </div>
+
     <div className={style.footerSocial}>
       <a className={style.LinkedIn} href="http://linkedin.com" target="_blank">
         <AiFillLinkedin />

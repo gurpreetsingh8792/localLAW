@@ -1,4 +1,5 @@
 import { FaBell } from "react-icons/fa";
+import { IoSettings } from "react-icons/io5";
 
 
 export const links = [
@@ -137,4 +138,5 @@ export const links = [
     bell: <FaBell />,
     path: "/dashboard/notifications"
 },
+
 ];

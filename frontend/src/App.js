@@ -1,6 +1,6 @@
 import "./App.css";
-import { NotificationProvider } from './component/utilities/Notifications/NotificationsContext.jsx'; // adjust path as needed
-import { BrowserRouter, Routes, Route} from "react-router-dom";
+import { NotificationContext, NotificationProvider } from './component/utilities/Notifications/NotificationsContext.jsx'; // adjust path as needed
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./pages/Login-Logout/AuthContext";
 
 // UI Library Chakra ui
@@ -54,6 +54,7 @@ import Notification from "./component/utilities/Notifications/Notifications.jsx"
 import DashboardNavbar from "./component/utilities/DashboardNavbar/DashboardNavbar.jsx";
 import ConvertDocument from "./component/form/ConvertDocument/ConvertDocument.jsx";
 import CaseHistory from "./component/form/AddCase/CaseHistory/CaseHistory.jsx";
+import NotificationSetting from "./component/utilities/Notifications/NotificationSetting/NotificationSetting.jsx";
 
 function App() {
  
@@ -66,7 +67,7 @@ function App() {
         <div className="App">
           <Navbar />
           <Routes>
-            {/* Pages Routes */}
+          {/* Pages Routes */}
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="dashboard" element={<DashBoard />} />      
@@ -79,6 +80,8 @@ function App() {
             <Route path="explore" element={<Explore />} />
             <Route path="DemoRequestForm" element={<DemoRequestForm />} />
             <Route path="dashboard/notifications" element={<Notification />} />
+            <Route path="dashboard/notificationssetting" element={<NotificationSetting />} />
+
 
 
             

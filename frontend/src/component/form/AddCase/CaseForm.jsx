@@ -153,6 +153,8 @@ const handleConcernedPersonSubmit = async (values, { resetForm }) => {
       setIsForm2Submitted(true);
       navigate(-1);
       resetForm();
+      setIsForm1Submitted(true);
+
     } catch (error) {
       console.error(error);
     }

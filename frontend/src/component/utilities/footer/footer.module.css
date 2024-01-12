@@ -1,63 +1,47 @@
-footer {
-    background-color: var(--color-secondary);
-    margin-top: 7rem;
-    /* padding: 1rem; */
-    /* font-size: 0.9rem; */
-    color: var(--color-primary);
+/* footer.module.css */
+
+.MainContainer {
+    background-color: #f2f2f2; /* light grey background */
+    padding: 20px;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  .LogoContainer {
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    text-decoration: none;
+    color: #333; /* dark text color for contrast */
+    font-size: 24px; /* larger font size for visibility */
+    height: 1.5rem;
+  }
+  .logo1{
     display: flex;
-    justify-content: space-between;
-    align-items: center; 
-    flex-wrap: nowrap; 
-}
-
-/* Adjust the logo image */
-.logo img {
-    height: 8rem; /* Adjust size as needed */
-}
-
-/* Footer text and logo container */
-.footerCopyright {
-    display: flex;
-    align-items: center;
-    gap: 1rem; /* Space between items */
-}
-.footerCopy{
-    color: var(--color-fifth);
-}
-
-/* Footer social icons */
-.footerSocial {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.footerSocial a {
-    background-color: var(--color-secondary);
-    padding: 0.5rem;
-    border: 1px solid var(--color-fourth);
-    border-radius: 0.5rem;
-    transition: var(--transition);
-}
-
-.footerSocial a svg {
-    color: var(--color-fourth);
-}
-
-.footerSocial a:hover {
-    border-color: var(--color-primary);
-    background: transparent;
-}
-
-/* Adjust for very small screens */
-@media screen and (max-width: 480px) {
-    footer {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-    }
-
-    .footerSocial {
-        justify-content: center;
-    }
-}
+    height: 14rem;
+    position: absolute;
+  }
+  
+  .FooterCopyContainer {
+    margin-bottom: 20px;
+  }
+  
+  .footerCopy {
+    color: #666; /* medium grey for less emphasis */
+    font-size: 14px;
+  }
+  
+  .footerSocial a {
+    margin: 0 10px;
+    color: #333; 
+    font-size: 24px;
+  }
+  
+  .LinkedIn:hover, .FaceBook:hover, .InstaGram:hover, .YouTuber:hover {
+    color: #0056b3; /* change color on hover for visual feedback */
+  }
+  
+  /* Additional responsive design considerations can be added as needed */
+  

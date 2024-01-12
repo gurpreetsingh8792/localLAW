@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import style from './ProxyData.module.css'
 import axios from 'axios';
+import DashboardNavbar from '../../utilities/DashboardNavbar/DashboardNavbar';
 
 const ProxyData = () => {
   const [proxyActivity, setProxyActivity] = useState([]);
@@ -39,27 +41,54 @@ const ProxyData = () => {
   
 
   return (
-    <div>
-      <h2>Proxy Activity</h2>
+    <>
+    <DashboardNavbar />
+
+    <div className={style.container}>
+      <h2 className={style.heading}>Proxy Activity</h2>
+
       {loading ? (
         <p>Loading...</p>
       ) : (
         <div>
+      <table className={style.table}>
+        <thead className={style.tableHead}>
+
+        
+        <tr>
+            <th>Creator </th>
+            <th>Acceptor</th>
+            <th>Acceptance Date</th>
+            <th>Court</th>
+            <th>Hearing Date</th>
+            <th>State</th>
+            <th>Actions</th>
+
+          </tr>
+
+          </thead>
+
+          <tbody className={style.tableBody}>
           {proxyActivity.map((activity) => (
-            <div key={activity.id}>
+            <tr className={style.CaseInfo} key={activity.id}>
               
-              <p>Creator: {activity.creatorFullName}</p>
-              <p>Acceptor: {activity.acceptorUsername}</p>
-              <p>Acceptance Date: {activity.acceptanceDate}</p>
-              <p>Court: {activity.type}</p>
-              <p>Hearing Date: {activity.hearingDate}</p>
-              <p>State: {activity.zipStateProvince}</p>
-              <button onClick={() => handleDelete(activity.id)}>Delete</button>
-            </div>
+              <td> {activity.creatorFullName}</td>
+              <td> {activity.acceptorUsername}</td>
+              <td> {activity.acceptanceDate}</td>
+              <td> {activity.type}</td>
+              <td> {activity.hearingDate}</td>
+              <td> {activity.zipStateProvince}</td>
+
+              <button className={style.btn} onClick={() => handleDelete(activity.id)}>Delete</button>
+              
+            </tr>
           ))}
+</tbody>
+</table>
         </div>
       )}
     </div>
+</>
   );
 };
 

@@ -38,6 +38,7 @@
 .tableBody {
   /* background-color: #fff; */
   padding-top: 1rem;
+  color: var(--color-fifth);
 }
 
 .tableBody tr:nth-child(odd) {

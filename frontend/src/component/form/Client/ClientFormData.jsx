@@ -130,6 +130,7 @@ const ClientFormData = () => {
             <EditPeopleForm
               clientData={clientData.find((clientItem) => clientItem.id === editingClient)}
               onCancel={handleCancelClick}
+              onClose={handleCancelClick}
             />
           )}
         </Modal>

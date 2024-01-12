@@ -1,0 +1,140 @@
+/* NotificationSetting.module.css */
+.MainContainer{
+  margin-top: 2rem;
+  height: 100%;
+  max-height: 88vh; /* Maximum height set to 80% of the viewport height */
+  overflow-y: auto;
+}
+
+
+
+.container {
+    background-color: white;
+    color: #fff;
+    border-radius: 10px; 
+    padding: 20px;
+    max-width: 400px;
+    margin: auto; 
+  }
+
+  .inputField {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd; /* Light grey border */
+    background-color: #fff;
+    color: #333;
+  }
+  
+  /* ... rest of your styles */
+  
+  
+  .title {
+    color: #ffcc00; /* Yellow color for the title */
+    text-align: center; /* Centering the title */
+    margin-bottom: 30px;
+  }
+  
+  .section {
+    margin-bottom: 20px;
+  }
+  
+  .sectionTitle {
+    color: var(--color-fourth); /* Yellow color for section titles */
+    margin-bottom: 10px;
+  }
+  
+  .checkboxLabel {
+    display: block; /* Block display to allow margin */
+    margin: 10px 0;
+    cursor: pointer; /* Cursor pointer for better UX */
+  }
+  
+  .checkboxInput {
+    margin-right: 10px; /* Spacing before the label text */
+  }
+  
+  .buttonGroup {
+    display: flex; /* Flex container for the buttons */
+    justify-content: space-between; /* Distribute space between buttons */
+    margin-top: 20px;
+  }
+  
+  .button {
+    background-color: #ffcc00; /* Yellow background for buttons */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners for buttons */
+    color: #1c1c1c; /* Dark text for contrast */
+    padding: 10px 15px; /* Padding inside the buttons */
+    cursor: pointer; /* Cursor pointer for better UX */
+    text-transform: uppercase; /* Uppercase text for buttons */
+    font-weight: bold; /* Bold font weight */
+  }
+  
+  .button:hover {
+    opacity: 0.9; /* Slight opacity change on hover */
+  }
+  
+  /* Specific styles for cancel and delete buttons */
+  .cancelButton {
+    background-color: #666; /* Darker background for cancel */
+  }
+  
+  .deleteButton {
+    background-color: #e74c3c; /* Red background for delete */
+  }
+  .toggleSwitch {
+    position: relative;
+    display: inline-block;
+    width: 40px; /* Adjusted width */
+    height: 22px; /* Adjusted height */
+    margin-left: 10px;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 22px; /* Adjusted to new height to maintain the pill shape */
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px; /* Adjusted for visual appeal */
+    width: 18px; /* Adjusted for visual appeal */
+    left: 2px; /* Smaller offset */
+    bottom: 2px; /* Smaller offset */
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(18px); /* Adjusted to new slider width */
+  }
+  
+  /* Keep the focus style the same or adjust as desired */
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  .notificationOption{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  
+  

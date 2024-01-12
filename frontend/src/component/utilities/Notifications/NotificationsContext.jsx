@@ -3,6 +3,7 @@ import React, { createContext, useState } from 'react';
 export const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
+  console.log("child",children)
   const [notifications, setNotifications] = useState([
     // ... initial notifications
   ]);

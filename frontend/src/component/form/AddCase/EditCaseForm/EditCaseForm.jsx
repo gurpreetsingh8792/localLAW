@@ -372,7 +372,7 @@ const handleSubmit = async (values, { resetForm, setErrors }) => {
                       </option>
                     ))}
                   </Field>
-              <NavLink className={styles.linkClient} to="/dashboard/clientform">Add New People</NavLink>
+              <NavLink className={styles.linkClient} to="/dashboard/peopleform">Add New People</NavLink>
             </div>
             <div className={styles.columnTeam}>
             <label className={styles.labelTeam}>Team:</label>
@@ -467,10 +467,9 @@ const handleSubmit = async (values, { resetForm, setErrors }) => {
             {/* Submit Button */}
             {/* <div className={styles.row}> */}
               <label className={styles.label}></label>
-
               <div className={styles.BtnContainer}>
               <button type="submit" className={styles.submitButton}>UPDATE</button>
-              <button type="button" onClose={handleCancel} className={styles.submitButton}>Cancel</button>
+              <button type="button" onClick={handleCancel} className={styles.submitButton}>Cancel</button>
               </div>
             
             {/* </div> */}

@@ -1,5 +1,6 @@
 /* Container for all notifications */
 .notificationsContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,6 +12,80 @@
   color: #c5c6c7; /* Light text color for contrast */
   height: 100%;
 }
+
+
+.notificationItemRead {
+  color: red; /* Example: grey color indicating read */
+}
+
+.markAllReadButtonContainer {
+  /* display: flex; */
+  margin: 10px 0;
+}
+
+.markAllReadButton {
+  padding: 8px 15px;
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.markAllReadButton:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+
+.settingIconContainer {
+  position: absolute;
+  top: 3rem; 
+  right: 1rem;
+  font-size: 2rem; 
+}
+
+.IconContainer{
+  color: var(--color-fourth);
+}
+
+
+.Heading{
+  font: 100;
+  font-size: 1rem;
+  color: var(--color-third);
+}
+
+.dropdownMenu {
+  background: transparent;
+  position: absolute;
+  /* width: 21rem; */
+  top: -2.5rem;
+  right: 0rem;
+  /* background-color: var(--color-primary); */
+  color: white;
+  /* border: 1px solid #ddd; */
+  /* border-radius: 1rem; */
+  padding: 4px;
+}
+
+.dropdownMenu.active {
+  opacity: 1; /* Fully visible when active */
+  transform: translateY(0); /* Final position */
+  visibility: visible; /* Make the dropdown visible when active */
+}
+
+.dropdownMenu label {
+  color: var(--color-third);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.dropdownMenu input[type="radio"] {
+  margin-right: 5px;
+}
+
 
 .tasksProxiesContainer {
   display: flex;
@@ -36,6 +111,15 @@
   color: var(--color-primary); 
 }
 
+.IconContainer{
+  position: absolute;
+  color: var(--color-third);
+  right: 1rem;
+  top:0.5rem;
+  margin-left: 1rem;
+  font-size: 2rem;
+}
+
 /* Individual notification item styling */
 .notificationItem {
   background-color: #0b0c10; 
@@ -51,10 +135,6 @@
   border-left: 4px solid var(--color-secondary); /* Bright border for active element */
 }
 
-/* .notificationItem:hover {
-  transform: translateY(-2px);
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-} */
 
 /* Styling for read and unread notifications */
 .notificationTextRead, .notificationTextUnread {
@@ -78,39 +158,6 @@
   transform: rotate(90deg); /* Rotate 90 degrees on hover */
 }
 
-/* Dropdown menu styling */
-
-@keyframes dropdownAnimation {
-  0% {
-    opacity: 0;
-    transform: scale(0.95) rotateX(-10deg);
-    transform-origin: top;
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotateX(0deg);
-  }
-}
-.dropdownMenu {
-  /* display: none;  */
-  flex-direction: column;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: #1f2833;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  z-index: 10;
-  padding: 10px;
-  opacity: 0;
-  visibility: hidden;
-  transition: visibility 0.3s linear;
-  animation: dropdownAnimation 0.5s ease forwards;
-}
-
-.dropdownMenuVisible {
-  visibility: visible;
-}
 
 /* Menu Items */
 .MenuItem {
