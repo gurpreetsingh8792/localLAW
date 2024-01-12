@@ -10,17 +10,18 @@
 
 /* black blue and grey need to try this color */
 :root {
-    --color-primary: #000000; /* Frost White */
-    --color-secondary: #6A0DAD; /* Twilight Purple */
+    --color-primary: rgb(215, 211, 211); /* Frost White */
+    --color-secondary: #488AC7; /* Twilight Purple */
     --color-third: #CCFF00; /* Laser Lime */
-    --color-fourth: #5F6A7D; /* Galactic Grey */
-    --color-fifth: #fff;
+    --color-fourth: #466c93; /* Galactic Grey */
+    --color-fifth: #fff; /* Pure White */
     --color-accent1: #87CEEB; /* Sky Blue */
     --color-accent2: #FFA500; /* Digital Orange */
     --bg-primary: #00020D; /* Cosmic Black */
     --bg-secondary: #C0C0C0; /* Starlight Silver */
     --bg-accent: #004E64; /* Neptune Teal */
-    --color-danger: rgb(232, 85, 85);
+    --color-danger: rgb(232, 85, 85); /* Danger Color */
+    --color-dark-blue: #003366; /* Dark Blue */
 
     --container-width-lg: 80%;
     --container-width-md: 90%;
@@ -28,8 +29,10 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
-    background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary), var(--bg-accent));
+        /* background: linear-gradient(135deg, var(--color-accent1), var(--color-accent2)); */
+        background: linear-gradient(135deg, var(--color-fifth), var(--bg-secondary));
+
+    color: #000000; /* Frost White */
 }
 
 .container{

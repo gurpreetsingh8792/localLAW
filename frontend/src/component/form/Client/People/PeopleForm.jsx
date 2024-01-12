@@ -15,10 +15,10 @@ const PeopleForm = () => {
   const [appointmentTitles, setAppointmentTitles] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
   const openModal = () => setIsModalOpen(true);
-  const openModalTwo = () => setIsModalOpenTwo(true);
   const closeModal = () => setIsModalOpen(false);
+  const openModalTwo = () => setIsModalOpenTwo(true);
+  const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
   const closeModalTwo = () => setIsModalOpenTwo(false);
 
   useEffect(() => {

@@ -1626,13 +1626,13 @@ const Calendar = () => {
                       </button>
                       <button
                         className={style.btn}
-                        onClick={updateHearingEvent}
+                        onClick={updateAppointmentEvent}
                       >
                         Update
                       </button>
                       <button
                         className={style.btn}
-                        onClick={deleteHearingEvent}
+                        onClick={deleteAppointmentEvent}
                       >
                         Delete
                       </button>

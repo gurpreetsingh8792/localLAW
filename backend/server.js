@@ -8,51 +8,63 @@ const secretKey = 'your_secret_key';
 const ejs = require('ejs');
 const pdf = require('html-pdf');
 const fetch = require('node-fetch');
+const FormData = require('form-data');
+app.use(cors()); 
 const fs = require('fs');
-const port = 8052;
-
-// const FormData = require('form-data');
-// const axios = require('axios');
+app.use(express.json());
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 
 // const { Storage } = require('@google-cloud/storage');
+const port = 8052;
 
-// const url = "http://34.105.29.122:8000/law_sections/";
-// const filePath = "SS_NIAPOLICYSCHEDULECIRTIFICATESS_44081908.pdf";
 
-const files = {
-  // pdf_file: fs.createReadStream(filePath)
-};
-
-// const params = {
-//   state: "Uttarakhand",
-//   case_no: "your_case_no",
-//   description: "eating pizza cancer lung vape",
-//   history: "None",
-//   District: "Dehradun",
-//   town: "Rishikesh",
-//   case_type: "None",
-//   full_name: "Mr ROSHAN LAL",
-//   address: "LANE 6, CANAL ROAD GHUMANIWALA, RISHIKESH DEHRADUN UTTARAKHAND - 249204 Tel. 9756877006"
-// };
-
-// const formData = new FormData();
-// for (const key in params) {
-//   formData.append(key, params[key]);
-// }
-// formData.append("pdf_file", files.pdf_file);
-
-// fetch(url, {
-//   method: 'GET',
-//   body: formData
-// })
-//   .then(response => response.json())
-//   .then(data => console.log(data))
-//   .catch(error => console.error(error));
+app.use(express.json());
 
 
 
 
+// Proxy endpoint
+// app.use('/proxy', createProxyMiddleware({
+//     target: 'http://34.105.29.122:8000',
+//     changeOrigin: true,
+//     pathRewrite: {
+//         '^/proxy': '', 
+//     },
+//   }));
+    
+const queryParams = new URLSearchParams({
+  state: "Punjab",
+  case_no: "your_case_no",
+  description: "not able to claim my insurance",
+  history: "None",
+  District: "Bathinda",
+  town: "Bathinda",
+  case_type: "Insurance",
+  full_name: "ENGINEER CONSTRUCTIONS PVT LTD",
+  address: "LANE 6, CANAL ROAD GHUMANIWALA, Bathinda - 249204 Tel. 9756877006"
+});
+
+const url = `http://34.105.29.122:8000/law_sections/?${queryParams.toString()}`;
+const filePath = "./Db-data/SS_NIAPOLICYSCHEDULECIRTIFICATESS_44081908.pdf";
+
+const formData = new FormData();
+formData.append('pdf_file', fs.createReadStream(filePath));
+
+fetch(url, {
+  method: 'POST',
+  body: formData
+})
+.then(response => {
+    console.log('Status Code:', response.status); // Log the response status code
+    return response.json();
+})
+.then(data => {
+    console.log('Response Data:', data); // Log the response data
+})
+.catch(error => {
+    console.error('Error:', error); // Log any errors
+});
 
 
 

@@ -6,6 +6,8 @@ import { NavLink } from 'react-router-dom';
 // import { MdClose } from "react-icons/md";
 import { links } from "./data";
 import style from './Navbar.module.css'
+import { IoSettings } from "react-icons/io5";
+
 import { NotificationContext } from '../Notifications/NotificationsContext'; // adjust path as needed
 
 const DashboardNavbar = () => {
@@ -112,6 +114,7 @@ const DashboardNavbar = () => {
                   {/* <span className={style.NotifiCount}>{Notification.length}</span> */}
           </ul>
         </div>
+        {/* <NavLink className={style.IconContainer} to={"/dashboard/notificationssetting"}> <IoSettings className={style.SettingIcon} />  </NavLink> */}
       </nav>
     </>
   );

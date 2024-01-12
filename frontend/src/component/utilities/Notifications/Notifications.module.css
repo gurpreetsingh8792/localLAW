@@ -14,37 +14,42 @@
 }
 
 
-/* .settingIconContainer {
-  position: absolute;
-  top: 1rem; 
-  right: 1rem;
-  font-size: 1.4rem;  
+.notificationItemRead {
+  color: red; /* Example: grey color indicating read */
 }
-.setting{
-  color: var(--color-fourth);
-} */
+
+.markAllReadButtonContainer {
+  /* display: flex; */
+  margin: 10px 0;
+}
+
+.markAllReadButton {
+  padding: 8px 15px;
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.markAllReadButton:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
 
 
 .settingIconContainer {
-  color: var(--color-third);
   position: absolute;
   top: 3rem; 
   right: 1rem;
-  font-size: 1.4rem; 
+  font-size: 2rem; 
 }
 
-
-@keyframes rotateAnimation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.IconContainer{
+  color: var(--color-fourth);
 }
-/* .settingIconContainer .SettingIcon:hover {
-  animation: rotateAnimation 1s linear;
-} */
+
 
 .Heading{
   font: 100;
@@ -55,13 +60,13 @@
 .dropdownMenu {
   background: transparent;
   position: absolute;
-  width: 21rem;
+  /* width: 21rem; */
   top: -2.5rem;
   right: 0rem;
-  background-color: var(--color-primary);
+  /* background-color: var(--color-primary); */
   color: white;
-  border: 1px solid #ddd;
-  border-radius: 1rem;
+  /* border: 1px solid #ddd; */
+  /* border-radius: 1rem; */
   padding: 4px;
 }
 
@@ -106,6 +111,15 @@
   color: var(--color-primary); 
 }
 
+.IconContainer{
+  position: absolute;
+  color: var(--color-third);
+  right: 1rem;
+  top:0.5rem;
+  margin-left: 1rem;
+  font-size: 2rem;
+}
+
 /* Individual notification item styling */
 .notificationItem {
   background-color: #0b0c10; 
@@ -121,10 +135,6 @@
   border-left: 4px solid var(--color-secondary); /* Bright border for active element */
 }
 
-/* .notificationItem:hover {
-  transform: translateY(-2px);
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-} */
 
 /* Styling for read and unread notifications */
 .notificationTextRead, .notificationTextUnread {
@@ -148,24 +158,6 @@
   transform: rotate(90deg); /* Rotate 90 degrees on hover */
 }
 
-/* Dropdown menu styling */
-
-/* @keyframes dropdownAnimation {
-  0% {
-    opacity: 0;
-    transform: scale(0.95) rotateX(-10deg);
-    transform-origin: top;
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotateX(0deg);
-  }
-} */
-
-
-/* .dropdownMenuVisible {
-  visibility: visible;
-} */
 
 /* Menu Items */
 .MenuItem {

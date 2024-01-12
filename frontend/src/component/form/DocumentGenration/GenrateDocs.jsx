@@ -21,7 +21,7 @@ const validationSchema = Yup.object().shape({
   // propertyType: Yup.string().required("Property type is required"),
   // PreviousCase: Yup.string().required("Previous case type is required"),
   casetype: Yup.string().required("Case type is required"),
-  History: Yup.string().required("History is required"),
+  // History: Yup.string().required("History is required"),
   fullName: Yup.string().required("Full name is required"),
   address: Yup.string().required("Address is required"),
 });
@@ -94,26 +94,104 @@ const GenrateDocs = () => {
 
   };
 
+  
+
+
+  // const handleAnalyzeClick = async (values) => {
+  //   setIsAnalyzing(true);
+  //   setAnalysisResult(null);
+  //   setAnalysisError(null);
+  //   // Create URLSearchParams from the form values
+  //   const queryParams = new URLSearchParams({
+  //     state: values.state,
+  //     case_no: values.CaseNo,
+  //     description: values.description,
+  //     history: values.History,
+  //     District: values.district,
+  //     town: values.Town,
+  //     case_type: values.casetype,
+  //     full_name: values.fullName,
+  //     address: values.address,
+  //   });
+
+  //   const url = `/proxy/law_sections/?${queryParams.toString()}`;
+  //   // Prepare the formData for the file
+  //   const formData = new FormData();
+  //   if (values.fileUpload) {
+  //     formData.append('pdf_file', values.fileUpload);
+  //   }
+  
+  //   try {
+  //     // Make the POST request with axios
+  //     const response = await axios.post(url, formData, {
+  //       headers: {
+  //         'x-auth-token': localStorage.getItem('token'),
+  //       },
+  //     });
+  
+  //     setAnalysisResult(response.data); // Adjust according to your API response
+  //     console.log('Analysis Result:', response.data);
+  //   } catch (error) {
+  //     setAnalysisError(error.message);
+  //     console.error('Error:', error);
+  //   } finally {
+  //     setIsAnalyzing(false);
+  //   }
+  // };
+
   const handleAnalyzeClick = async (values) => {
     setIsAnalyzing(true);
     setAnalysisResult(null);
     setAnalysisError(null);
+  
+    // Construct the query parameters
+    const queryParams = new URLSearchParams({
+      state: values.state,
+      case_no: values.CaseNo,
+      description: values.description,
+      history: values.History,
+      District: values.district,
+      town: values.Town,
+      case_type: values.casetype,
+      full_name: values.fullName,
+      address: values.address
+    });
 
+    // Append query parameters to the URL
+    const url = `http://34.105.29.122:8000/law_sections/?${queryParams.toString()}`;
+    // Prepare the form data for the file
+    const formData = new FormData();
+    if (values.fileUpload) {
+      formData.append('pdf_file', values.fileUpload);
+    }
+    console.log("Form data for debugging:", formData);
+    let headers = new Headers();
+    headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+    headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Credentials', 'true');
+        
     try {
-      // Replace this with your actual API call
-      const response = await axios.get('http://34.105.29.122:8000/law_sections/', {
-        headers: {
-          'x-auth-token': localStorage.getItem('token'), // Get the token from localStorage or your authentication mechanism
-        },
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: headers
+       
       });
-
-       setAnalysisResult(response.data); // Adjust according to your API response
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        setAnalysisResult(responseData);
+      } else {
+        throw new Error('Failed to analyze data');
+      }
     } catch (error) {
       setAnalysisError(error.message);
     } finally {
       setIsAnalyzing(false);
     }
   };
+
+
 
   const handleStateChange = (event, setFieldValue) => {
     const state = event.target.value;
@@ -133,8 +211,11 @@ const GenrateDocs = () => {
 
   const handleFileUpload = (event, setFieldValue) => {
     const file = event.currentTarget.files[0];
-    setFieldValue("fileUpload", file);
+    setFieldValue("fileUpload", file); // Update the field name to "fileUpload"
+    console.log("upload file", file);
   };
+  
+
   const navigate = useNavigate();
   const HandleCancel=()=>{
     navigate('/dashboard')
@@ -158,7 +239,7 @@ const GenrateDocs = () => {
           address: "",
           CaseNo: "",
           Previouscase: "",
-          fileUpload: null, // Add a field for file upload
+          fileUpload: null, 
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
@@ -294,14 +375,13 @@ const GenrateDocs = () => {
                       <label htmlFor="Document" className={style.Label}>
                         Upload Documents (Optionals)
                       </label>
+
                       <Field
                         id="Document"
                         className={style.HiddenFileInput}
                         type="file"
                         name="Document"
-                        onChange={(event) =>
-                          handleFileUpload(event, setFieldValue)
-                        }
+                        onChange={(event) => handleFileUpload(event, setFieldValue)}
                         // You can add an 'onChange' event here if you need to handle the file input
                       />
                       {/* Update this to display errors for the 'Document' field */}

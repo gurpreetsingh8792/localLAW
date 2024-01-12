@@ -4,6 +4,9 @@ import DashboardNavbar from "../DashboardNavbar/DashboardNavbar";
 import style from './Notifications.module.css'
 import { IoSettings } from "react-icons/io5";
 import { NavLink, useNavigate } from "react-router-dom";
+import Modal from "../../form/Client/People/ModelPop/Modal";
+import NotificationSetting from "./NotificationSetting/NotificationSetting";
+
 
 
 
@@ -16,6 +19,9 @@ const Notifications = () => {
   const [showDropdown, setShowDropdown] = useState({});
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
   const [notificationMethod, setNotificationMethod] = useState('email');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const navigate = useNavigate();
 
@@ -26,6 +32,31 @@ const Notifications = () => {
 
   const handleOptionChange = (e) => {
     setNotificationMethod(e.target.value);
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      // Assuming you have an endpoint to mark all notifications as read
+      const response = await axios.put('http://localhost:8052/dashboard/user/mark-all-notifications-as-read', {}, {
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      });
+      setTasks(tasks.map(task => ({ ...task, isRead: true })));
+      setProxy(proxy.map(proxyItem => ({ ...proxyItem, isRead: true })));
+
+      console.log('All notifications marked as read');
+      
+      // Update your local state to reflect the changes
+      // This could mean setting all notifications to a 'read' state
+      // or simply fetching the notifications again to get the updated state
+      // For example:
+      // setTasks(tasks.map(task => ({ ...task, isRead: true })));
+      // setProxy(proxy.map(proxyItem => ({ ...proxyItem, isRead: true })));
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+      // Handle error
+    }
   };
 
 
@@ -180,20 +211,25 @@ const Notifications = () => {
   handleAccept(proxyItem.id, 'proxy'); 
 }}>Accept</div> */}
 
+    <div className={style.markAllReadButtonContainer}>
+          <button onClick={handleMarkAllAsRead} className={style.markAllReadButton}>
+            Mark All as Read
+          </button>
     <div className={style.notificationsContainer}>
 
-    
 
     <div className={style.tasksProxiesContainer}>
           {/* ... (header and loading indicators remain the same) */}
 
       {/* Alerts Section */}
+      
          <div className={style.tasksSection}>
+         
         <h2 className="header">Tasks</h2>
         {tasksLoading ? <p>Loading Tasks...</p> : (
           <ul>
-            {tasks.map((alert, index) => (
-              <li key={index} className={style.notificationItem}>
+            {tasks.map((alert, index, task) => (
+              <li key={index} className={task.isRead ? style.notificationItemRead : style.notificationItem}>
                 <span className={style.notificationTextUnread}>{alert}</span>
                 {/* <button onClick={() => toggleDropdown(index, 'alert')} className={style.dropdownToggle}>⋮</button> */}
                 {/* {showDropdown[`alert-${index}`] && (
@@ -203,7 +239,8 @@ const Notifications = () => {
                   </div>
                 )} */
                 }
-              </li>
+            
+            </li>
             ))}
           </ul>
         )}
@@ -217,8 +254,7 @@ const Notifications = () => {
 
           <ul>
             {proxy.map((proxyItem, index) => (
-              <li key={index} className={style.notificationItem}>
-                <span className={style.notificationTextUnread}>{proxyItem.message}</span>
+              <li key={index} className={proxyItem.isRead ? style.notificationItemRead : style.notificationItem}>                <span className={style.notificationTextUnread}>{proxyItem.message}</span>
                 <button onClick={() => toggleDropdown(index, 'proxy')} className={style.dropdownToggle}>⋮</button>
                 {showDropdown[`proxy-${index}`] && (
                   <div className={`${style.dropdownMenu} ${showDropdown[`proxy-${index}`] ? style.dropdownMenuVisible : ''}`}>                    <div className={style.MenuItem} onClick={() => handleDelete(proxyItem.id, 'proxy')}>Delete</div>
@@ -231,45 +267,16 @@ const Notifications = () => {
           
         )}
       </div>
+  {/* Button to mark all notifications as read */}
+  <NavLink className={style.IconContainer} onClick={openModal} to={"#"}> <IoSettings className={style.SettingIcon} />  </NavLink>
 
-      <div className={style.settingIconContainer} >
-      <div className={`${style.dropdownMenu} ${showSettingsDropdown ? 'active' : ''}`}>         
-     
-       <div className={style.SettingIcon} onClick={toggleSettingsDropdown}>
-        <h2 className={style.Heading}> How would you like your Notifications ? <IoSettings className={style.SettingIcon} /> </h2>
-
-      </div>
-
-      {showSettingsDropdown && 
-        <div> 
-                 <label>
-            <input
-              type="radio"
-              value="email"
-              checked={notificationMethod === "email"}
-              onChange={handleOptionChange}
-            /> Email
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="whatsapp"
-              checked={notificationMethod === "whatsapp"}
-              onChange={handleOptionChange}
-            /> WhatsApp
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="both"
-              checked={notificationMethod === "both"}
-              onChange={handleOptionChange}
-            /> Both
-          </label>
-</div>
-      }
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+                  <NotificationSetting onClose={closeModal}/>
+      </Modal>
+  
         </div>
-        </div>
+  
+
       </div>
 
       {/* {showSettingsDropdown && (
