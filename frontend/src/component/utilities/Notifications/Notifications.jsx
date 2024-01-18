@@ -8,8 +8,6 @@ import Modal from "../../form/Client/People/ModelPop/Modal";
 import NotificationSetting from "./NotificationSetting/NotificationSetting";
 
 
-
-
 const Notifications = () => {
   const [tasks, setTasks] = useState([]);
   const [proxy, setProxy] = useState([]);
@@ -212,9 +210,9 @@ const Notifications = () => {
 }}>Accept</div> */}
 
     <div className={style.markAllReadButtonContainer}>
-          <button onClick={handleMarkAllAsRead} className={style.markAllReadButton}>
+          {/* <button onClick={handleMarkAllAsRead} className={style.markAllReadButton}>
             Mark All as Read
-          </button>
+          </button> */}
     <div className={style.notificationsContainer}>
 
 

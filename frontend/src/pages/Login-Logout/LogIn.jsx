@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import style from './login.module.css';
 import { useAuth } from './AuthContext';
-
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 // Validation schema using Yup
 const loginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -15,7 +15,11 @@ const loginSchema = Yup.object().shape({
 const LogIn = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleLogin = async (values, actions) => {
     try {
       const response = await axios.post('http://localhost:8052/login', {
@@ -62,14 +66,25 @@ const LogIn = () => {
                 placeholder="What is your email?"
               />
               <ErrorMessage name="email" component="div" className={style.error} />
-
+              <div className={style.inputContainer}>
               <Field
-                className={style.input}
-                type="password"
-                name="password"
-                placeholder="Enter password"
-              />
-              <ErrorMessage name="password" component="div" className={style.error} />
+              className={`${style.input} ${style.passwordInput}`}
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              placeholder="Password"
+              
+            />
+            <button
+              type="button"
+              className={style.visibilityButton}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </button>
+            </div>
+       
+      
+              <ErrorMessage  name = "password" component="div" className={style.error} />
 
               <button className={style.submit} type="submit" disabled={isSubmitting}>
                 Continue

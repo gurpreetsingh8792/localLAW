@@ -189,7 +189,7 @@ const handleExpensesChange = (e, setFieldValue, values) => {
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
-            <div className={styles.invoiceNo}><span style={{ color: 'var(--color-primary)'}}>INV</span>
+            <div className={styles.invoiceNo}><span style={{ color: 'var(--color-primary)'}}>INV-</span>
   {generateInvoiceNo()}</div>
   
   <label className={styles.label} htmlFor="title">Title</label>

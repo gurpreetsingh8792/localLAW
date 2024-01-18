@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import style from "./register.module.css";
 
 // Validation schema for form fields
@@ -14,6 +15,11 @@ const validationSchema = Yup.object({
 });
 
 const LogIn = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
@@ -62,7 +68,23 @@ const LogIn = () => {
               <Field className={style.input} type="email" name="email" placeholder="Your email" />
               <ErrorMessage name="email" component="div" className={style.error} />
 
-              <Field className={style.input} type="password" name="password" placeholder="Password" />
+              <div className={style.inputContainer}>
+              <Field
+              className={`${style.input} ${style.passwordInput}`}
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              placeholder="Password"
+              
+            />
+            <button
+              type="button"
+              className={style.visibilityButton}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </button>
+            </div>
+       
               <ErrorMessage name="password" component="div" className={style.error} />
 
               <button type="submit" className={style.submit} disabled={isSubmitting}>

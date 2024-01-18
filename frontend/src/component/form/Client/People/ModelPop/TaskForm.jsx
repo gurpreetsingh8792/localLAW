@@ -9,6 +9,7 @@ const TaskForm = ({onClose}) => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [cases, setCases] = useState([]);
   const [selectedCaseTitle, setSelectedCaseTitle] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
@@ -65,6 +66,7 @@ const TaskForm = ({onClose}) => {
       });
       console.log('Form submission response:', response.data);
       alert('Alerts Form submitted successfully!');
+      navigate(0);
       resetForm();
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -90,7 +92,7 @@ const TaskForm = ({onClose}) => {
     formik.setFieldValue('caseTitle', event.target.value);
   };
 
-  const navigate = useNavigate();
+ 
   const HandleCancel = () => {
     onClose();
   };

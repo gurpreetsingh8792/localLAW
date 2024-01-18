@@ -3,6 +3,7 @@ import { NotificationContext, NotificationProvider } from './component/utilities
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./pages/Login-Logout/AuthContext";
 
+
 // UI Library Chakra ui
 import { ChakraProvider } from '@chakra-ui/react'
 
@@ -14,6 +15,7 @@ import Services from "./pages/Services/Services";
 
 import LogIn from "./pages/Login-Logout/LogIn";
 import Register from "./pages/Login-Logout/Register";
+import VerifyEmail from "./pages/Login-Logout/VerifyEmail";
 import Contact from "./pages/Contact/Contact";
 import Forgot from "./pages/Login-Logout/Forgot";
 import Explore from "./pages/Explore/Explore";
@@ -76,6 +78,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<LogIn />} />
             <Route path="register" element={<Register />} />
+            <Route path="verifyemail" element={<VerifyEmail />} />
             <Route path="forgot" element={<Forgot />} />
             <Route path="explore" element={<Explore />} />
             <Route path="DemoRequestForm" element={<DemoRequestForm />} />

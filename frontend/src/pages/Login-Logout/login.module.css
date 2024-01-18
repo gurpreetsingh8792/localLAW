@@ -8,6 +8,34 @@
     overflow: hidden;
   }
 
+  .inputContainer {
+    position: relative;
+    width: 100%;
+  }
+  .passwordInput {
+    padding-right: 40px; /* Adjust the padding to leave space for the button */
+    width: 70%;
+    padding: 10px;
+    margin: 12px 0;
+    border: 0px solid;
+    border-radius: 0.5rem;
+    font-size: 16px;
+    background-color: #f6f6f6;
+  }
+/* login.module.css */
+.visibilityButton {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  margin-right: 15%;
+}
+
   
   .midContainer {
     display: flex;
@@ -150,6 +178,32 @@
       padding: 0;
       display: none;
     }
+    .inputContainer {
+      position: relative;
+      width: 100%;
+    }
+    .passwordInput {
+      padding-right: 40px; /* Adjust the padding to leave space for the button */
+      width: 70%;
+      padding: 10px;
+      margin: 12px 0;
+      border: 0px solid;
+      border-radius: 0.5rem;
+      font-size: 16px;
+      background-color: #f6f6f6;
+    }
+    .visibilityButton {
+      position: absolute;
+      top: 50%;
+      left: 15%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+     
+    }
   }
   
   /* For screens smaller than 768px */
@@ -161,5 +215,31 @@
     .midRightContainer {
       padding-top: 4rem;
       width: 90%;
+    }
+    .inputContainer {
+      position: relative;
+      width: 100%;
+    }
+    .passwordInput {
+      padding-right: 40px; /* Adjust the padding to leave space for the button */
+      width: 70%;
+      padding: 10px;
+      margin: 12px 0;
+      border: 0px solid;
+      border-radius: 0.5rem;
+      font-size: 16px;
+      background-color: #f6f6f6;
+    }
+    .visibilityButton {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+      margin-left: 15%;
     }
   }

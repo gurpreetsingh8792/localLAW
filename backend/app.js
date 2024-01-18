@@ -19,40 +19,40 @@ app.use(express.json());
 
 
 // const { Storage } = require('@google-cloud/storage');
-const port = 8052;
+const port = process.env.PORT || 8052;
 
-const queryParams = new URLSearchParams({
-  state: "Punjab",
-  case_no: "your_case_no",
-  description: "not able to claim my insurance",
-  history: "None",
-  District: "Bathinda",
-  town: "Bathinda",
-  case_type: "Insurance",
-  full_name: "ENGINEER CONSTRUCTIONS PVT LTD",
-  address: "LANE 6, CANAL ROAD GHUMANIWALA, Bathinda - 249204 Tel. 9756877006"
-});
+// const queryParams = new URLSearchParams({
+//   state: "Punjab",
+//   case_no: "your_case_no",
+//   description: "not able to claim my insurance",
+//   history: "None",
+//   District: "Bathinda",
+//   town: "Bathinda",
+//   case_type: "Insurance",
+//   full_name: "ENGINEER CONSTRUCTIONS PVT LTD",
+//   address: "LANE 6, CANAL ROAD GHUMANIWALA, Bathinda - 249204 Tel. 9756877006"
+// });
 
-const url = `http://34.105.29.122:8000/law_sections/?${queryParams.toString()}`;
-const filePath = "./Db-data/SS_NIAPOLICYSCHEDULECIRTIFICATESS_44081908.pdf";
+// const url = `http://34.105.29.122:8000/law_sections/?${queryParams.toString()}`;
+// const filePath = "./Db-data/SS_NIAPOLICYSCHEDULECIRTIFICATESS_44081908.pdf";
 
-const formData = new FormData();
-formData.append('pdf_file', fs.createReadStream(filePath));
+// const formData = new FormData();
+// formData.append('pdf_file', fs.createReadStream(filePath));
 
-fetch(url, {
-  method: 'POST',
-  body: formData
-})
-.then(response => {
-    console.log('Status Code:', response.status); // Log the response status code
-    return response.json();
-})
-.then(data => {
-    console.log('Response Data:', data); // Log the response data
-})
-.catch(error => {
-    console.error('Error:', error); // Log any errors
-});
+// fetch(url, {
+//   method: 'POST',
+//   body: formData
+// })
+// .then(response => {
+//     console.log('Status Code:', response.status); // Log the response status code
+//     return response.json();
+// })
+// .then(data => {
+//     console.log('Response Data:', data); // Log the response data
+// })
+// .catch(error => {
+//     console.error('Error:', error); // Log any errors
+// });
 
 
 
@@ -2784,5 +2784,5 @@ app.use((err, req, res, next) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
